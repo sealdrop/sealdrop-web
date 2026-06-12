@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="drop" x1="25%" y1="0%" x2="75%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <linearGradient id="seal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1d4ed8"/>
+      <stop offset="100%" stop-color="#1e3a8a"/>
+    </linearGradient>
+    <linearGradient id="drop-dark" x1="25%" y1="0%" x2="75%" y2="100%">
+      <stop offset="0%" stop-color="#374151"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+    <linearGradient id="seal-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1f2937"/>
+      <stop offset="100%" stop-color="#030712"/>
+    </linearGradient>
+  </defs>
+
+  <style>
+    .drop  { fill: url(#drop); }
+    .seal  { fill: url(#seal); }
+    .lock  { fill: white; }
+    .ring  { stroke: rgba(255,255,255,0.28); fill: none; }
+    @media (prefers-color-scheme: dark) {
+      .drop { fill: url(#drop-dark); }
+      .seal { fill: url(#seal-dark); }
+      .lock { fill: #9ca3af; }
+      .ring { stroke: rgba(255,255,255,0.12); }
+    }
+  </style>
+
+  <!-- Water drop: geometric pointed top, round bottom -->
+  <path class="drop"
+        d="M256,44 C292,98 434,228 434,332 A178,178 0,1,1 78,332 C78,228 220,98 256,44 Z"/>
+
+  <!-- Wax seal disc -->
+  <circle class="seal" cx="256" cy="358" r="76"/>
+  <!-- Subtle ring detail -->
+  <circle class="ring" cx="256" cy="358" r="66" stroke-width="5"/>
+
+  <!-- Lock shackle -->
+  <path class="lock"
+        d="M224,350 v-26 a32,32 0,0,1 64,0 v26"
+        fill="none" stroke="white" stroke-width="20"
+        stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Lock body -->
+  <rect class="lock" x="216" y="348" width="80" height="58" rx="12"/>
+
+  <!-- Keyhole -->
+  <circle cx="256" cy="371" r="11" class="seal"/>
+  <rect x="251" y="379" width="10" height="13" rx="3" class="seal"/>
+</svg>

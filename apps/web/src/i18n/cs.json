@@ -1,0 +1,655 @@
+{
+  "common": {
+    "back": "← Zpět",
+    "goToSealDrop": "Přejít na SealDrop",
+    "openOnDevice": {
+      "title": "Otevřít na jiném zařízení",
+      "sendHint": "Chcete soubor otevřít na počítači? Vytvořte krátký kód místo kopírování dlouhého odkazu.",
+      "fileHint": "Chcete soubor raději stáhnout na počítači?",
+      "createCode": "Vytvořit kód pro otevření",
+      "creating": "Vytváření…",
+      "error": "Nepodařilo se vytvořit kód pro otevření. Zkuste to znovu.",
+      "step1": "Přejděte na",
+      "step1Computer": "Přejděte na",
+      "onYourComputer": "na počítači",
+      "step2": "Zadejte tento kód:",
+      "expiryDuration": "10 minut",
+      "expires": "Platnost 10 minut.",
+      "copyInstructions": "Zkopírovat pokyny",
+      "instructionsText": "Poslal(a) jsem vám soubor přes SealDrop.\n\nPro otevření na počítači:\n1. Přejděte na https://sealdrop.io/open\n2. Zadejte tento kód: {{code}}\n\nPlatnost kódu vyprší za 10 minut.",
+      "securityNote": "Tento kód otevírá stejný odkaz na soubor. Sdílejte ho pouze se zamýšleným příjemcem."
+    },
+    "largeDownloadWarning": "Velký soubor: tento prohlížeč před uložením podrží celé stažení v paměti. Pro nejlepší zážitek použijte Chrome nebo Edge."
+  },
+  "copyBtn": {
+    "copy": "Kopírovat",
+    "copied": "Zkopírováno!"
+  },
+  "shareBtn": {
+    "share": "Sdílet",
+    "shared": "Sdíleno"
+  },
+  "installHint": {
+    "title": "Používejte SealDrop jako aplikaci",
+    "ios": "Na iPhonu nebo iPadu klepněte na Sdílet a potom Přidat na plochu.",
+    "android": "Na Androidu otevřete menu prohlížeče a zvolte Instalovat aplikaci nebo Přidat na plochu."
+  },
+  "qr": {
+    "show": "Zobrazit QR kód",
+    "hide": "Skrýt QR kód"
+  },
+  "filePicker": {
+    "tapToChoose": "Klepněte pro výběr souboru",
+    "hint": "nebo přetáhněte · až 50 GB",
+    "tapToChange": "klepněte pro změnu",
+    "tooLarge": "Soubor je příliš velký. Maximální velikost je {{size}}.",
+    "ariaChoose": "Vyberte soubor k nahrání",
+    "ariaSelected": "Vybraný soubor {{name}}. Stiskněte Enter pro výběr jiného souboru."
+  },
+  "expiry": {
+    "label": "Platnost",
+    "send": {
+      "openOnce": "Otevřít jednou (výchozí)",
+      "1h": "1 hodina",
+      "today": "Dnes",
+      "3d": "3 dny",
+      "7d": "7 dní"
+    },
+    "receive": {
+      "oneFile": "Přijmout jeden soubor, vyprší dnes (výchozí)",
+      "1h": "Přijímat soubory 1 hodinu",
+      "today": "Přijímat soubory do dnešního dne",
+      "3files": "Přijmout až 3 soubory",
+      "7d": "Přijímat soubory 7 dní"
+    }
+  },
+  "send": {
+    "title": "Poslat soubor",
+    "subtitle": "Zapečetěno ve vašem prohlížeči před odesláním.",
+    "notePlaceholder": "Přidat poznámku (volitelné) — šifrováno end-to-end",
+    "sizePrivacy": "Soukromí velikosti",
+    "padding": {
+      "standard": "Standardní",
+      "enhanced": "Rozšířené",
+      "maximum": "Maximální",
+      "descStandard": "Zaokrouhlí poslední blok na 4 KB",
+      "descEnhanced": "Zaokrouhlí upload na nejbližší 1 MB",
+      "descMaximum": "Zaokrouhlí upload na 10/50/100/500 MB nebo 1 GB",
+      "descFile": "odesláno ~{{size}}"
+    },
+    "passphrase": {
+      "label": "Chránit heslem",
+      "placeholder": "Zadejte heslo (min. 8 znaků)",
+      "tooShort": "Heslo musí mít alespoň 8 znaků."
+    },
+    "accessCode": {
+      "label": "Vyžadovat přístupový kód",
+      "hint": "Po nahrání se vygeneruje krátký kód. Pošlete ho odděleně od odkazu."
+    },
+    "deleteLink": "Vygenerovat odkaz pro smazání",
+    "sealBtn": "Zapečetit a sdílet",
+    "sealing": "Pečetění souboru ve vašem prohlížeči…",
+    "uploading": "Nahrávání zapečetěného souboru… {{pct}}%",
+    "shared": {
+      "title": "Sdíleno do SealDrop",
+      "loaded": "Sdílený soubor je připraven. Zkontrolujte volby a zapečeťte ho.",
+      "textOnly": "Sdílený text byl přidán jako šifrovaná poznámka. Pro pokračování vyberte soubor.",
+      "empty": "Ze sdílení nic nepřišlo. Pro pokračování vyberte soubor.",
+      "tooLarge": "Sdílený soubor je příliš velký. Pro pokračování vyberte menší soubor."
+    },
+    "safety": "Váš soubor je zašifrován před opuštěním vašeho zařízení.\nServer ukládá pouze zapečetěnou verzi.",
+    "done": {
+      "title": "Soubor zapečetěn",
+      "shareLink": "Odkaz ke sdílení",
+      "shareLinkWarning": "Tento odkaz obsahuje klíčový materiál. Kdokoli s odkazem může soubor otevřít, pokud není vyžadován také přístupový kód nebo heslo.",
+      "accessCode": "Přístupový kód",
+      "accessCodeHint": "Pošlete přístupový kód odděleně od odkazu — oba jsou potřeba pro otevření souboru.",
+      "accessCodeWarning": "Zacházejte s tímto kódem jako s tajemstvím. Pošlete ho jiným kanálem než odkaz.",
+      "deleteLink": "Odkaz pro smazání (uchovejte soukromý)",
+      "deleteLinkWarning": "Tento odkaz může trvale smazat zašifrovaný soubor. Uchovejte ho soukromě.",
+      "safetyBase": "Zamčeno ve vašem prohlížeči · Smazáno po vypršení",
+      "safetyCode": "K otevření souboru jsou potřeba odkaz i přístupový kód",
+      "safetyPassphrase": "K otevření souboru je vyžadováno heslo",
+      "safetyDefault": "Kdokoli s celým odkazem může soubor otevřít"
+    }
+  },
+  "sendFile": {
+    "loading": "Otevírání zapečetěného souboru…",
+    "passphrase": {
+      "title": "Vyžadováno heslo",
+      "subtitle": "Tento soubor je chráněn heslem.",
+      "placeholder": "Zadejte heslo",
+      "error": "Nesprávné heslo. Zkuste to znovu.",
+      "unlock": "Odemknout"
+    },
+    "accessCode": {
+      "title": "Vyžadován přístupový kód",
+      "subtitle": "Tento soubor je chráněn. Zadejte přístupový kód pro otevření.",
+      "placeholder": "např. K7M9-R2QX",
+      "error": "Nesprávný přístupový kód. Zkuste to znovu.",
+      "safety": "Přístupový kód je použit ve vašem prohlížeči k odemčení klíče souboru.\nNikdy není odeslán na SealDrop."
+    },
+    "openOnce": {
+      "title": "Otevřít jednou",
+      "subtitle": "Tento soubor lze otevřít pouze jednou. Otevření nyní ho trvale znepřístupní.",
+      "senderNote": "Poznámka odesílatele:",
+      "btn": "Otevřít a stáhnout",
+      "safety": "Po otevření nelze soubor znovu získat."
+    },
+    "error": {
+      "title": "Soubor nedostupný",
+      "missingKey": "Tento odkaz je neúplný. V URL chybí dešifrovací klíč.",
+      "generic": "Něco se pokazilo. Zkontrolujte prosím odkaz a zkuste to znovu.",
+      "expired": "Tento soubor již není dostupný. Možná vypršel nebo byl již otevřen.",
+      "expiredOpen": "Tento soubor již není dostupný. Byl již otevřen nebo mu vypršela platnost.",
+      "downloadFailed": "Nepodařilo se otevřít soubor. Zkuste to znovu."
+    },
+    "ready": {
+      "title": "Zapečetěný soubor",
+      "subtitle": "Někdo vám poslal zapečetěný soubor.",
+      "openBtn": "Otevřít soubor",
+      "downloading": "Stahování a odemykání… {{pct}}%",
+      "safety": "Tento soubor je zapečetěn před nahráním a odemknut pouze ve vašem prohlížeči.\nServer nikdy nevidí jeho obsah."
+    },
+    "done": {
+      "title": "Soubor otevřen",
+      "subtitle": "Stahování by mělo začít.",
+      "safety": "Tento soubor byl zapečetěn před nahráním a dešifrován pouze ve vašem prohlížeči."
+    }
+  },
+  "receive": {
+    "title": "Přijmout soubor",
+    "subtitle": "Vytvořte soukromý odkaz pro příjem. Jen vy odemknete, co dorazí.",
+    "creating": "Vytváření příjmového místa…",
+    "createBtn": "Vytvořit odkaz pro příjem",
+    "safety": "Váš soukromý klíč je vygenerován ve vašem prohlížeči a nikdy není odeslán na server.",
+    "errorServer": "Chyba serveru. Zkuste to znovu.",
+    "errorGeneric": "Něco se pokazilo.",
+    "done": {
+      "title": "Odkaz pro příjem připraven",
+      "subtitle": "Sdílejte odkaz pro příjem. Vlastnický odkaz uchovejte soukromý.",
+      "dropLabel": "Odkaz pro příjem — bezpečný ke sdílení",
+      "warning": "⚠️ Uchovejte soukromý. Vlastnický odkaz je jediný způsob, jak odemknout soubory zaslané vám. Uložte ho na bezpečné místo — nelze ho obnovit.",
+      "ownerLabel": "Vlastnický odkaz — soukromý",
+      "ownerLinkWarning": "Tento odkaz obsahuje váš soukromý klíč. Kdokoli s ním může odemknout soubory poslané do tohoto přijímacího místa.",
+      "safety": "Soubory nahrané sem jsou zapečetěny před odesláním.\nJen váš vlastnický odkaz je může odemknout."
+    }
+  },
+  "drop": {
+    "loading": "Načítání příjmového místa…",
+    "closed": {
+      "title": "Příjmové místo uzavřeno",
+      "subtitle": "Toto místo již nepřijímá soubory."
+    },
+    "done": {
+      "title": "Soubor zapečetěn a odeslán",
+      "subtitle": "Příjemce ho bude moci odemknout pomocí svého vlastnického odkazu."
+    },
+    "ready": {
+      "title": "Někdo požaduje zapečetěný soubor",
+      "sealBtn": "Zapečetit a odeslat",
+      "sealing": "Pečetění souboru ve vašem prohlížeči…",
+      "uploading": "Nahrávání zapečetěného souboru… {{pct}}%",
+      "safety": "Váš soubor je zapečetěn ve vašem prohlížeči před nahráním.\nJen příjemce ho může odemknout."
+    },
+    "errorLoad": "Nepodařilo se načíst příjmové místo. Zkontrolujte prosím odkaz.",
+    "uploadFailed": "Nahrávání selhalo. Zkuste to znovu."
+  },
+  "owner": {
+    "loading": "Načítání vašeho příjmového místa…",
+    "error": {
+      "title": "Pohled vlastníka",
+      "missingKey": "Tento odkaz je neúplný. V URL chybí soukromý klíč.",
+      "expired": "Toto příjmové místo již není dostupné.",
+      "loadFailed": "Nepodařilo se načíst soubory. Zkuste to znovu."
+    },
+    "title": "Vaše zapečetěné soubory",
+    "subtitle": "Soubory jsou odemknuty ve vašem prohlížeči pomocí vašeho soukromého klíče.",
+    "empty": "Zatím nebyly nahrány žádné soubory.\nUchovejte tuto stránku nebo váš vlastnický odkaz.",
+    "sealedFile": "Zapečetěný soubor {{n}}",
+    "fileUnavailable": "Soubor již není dostupný.",
+    "unlockFailed": "Odemčení selhalo. Odkaz nebo soubor může být poškozený.",
+    "saved": "Uloženo",
+    "unlock": "Odemknout",
+    "safety": "Soubory jsou dešifrovány pouze ve vašem prohlížeči.\nVáš soukromý klíč nikdy neopustí toto zařízení."
+  },
+  "open": {
+    "title": "Otevřít odkaz SealDrop",
+    "subtitle": "Zadejte kód, který jste obdrželi.",
+    "placeholder": "např. A7KP2M 482 913 774",
+    "error": "Tento kód je neplatný nebo vypršela jeho platnost.",
+    "opening": "Otevírání…",
+    "openBtn": "Otevřít soubor",
+    "scanBtn": "Naskenovat QR kód",
+    "scanStarting": "Spouštění kamery…",
+    "scanStop": "Zastavit skenování",
+    "scanError": "Nepodařilo se skenovat. Zadejte kód ručně.",
+    "safety": "Kód slouží pouze k získání zašifrovaného odkazu.\nVáš soubor je dešifrován ve vašem prohlížeči."
+  },
+  "landing": {
+    "nav": {
+      "howItWorks": "Jak to funguje",
+      "security": "Zabezpečení",
+      "createDropLink": "Vytvořit odkaz pro příjem",
+      "sendFile": "Poslat soubor"
+    },
+    "footer": {
+      "tagline": "Dočasná šifrovaná výměna souborů. Bez účtu. Zmizí po použití.",
+      "howItWorks": "Jak to funguje",
+      "security": "Zabezpečení",
+      "privacy": "Soukromí",
+      "terms": "Podmínky",
+      "abuseAndLegal": "Zneužití a právní info",
+      "source": "Zdrojový kód"
+    },
+    "preview": {
+      "ariaLabel": "Náhled procesu nahrávání v SealDrop",
+      "eyebrow": "Tok odesílání",
+      "heading": "Zapečetit soubor",
+      "badge": "Otevřít jednou",
+      "dropFile": "Přetáhněte soubor sem",
+      "orChoose": "nebo vyberte ze zařízení",
+      "fileName": "smlouva.pdf",
+      "fileSize": "2,4 MB · zašifrováno před nahráním",
+      "expires": "Platnost",
+      "afterFirstDownload": "Po prvním stažení",
+      "copyLink": "Kopírovat odkaz",
+      "linkPlaceholder": "https://sealdrop.io/s/..."
+    },
+    "hero": {
+      "kicker": "Dočasná šifrovaná výměna",
+      "heading": "Pošlete soukromý odkaz na soubor, který zmizí.",
+      "body": "SealDrop šifruje soubory ve vašem prohlížeči, vytváří odkaz ke sdílení a soubor po použití nebo vypršení smaže. Bez účtu. Bez složek ke správě.",
+      "sendBtn": "Poslat soubor",
+      "dropBtn": "Vytvořit odkaz pro příjem",
+      "badgeNoAccount": "Bez účtu",
+      "badgeEncrypted": "Šifrováno před nahráním",
+      "badgeDeleted": "Automaticky smazáno"
+    },
+    "howItWorks": {
+      "eyebrow": "Jak to funguje",
+      "heading": "Tři kroky. Bez účtu.",
+      "step1Title": "Nahrání souboru",
+      "step1Body": "Vyberte soubor a pravidlo vypršení. Výchozí je otevřít jednou.",
+      "step2Title": "Sdílení bezpečného odkazu",
+      "step2Body": "SealDrop vytvoří odkaz obsahující dešifrovací klíč v URL fragmentu.",
+      "step3Title": "Zmizí",
+      "step3Body": "Server odstraní šifrovaný soubor po dosažení limitu stažení nebo vypršení platnosti.",
+      "fullWalkthrough": "Podrobný průvodce"
+    },
+    "features": {
+      "eyebrow": "Výhody",
+      "heading": "Navrženo pro soubory, které by neměly zůstat.",
+      "f1Title": "Šifrování na straně klienta",
+      "f1Body": "Soubory a názvy souborů jsou zašifrovány v prohlížeči před nahráním.",
+      "f2Title": "Bez nutnosti účtu",
+      "f2Body": "Veškerá výměna probíhá přes odkazy. Žádní uživatelé, hesla ani profily.",
+      "f3Title": "Dočasné z principu",
+      "f3Body": "Použijte otevření jednou, krátké doby platnosti a volitelné odkazy pro smazání.",
+      "f4Title": "Jednoduchá výměna odkazů",
+      "f4Body": "Pošlete soubor přímo nebo vytvořte odkaz pro příjem, aby vám někdo mohl soubor poslat.",
+      "f5Title": "Metadata zaměřená na soukromí",
+      "f5Body": "Server ukládá šifrovaný obsah a zaokrouhlenou velikost, nikoli prostý text.",
+      "f6Title": "Přátelské pro vývojáře",
+      "f6Body": "Open source, self-hostovatelné a postavené na standardní kryptografii prohlížeče."
+    },
+    "security": {
+      "eyebrow": "Bezpečnostní model",
+      "heading": "Server by nikdy neměl potřebovat číst váš soubor.",
+      "body1": "SealDrop používá Web Crypto API k šifrování souborů před nahráním. Server ukládá šifrované bloby. Dešifrovací klíče žijí v URL fragmentech, které prohlížeče nezahrnují do HTTP požadavků.",
+      "body2": "To neznamená, že každé riziko zmizí. Velikost souboru a čas nahrání jsou viditelné, záleží na přístupu k odkazu a uživatelé s vysokými nároky na bezpečnost by měli zkontrolovat zdrojový kód a podávaný JavaScript.",
+      "fullModel": "Úplný bezpečnostní model"
+    },
+    "verify": {
+      "eyebrow": "Ověřte si to sami",
+      "heading": "Nemusíte nám jen věřit.",
+      "body": "SealDrop zveřejňuje vše potřebné k ověření, že nasazený klient odpovídá tomu, co je zde popsáno.",
+      "linkSecurity": "Úplný bezpečnostní model",
+      "linkBuild": "Ověření sestavení a kontrolních součtů",
+      "linkSecurityTxt": "Nahlášení bezpečnostní chyby (security.txt)",
+      "linkPrivacy": "Zásady ochrany osobních údajů",
+      "linkSource": "Zdrojový kód frontendu"
+    },
+    "cta": {
+      "eyebrow": "Připraveni",
+      "heading": "Zapečeťte jeden soubor. Sdílejte jeden odkaz. Hotovo.",
+      "sendBtn": "Poslat soubor",
+      "dropBtn": "Vytvořit odkaz pro příjem"
+    }
+  },
+  "howItWorks": {
+    "eyebrow": "Jak to funguje",
+    "heading": "Krok za krokem.",
+    "tabSend": "Poslat soubor",
+    "tabReceive": "Režim příjmu",
+    "send": {
+      "s1Title": "Vyberte soubor",
+      "s1Body": "Zvolte soubor ze zařízení. Načte se pouze do paměti prohlížeče. Nic zatím neopouští váš počítač.",
+      "s2Title": "Prohlížeč vygeneruje jednorázový klíč",
+      "s2Body": "Kryptograficky náhodný 256bitový klíč je vytvořen lokálně pomocí Web Crypto API. Nikdy se nedostane na server.",
+      "s3Title": "Šifrování probíhá ve vašem prohlížeči",
+      "s3Body": "Obsah souboru a název jsou zašifrovány pomocí AES-GCM před jakýmkoliv síťovým požadavkem. Nic neopouští nešifrované.",
+      "s4Title": "Na server se nahrává pouze šifrovaný obsah",
+      "s4Body": "Šifrovaný blob a šifrovaná metadata jsou odeslána na server. Server ukládá bajty, které nemůže číst.",
+      "s5Title": "Získáte odkaz ke sdílení",
+      "s5Body": "Dešifrovací klíč žije v URL fragmentu (části za #). Prohlížeče nikdy nezahrnují fragmenty do HTTP požadavků, takže server klíč nikdy nevidí.",
+      "s6Title": "Příjemce dešifruje lokálně",
+      "s6Body": "Když někdo otevře odkaz, prohlížeč přečte klíč z fragmentu a dešifruje soubor na jejich zařízení. V tomto kroku se na server nic neposílá.",
+      "s7Title": "Soubor zmizí",
+      "s7Body": "Po prvním stažení nebo dosažení časového limitu server trvale smaže šifrovaný blob a záznam v databázi."
+    },
+    "receive": {
+      "s1Title": "Vytvořte odkaz pro příjem",
+      "s1Body": "Váš prohlížeč vygeneruje pár klíčů ECDH P-256. Veřejný klíč je odeslán na server; soukromý klíč zůstává ve vašem prohlížeči a objeví se pouze ve vašem vlastnickém odkazu.",
+      "s2Title": "Váš soukromý klíč zůstává u vás",
+      "s2Body": "Soukromý klíč se objevuje pouze v URL fragmentu vašeho vlastnického odkazu. Server nemá kopii. Ztráta vlastnického odkazu znamená ztrátu schopnosti dešifrovat přijaté soubory.",
+      "s3Title": "Sdílejte odkaz pro příjem",
+      "s3Body": "Odkaz pro příjem obsahuje pouze náhodné ID, bez klíčů. Kdokoli s tímto odkazem může nahrát zašifrovaný soubor.",
+      "s4Title": "Nahrávající šifrují na váš veřejný klíč",
+      "s4Body": "Prohlížeč každého nahrávajícího načte váš veřejný klíč, vygeneruje náhodný AES klíč pro soubor a soubor jím zašifruje.",
+      "s5Title": "Klíč souboru je zabalen do vašeho veřejného klíče",
+      "s5Body": "Klíč AES souboru je zašifrován pro vás pomocí ECDH dohody o klíčích, odvození klíče HKDF a zabalení AES-KW. Pouze váš soukromý klíč ho může rozbalit.",
+      "s6Title": "Server ukládá pouze šifrovaný obsah",
+      "s6Body": "Server drží zašifrovaný soubor a zabalený klíč. Bez vašeho soukromého klíče není ani jedno čitelné, ani pro server.",
+      "s7Title": "Dešifrujete pomocí vlastnického odkazu",
+      "s7Body": "Otevřením vlastnického odkazu prohlížeč extrahuje váš soukromý klíč z fragmentu, rozbalí klíč souboru a dešifruje soubor lokálně."
+    },
+    "expiry": {
+      "eyebrow": "Vypršení a smazání",
+      "heading": "Soubory, které nemohou zůstat.",
+      "sendTitle": "Možnosti vypršení odesílání",
+      "sendBody": "Otevřít jednou (výchozí), 1 hodina, 1 den nebo 7 dní. Soubor je smazán, jakmile je splněna první podmínka.",
+      "receiveTitle": "Limity příjmového místa",
+      "receiveBody": "Přijmout 1 soubor (výchozí) nebo až 3 soubory. Příjmová místa vyprší dnes nebo za 7 dní, podle toho co nastane dříve.",
+      "deletionTitle": "Co znamená smazání",
+      "deletionBody": "Šifrovaný blob je odstraněn z úložiště a databázový záznam je trvale vymazán. Žádná záloha, žádné obnovení, žádná stopa."
+    },
+    "securityLink": "Přečíst bezpečnostní model"
+  },
+  "terms": {
+    "eyebrow": "Podmínky služby",
+    "title": "Jednoduché podmínky pro jednoduchou službu.",
+    "usingService": {
+      "heading": "Používání této služby",
+      "body": "SealDrop je poskytován bezplatně a bez záruky. Používáním služby souhlasíte s těmito podmínkami. Pokud nesouhlasíte, službu nepoužívejte."
+    },
+    "acceptableUse": {
+      "heading": "Přijatelné použití",
+      "intro": "SealDrop nesmíte používat k nahrávání, sdílení nebo distribuci:",
+      "item1": "Obsahu, který je nezákonný ve vaší jurisdikci nebo v jurisdikci, kde tato služba působí",
+      "item2": "Obsahu, který porušuje práva duševního vlastnictví jiných osob",
+      "item3": "Malwaru, exploitů nebo nástrojů určených k poškozování systémů nebo lidí",
+      "item4": "Obsahu, který představuje zneužití, obtěžování nebo vyhrůžky vůči jakékoli osobě"
+    },
+    "contentEncryption": {
+      "heading": "Obsah a šifrování",
+      "body": "Soubory nahrané do SealDrop jsou šifrovány end-to-end. Nemůžeme kontrolovat jejich obsah. To je základní součástí záruk ochrany soukromí služby a znamená to, že nesete výhradní odpovědnost za soubory, které nahráváte a sdílíte."
+    },
+    "noWarranty": {
+      "heading": "Bez záruky",
+      "body": "Služba je poskytována „tak, jak je“, bez jakékoli záruky. Nezaručujeme dostupnost, trvanlivost ani doručení. Soubory mohou být smazány dříve, než je jejich uvedená platnost, pokud služba zaznamenala technické problémy. Nepoužívejte SealDrop jako jedinou kopii důležitých dat."
+    },
+    "takedowns": {
+      "heading": "Stahování obsahu a zneužití",
+      "body1": "Vyhrazujeme si právo smazat soubory podle ID v reakci na věrohodná hlášení zneužití nebo zákonné požadavky, aniž bychom potvrzovali nebo prozrazovali obsah jakéhokoli souboru. Protože jsou soubory šifrovány end-to-end, nemůžeme kontrolovat jejich obsah, ale můžeme je smazat podle ID.",
+      "body2Before": "Chcete-li nahlásit zneužití nebo zaslat právní požadavek, navštivte stránku ",
+      "body2Link": "zneužití a právní záležitosti",
+      "body2After": ", kde zjistíte, co můžeme udělat a jak nás kontaktovat."
+    },
+    "liability": {
+      "heading": "Omezení odpovědnosti",
+      "body": "V maximálním rozsahu povoleném příslušnými právními předpisy neneseme odpovědnost za ztrátu dat, nedoručení souborů ani za jakékoli jiné škody vzniklé v důsledku vašeho používání této služby."
+    },
+    "changes": {
+      "heading": "Změny těchto podmínek",
+      "body": "Tyto podmínky mohou být kdykoli aktualizovány. Pokračující používání služby po změnách představuje souhlas s revidovanými podmínkami."
+    }
+  },
+  "abuse": {
+    "eyebrow": "Zneužití a právní záležitosti",
+    "title": "Jak řešíme zneužití a právní požadavky.",
+    "whatWeCan": {
+      "heading": "Co můžeme udělat",
+      "intro": "Po obdržení věrohodného hlášení zneužití nebo platného právního požadavku můžeme:",
+      "item1": "Smazat soubor nebo příjmové místo podle jeho náhodného ID",
+      "item2": "Zabránit novým nahrávkám na konkrétní odkaz příjmového místa",
+      "response": "Věrohodná hlášení se snažíme vyřešit do 48 hodin od jejich obdržení."
+    },
+    "whatWeCannot": {
+      "heading": "Co nemůžeme udělat",
+      "intro": "SealDrop je šifrován end-to-end. Toto není právní tvrzení — je to technický fakt. Předtím, než soubor opustí zařízení odesílatele, je zašifrován klíčem, který drží pouze příjemce. Klíč není nikdy přenášen na naše servery. To znamená:",
+      "item1": "Nemůžeme kontrolovat obsah žádného souboru",
+      "item2": "Nemůžeme dešifrovat soubory na požádání",
+      "item3": "Nemůžeme identifikovat, kdo nahrál soubor nebo kdo vlastní odkaz ke sdílení",
+      "item4": "Nemůžeme potvrdit ani vyvrátit, zda konkrétní ID souboru obsahuje určitý obsah",
+      "note": "Smazání souboru podle ID odstraní šifrovaný blob a jeho databázový záznam. Pokud si příjemce soubor již stáhl, smazání nemá žádný vliv na jeho kopii."
+    },
+    "whatToInclude": {
+      "heading": "Co uvést v hlášení",
+      "intro": "Abychom mohli jednat rychle, uveďte:",
+      "item1": "Celou URL adresu hlášeného souboru nebo odkazu příjmového místa (náhodné ID je vše, co potřebujeme — nezahrnujte žádný fragment URL, protože to je soukromý dešifrovací klíč)",
+      "item2": "Stručný popis problému",
+      "item3": "U právních požadavků: příslušný zákon nebo příkaz a jurisdikci"
+    },
+    "contact": {
+      "heading": "Jak nás kontaktovat",
+      "body1Before": "Hlášení a právní požadavky zasílejte e-mailem na: ",
+      "body2": "Neudržujeme program bug bounty, ale zodpovědné zveřejňování bezpečnostních zranitelností je vítáno na stejné adrese."
+    },
+    "transparency": {
+      "heading": "Transparentnost",
+      "body1": "Věříme v upřímnost ohledně našich schopností. Požadavky, které nás žádají o technicky nemožné věci — například dešifrování souboru nebo identifikaci uživatele — obdrží čestnou odpověď vysvětlující, proč nemůžeme vyhovět. Toto není právní ani politické stanovisko: je to důsledek způsobu, jakým šifrování funguje.",
+      "body2Before": "Úplný technický model najdete na stránce ",
+      "body2Link": "zabezpečení",
+      "body2After": "."
+    },
+    "acceptableUse": {
+      "heading": "Přijatelné použití",
+      "bodyBefore": "Používání SealDrop ke sdílení nezákonného obsahu, malwaru nebo obsahu, který zneužívá nebo obtěžuje ostatní, porušuje naše ",
+      "bodyLink": "podmínky služby",
+      "bodyAfter": ". Budeme jednat na základě věrohodných hlášení v rámci našich technických možností."
+    }
+  },
+  "deleteFile": {
+    "done": {
+      "title": "Soubor smazán",
+      "subtitle": "Soubor byl trvale odstraněn ze serveru."
+    },
+    "error": {
+      "title": "Nelze smazat",
+      "missingToken": "Tento odkaz je neúplný. V URL chybí token pro smazání.",
+      "expired": "Tento soubor již není dostupný. Mohl již být smazán nebo mu vypršela platnost.",
+      "failed": "Smazání souboru selhalo. Zkuste to znovu."
+    },
+    "confirm": {
+      "title": "Smazat tento soubor?",
+      "subtitle": "Tím se soubor trvale odstraní ze serveru.\nKdokoli s odkazem ke sdílení ho nebude moci otevřít.",
+      "deleting": "Mazání…",
+      "deleteBtn": "Smazat soubor"
+    }
+  },
+  "securityPage": {
+    "hero": {
+      "eyebrow": "Bezpečnostní model",
+      "heading": "Server by nikdy neměl přečíst váš soubor."
+    },
+    "cards": {
+      "encryptedEyebrow": "Šifrováno před nahráním",
+      "encryptedBody": "AES-GCM 256-bit ve vašem prohlížeči — ještě než jediný bajt opustí vaše zařízení. Server přijímá pouze ciphertext.",
+      "cannotReadEyebrow": "Nemůžeme to přečíst",
+      "cannotReadBody": "Na naše servery nikdy nedorazí žádné klíče, názvy souborů ani prostý text. Ani úplný výpis databáze neodhalí nic čitelného.",
+      "linkIsKeyEyebrow": "Odkaz je klíč",
+      "linkIsKeyBody": "Kdokoli drží sdílecí odkaz, může soubor dešifrovat. Zacházejte s ním jako s heslem a pošlete ho přes šifrovaný kanál."
+    },
+    "storage": {
+      "eyebrow": "Ukládání dat",
+      "heading": "Co je uloženo na serveru.",
+      "colStored": "Uloženo",
+      "colNeverStored": "Nikdy neuloženo",
+      "stored": [
+        "Zašifrovaný soubor",
+        "Zašifrovaný název souboru a MIME typ",
+        "Přibližná velikost souboru (zaokrouhlena do skupiny pro soukromí)",
+        "Časové razítko vypršení",
+        "Náhodná ID souborů a přijímacích míst",
+        "IV potřebná pro dešifrování"
+      ],
+      "notStored": [
+        "Obsah souboru v nešifrované podobě",
+        "Název souboru nebo MIME typ v nešifrované podobě",
+        "Šifrovací klíče",
+        "Soukromé klíče",
+        "Fragmenty URL",
+        "Přesná velikost souboru nebo počet bloků",
+        "Jakýkoli identifikátor spojující vás se souborem"
+      ]
+    },
+    "primitives": {
+      "eyebrow": "Kryptografická primitiva",
+      "heading": "Co šifruje váš soubor.",
+      "aesTitle": "AES-GCM 256-bit",
+      "aesBody": "Každý soubor je uzamčen 256-bitovým klíčem a 96-bitovým IV, oba vygenerované čerstvě pro každý soubor. AES-GCM zajišťuje důvěrnost i integritu: jakékoli narušení rozbije dešifrování.",
+      "ecdhTitle": "ECDH P-256 (režim příjmu)",
+      "ecdhBody": "V režimu příjmu se odesílatel a vlastník dohodnou na sdíleném tajemství pomocí eliptické Diffie–Hellmanovy výměny bez sdílení soukromých klíčů. Výsledek je zpracován přes HKDF a použit pro zabalení klíče pomocí AES-KW.",
+      "webCryptoTitle": "Pouze Web Crypto API",
+      "webCryptoBody": "Všechny operace probíhají ve vestavěném kryptografickém stroji prohlížeče, izolovaném na úrovni OS. Žádné knihovny třetích stran, žádný kód načítaný z CDN. Implementace je součástí vašeho prohlížeče a je nezávisle auditována."
+    },
+    "sizePrivacy": {
+      "eyebrow": "Soukromí velikosti",
+      "heading": "Ovládejte, co prozradí velikost vašeho nahrávání.",
+      "standardTitle": "Standardní",
+      "standardBody": "Poslední blok souboru je doplněn na hranici 4 KB. Velikost nahrávání odpovídá skutečné velikosti souboru.",
+      "enhancedTitle": "Rozšířené",
+      "enhancedBody": "Celé nahrávání je doplněno na nejbližší hranici 1 MB. Pozorovatel nedokáže rozlišit soubory v rámci stejného megabytu.",
+      "maximumTitle": "Maximální",
+      "maximumBody": "Nahrávání je doplněno na nejbližší skupinu: 10 MB, 50 MB, 100 MB, 500 MB nebo 1 GB. Mezera je vyplněna náhodnými daty, takže všechny soubory ve skupině vypadají na síti identicky.",
+      "note": "Veškeré doplnění používá kryptograficky náhodné výplně. Skutečná velikost souboru je uložena pouze v zašifrovaných metadatech, která server nemůže přečíst."
+    },
+    "buildIdentity": {
+      "eyebrow": "Identita sestavení",
+      "heading": "Ověřte, co spouštíte.",
+      "intro": "Klient, který zajišťuje šifrování, je identifikován svým commit hashem.",
+      "thisBuildLabel": "Toto sestavení.",
+      "commit": "Commit",
+      "builtAt": "sestaveno",
+      "checksumsLabel": "Kontrolní součty.",
+      "checksumsBefore": "SHA-256 hashe nasazených klientských balíků jsou po každém sestavení zveřejněny na ",
+      "checksumsMiddle": ". Stáhněte ho a spusťte ",
+      "checksumsAfter": " proti místní kopii balíku, abyste potvrdili shodu souborů.",
+      "manifestLabel": "Podepsaný manifest sestavení.",
+      "manifestBefore": "Každé sestavení také publikuje podepsaný manifest na ",
+      "manifestMiddle": " obsahující commit, čas sestavení a SHA-256 hashe jednotlivých souborů, podepsaný klíčem ECDSA, jehož veřejná část je zveřejněna na ",
+      "manifestAfter": ". Ověření podpisu potvrzuje, že manifest vznikl skutečnou build pipeline a nebyl při přenosu změněn.",
+      "verifyLabel": "Jak ověřit.",
+      "verifyBody": "Otevřete /checksums.txt, ověřte, že commit odpovídá sestavení zobrazenému zde, stáhněte uvedené JavaScriptové a CSS soubory a porovnejte jejich SHA-256 hashe. Neshoda znamená, že nasazený klient není sestavení popsané touto stránkou.",
+      "sourceLabel": "Zdrojový kód.",
+      "sourceBefore": "Kód klienta a šifrování v prohlížeči jsou zveřejněny na ",
+      "sourceAfter": ". Tento repozitář je aktualizován pravidelně, nikoli automaticky zrcadlen, takže commit uvedený v podepsaném manifestu sestavení nemusí odpovídat commitu v tomto repozitáři – pro ověření produkčního sestavení porovnejte samotný kód, nikoli hashe commitů.",
+      "safeBrowsingLabel": "Externí kontrola.",
+      "safeBrowsingBefore": "Reputaci sealdrop.io můžete také zkontrolovat ve službě ",
+      "safeBrowsingAfter": ", nezávislé transparentní zprávě o známých nebezpečných webech.",
+      "safeUseLabel": "Pokyny pro bezpečné používání.",
+      "safeUseBody": "Pro vysoce citlivé soubory používejte důvěryhodné zařízení a profil prohlížeče s vypnutými rozšířeními. SealDrop nemůže chránit před malwarem, napadeným operačním systémem ani škodlivým rozšířením prohlížeče."
+    },
+    "threatModel": {
+      "eyebrow": "Model hrozeb",
+      "heading": "Před čím toto chrání.",
+      "protectsTitle": "Chrání před",
+      "doesNotProtectTitle": "Nechrání před",
+      "protects": [
+        "Kompromitací serveru nebo úplným výpisem databáze",
+        "Únikem dat z R2 nebo D1",
+        "Pasivním síťovým pozorovatelem (HTTPS šifruje přenos; payload je také šifrován)",
+        "Únikem názvů souborů v čitelné podobě",
+        "Výčtem ID souborů (ID jsou kryptograficky náhodná)"
+      ],
+      "doesNotProtect": [
+        "Osobou, která drží sdílecí odkaz — ta je zamýšleným příjemcem",
+        "Napadeným prohlížečem nebo škodlivým rozšířením",
+        "Analýzou provozu: časy nahrávání a velikost přenosu jsou pozorovatelné. Rozšířený a maximální režim soukromí hrubí velikosti na 1 MB nebo pevné skupiny.",
+        "Právními žádostmi o smazání; v případě požadavku lze zašifrované soubory smazat",
+        "Přístupem k infrastruktuře Cloudflare; Cloudflare provozuje výpočetní a úložnou vrstvu"
+      ]
+    },
+    "protectedLinks": {
+      "eyebrow": "Chráněné odkazy",
+      "heading": "Vyžadujte přístupový kód.",
+      "intro": "Volitelný druhý faktor pro samotný odkaz.",
+      "howItWorksLabel": "Jak to funguje.",
+      "howItWorksBody": "Pokud povolíte \"Vyžadovat přístupový kód\", váš prohlížeč vygeneruje krátký čitelný kód a použije ho k uzamčení klíče souboru. Soubor může dešifrovat pouze někdo, kdo má jak sdílecí odkaz, tak správný přístupový kód.",
+      "sendSeparatelyLabel": "Pošlete je odděleně.",
+      "sendSeparatelyBody": "Přístupový kód se vám zobrazí po nahrání. Pošlete ho jiným kanálem než odkaz — například odkaz sdílejte e-mailem a kód textovou zprávou.",
+      "neverLeavesLabel": "Kód nikdy neopustí váš prohlížeč.",
+      "neverLeavesBody": "Přístupový kód je použit lokálně k odvození obalovacího klíče přes PBKDF2-SHA256. Uložen je pouze zabalený klíčový materiál. SealDrop kód nikdy neuvidí.",
+      "limitsLabel": "Omezení.",
+      "limitsBody": "Pomáhá to, pokud je odkaz vystaven v historii e-mailů, Slacku nebo náhledu odkazu. Nechrání to před napadeným zařízením nebo někým, kdo získal jak odkaz, tak kód."
+    },
+    "responsibilities": {
+      "eyebrow": "Vaše odpovědnosti",
+      "heading": "Bezpečnost je sdílená.",
+      "intro": "SealDrop zajišťuje šifrování. Zbytek je na vás.",
+      "shareLinksLabel": "Sdílejte odkazy bezpečně.",
+      "shareLinksBody": "Sdílecí odkazy posílejte přes Signal, iMessage nebo jiný end-to-end šifrovaný kanál. E-mail, Slack a obyčejné SMS odkaz odhalí — a odkaz je klíč.",
+      "guardOwnerLabel": "Chraňte svůj vlastnický odkaz.",
+      "guardOwnerBody": "Vlastnický odkaz v režimu příjmu umožňuje plný přístup ke všem souborům v přijímacím místě. Nikdy ho nesdílejte. Pokud máte podezření na kompromitaci, zavřete přijímací místo a vytvořte nové.",
+      "deviceMattersLabel": "Vaše zařízení je důležité.",
+      "deviceMattersBody": "Napadený operační systém nebo škodlivé rozšíření prohlížeče mohou před šifrováním přečíst klíče z paměti. SealDrop nemůže chránit před zařízením, které nekontrolujete."
+    },
+    "privacy": {
+      "eyebrow": "Soukromí",
+      "heading": "Nic se nesleduje. Nic se neuchovává.",
+      "noAccountsTitle": "Žádné účty",
+      "noAccountsBody": "Žádný e-mail, žádné uživatelské jméno, žádné heslo. Soubory a přijímací místa jsou identifikovány pouze náhodnými ID.",
+      "noAnalyticsTitle": "Žádná analytika",
+      "noAnalyticsBody": "Žádné sledovací skripty třetích stran, žádné fingerprinting, žádné trvalé cookies. Stránka, kterou načtete, je stránka, kterou dostanete.",
+      "cloudflareTitle": "Infrastruktura Cloudflare",
+      "cloudflareBody": "SealDrop běží na Cloudflare Workers, R2 a D1. Cloudflare zpracovává standardní HTTP metadata (IP adresy, časování, hlavičky), ale nikdy nevidí šifrovací klíče ani prostý obsah.",
+      "fullPolicyBtn": "Celé zásady ochrany osobních údajů"
+    }
+  },
+  "privacy": {
+    "eyebrow": "Zásady ochrany osobních údajů",
+    "heading": "Co sbíráme a proč.",
+    "whatStored": {
+      "title": "Co tato služba ukládá",
+      "body": "SealDrop ukládá zašifrované soubory, zašifrované názvy souborů a MIME typy, přibližné velikosti souborů, časová razítka vypršení a náhodně vygenerovaná ID souborů a přijímacích míst. Nic z toho není spojeno s vaší identitou."
+    },
+    "whatNotStored": {
+      "title": "Co tato služba neukládá",
+      "items": [
+        "Vaše jméno, e-mailovou adresu ani žádný osobní identifikátor",
+        "Obsah souboru nebo názvy souborů v nešifrované podobě",
+        "Šifrovací klíče ani soukromé klíče",
+        "Fragmenty URL (prohlížeče je nikdy nepřenášejí na servery)",
+        "IP adresy nad rámec toho, co Cloudflare uchovává ve standardních přístupových protokolech"
+      ]
+    },
+    "retention": {
+      "title": "Uchovávání dat",
+      "body": "Soubory jsou automaticky smazány po splnění podmínky vypršení: první stažení, časový limit nebo uzavření přijímacího místa. Neplatí žádná manuální doba uchovávání. Zálohy obsahu souborů se neprovádějí."
+    },
+    "thirdParty": {
+      "title": "Služby třetích stran",
+      "bodyBefore": "SealDrop běží na infrastruktuře Cloudflare: Workers, objektové úložiště R2, databáze D1 a Pages. Cloudflare zpracovává standardní HTTP metadata požadavků (IP adresy, časy požadavků, hlavičky) při směrování a obsluze požadavků. Cloudflare nemá přístup k šifrovacím klíčům ani prostému obsahu. Podrobnosti o tom, co uchovávají, naleznete v ",
+      "bodyAfter": ".",
+      "cfLinkText": "Zásadách ochrany osobních údajů Cloudflare"
+    },
+    "cookies": {
+      "title": "Cookies a sledování",
+      "body": "Nejsou nastaveny žádné sledovací cookies. Nenačítají se žádné analytické skripty ani reklamní skripty třetích stran. Neprovádí se žádné fingerprinting. Jediné úložiště prohlížeče, které se používá, je dočasný stav klíčů v paměti během aktivní šifrovací nebo dešifrovací relace."
+    },
+    "rights": {
+      "title": "Vaše práva",
+      "body": "Protože SealDrop neukládá osobní údaje spojené s vaší identitou, obvykle neexistuje nic, k čemu by bylo možné přistupovat, opravovat nebo mazat. Pokud se domníváte, že uchováváme osobní údaje, podle nichž vás lze identifikovat, kontaktujte nás a budeme to prošetřovat."
+    },
+    "changes": {
+      "title": "Změny těchto zásad",
+      "body": "Pokud se tyto zásady podstatně změní, tuto stránku aktualizujeme. Nemůžeme vás informovat e-mailem, protože vaši e-mailovou adresu nemáme."
+    },
+    "contact": {
+      "title": "Kontakt",
+      "bodyBefore": "Pro otázky o ochraně osobních údajů nebo nahlášení obav napište na ",
+      "bodyAfter": "."
+    }
+  }
+}

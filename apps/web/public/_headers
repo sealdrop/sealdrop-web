@@ -1,0 +1,54 @@
+# Security headers for Cloudflare Pages
+# More specific rules override /*
+
+/
+  Link: </.well-known/api-catalog>; rel="api-catalog"
+
+/.well-known/api-catalog
+  Content-Type: application/linkset+json
+  Cache-Control: public, max-age=86400, no-transform
+
+/.well-known/agents.json
+  Content-Type: application/json; charset=utf-8
+  Cache-Control: public, max-age=86400, no-transform
+
+/.well-known/agent-skills/index.json
+  Content-Type: application/json; charset=utf-8
+  Cache-Control: public, max-age=86400, no-transform
+
+/.well-known/agent-skills/*/SKILL.md
+  Content-Type: text/markdown; charset=utf-8
+  Cache-Control: public, max-age=86400, no-transform
+
+/build-manifest.json
+  Content-Type: application/json; charset=utf-8
+  Cache-Control: no-store, no-transform
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://challenges.cloudflare.com; script-src-attr 'none'; worker-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' blob: data:; connect-src 'self' https://challenges.cloudflare.com; object-src 'none'; base-uri 'none'; frame-src 'self' https://challenges.cloudflare.com; frame-ancestors 'none'; form-action 'none'; manifest-src 'self'; upgrade-insecure-requests;
+  Cache-Control: no-store, no-transform
+
+# Long cache for content-hashed assets
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable, no-transform
+
+# Self-hosted fonts — versioned by filename, long cache
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable, no-transform
+
+# Don't index sensitive routing pages
+/s/*
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/r/*
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/open
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/open/*
+  X-Robots-Tag: noindex, nofollow, noarchive

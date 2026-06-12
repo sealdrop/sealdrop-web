@@ -1,0 +1,92 @@
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { MotionIconStack } from "../components/MotionIconStack.js";
+import { InstallHint } from "../components/InstallHint.js";
+import { HandoffQrScanner } from "../components/HandoffQrScanner.js";
+import { parseHandoffCode, decryptHandoffUrl } from "@sealdrop/crypto";
+import { getOpenLink, consumeOpenLink, ApiError } from "../lib/api.js";
+
+type Step = "idle" | "opening" | "error";
+
+export function OpenPage() {
+  const { t } = useTranslation();
+  const [code, setCode] = useState("");
+  const [step, setStep] = useState<Step>("idle");
+
+  async function handleOpen() {
+    const parsed = parseHandoffCode(code);
+    if (!parsed) {
+      setStep("error");
+      return;
+    }
+    setStep("opening");
+    try {
+      const payload = await getOpenLink(parsed.handoffId);
+      const fullUrl = await decryptHandoffUrl(parsed.secret, {
+        encryptedPayload: payload.encrypted_payload,
+        payloadIv: payload.payload_iv,
+        kdfSalt: payload.kdf_salt,
+        kdfIterations: payload.kdf_iterations,
+      });
+      consumeOpenLink(parsed.handoffId).catch(() => {});
+      window.location.href = fullUrl;
+    } catch (err) {
+      if (!(err instanceof ApiError) || err.status !== 404) {
+        console.error("open handoff failed:", err);
+      }
+      setStep("error");
+    }
+  }
+
+  return (
+    <div className="page">
+      <div className="card stack">
+        <MotionIconStack variant="open" />
+        <div className="nav">
+          <a className="back" href="/">{t("common.back")}</a>
+        </div>
+
+        <div style={{ textAlign: "center" }}>
+          <h1 className="title">{t("open.title")}</h1>
+          <p className="subtitle">{t("open.subtitle")}</p>
+        </div>
+        <InstallHint />
+
+        <div className="stack-sm">
+          <input
+            className="input"
+            type="text"
+            placeholder={t("open.placeholder")}
+            value={code}
+            onChange={(e) => { setCode(e.target.value); setStep("idle"); }}
+            onKeyDown={(e) => { if (e.key === "Enter") void handleOpen(); }}
+            autoComplete="off"
+            autoFocus
+            spellCheck={false}
+          />
+          {step === "error" && (
+            <p className="hint motion-reveal" style={{ color: "var(--color-error)" }}>
+              {t("open.error")}
+            </p>
+          )}
+        </div>
+
+        <HandoffQrScanner onCode={(scannedCode) => { setCode(scannedCode); setStep("idle"); }} />
+
+        <button
+          className={`btn btn-primary${step === "opening" ? " motion-pop" : ""}`}
+          disabled={step === "opening" || code.trim().length === 0}
+          onClick={() => void handleOpen()}
+        >
+          {step === "opening" ? t("open.opening") : t("open.openBtn")}
+        </button>
+
+        <p className="safety-label">
+          {t("open.safety").split("\n").map((line, i) => (
+            <span key={i}>{line}{i === 0 ? <br /> : null}</span>
+          ))}
+        </p>
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,655 @@
+{
+  "common": {
+    "back": "← Back",
+    "goToSealDrop": "Go to SealDrop",
+    "openOnDevice": {
+      "title": "Open on another device",
+      "sendHint": "Need to open this on a computer? Create a short code instead of copying the long link.",
+      "fileHint": "Want to download this on your computer instead?",
+      "createCode": "Create open code",
+      "creating": "Creating…",
+      "error": "Could not create open code. Try again.",
+      "step1": "Go to",
+      "step1Computer": "Go to",
+      "onYourComputer": "on your computer",
+      "step2": "Enter this code:",
+      "expiryDuration": "10 minutes",
+      "expires": "Expires in 10 minutes.",
+      "copyInstructions": "Copy instructions",
+      "instructionsText": "I sent you a file with SealDrop.\n\nTo open it on your computer:\n1. Go to https://sealdrop.io/open\n2. Enter this code: {{code}}\n\nThis code expires in {{expiry}}.",
+      "securityNote": "This code opens the same file link. Share it only with the intended recipient."
+    },
+    "largeDownloadWarning": "Large file: this browser will hold the whole download in memory before saving. For the best experience, use Chrome or Edge."
+  },
+  "copyBtn": {
+    "copy": "Copy",
+    "copied": "Copied!"
+  },
+  "shareBtn": {
+    "share": "Share",
+    "shared": "Shared"
+  },
+  "installHint": {
+    "title": "Use SealDrop like an app",
+    "ios": "On iPhone or iPad, tap Share, then Add to Home Screen.",
+    "android": "On Android, use your browser menu and choose Install app or Add to Home screen."
+  },
+  "qr": {
+    "show": "Show QR code",
+    "hide": "Hide QR code"
+  },
+  "filePicker": {
+    "tapToChoose": "Tap to choose a file",
+    "hint": "or drag and drop · up to 50 GB",
+    "tapToChange": "tap to change",
+    "tooLarge": "File is too large. Maximum size is {{size}}.",
+    "ariaChoose": "Choose a file to upload",
+    "ariaSelected": "Selected file {{name}}. Press Enter to choose a different file."
+  },
+  "expiry": {
+    "label": "Expires",
+    "send": {
+      "openOnce": "Open once (default)",
+      "1h": "1 hour",
+      "today": "Today",
+      "3d": "3 days",
+      "7d": "7 days"
+    },
+    "receive": {
+      "oneFile": "Accept one file, expires today (default)",
+      "1h": "Accept files for 1 hour",
+      "today": "Accept files until today",
+      "3files": "Accept up to 3 files",
+      "7d": "Accept files for 7 days"
+    }
+  },
+  "send": {
+    "title": "Send a file",
+    "subtitle": "Sealed in your browser before upload.",
+    "notePlaceholder": "Add a note (optional) — encrypted end-to-end",
+    "sizePrivacy": "Size privacy",
+    "padding": {
+      "standard": "Standard",
+      "enhanced": "Enhanced",
+      "maximum": "Maximum",
+      "descStandard": "Pads last block to 4 KB boundary",
+      "descEnhanced": "Rounds upload to next 1 MB",
+      "descMaximum": "Rounds upload to nearest 10/50/100/500 MB or 1 GB bucket",
+      "descFile": "~{{size}} sent"
+    },
+    "passphrase": {
+      "label": "Protect with a passphrase",
+      "placeholder": "Enter a passphrase (min. 8 characters)",
+      "tooShort": "Passphrase must be at least 8 characters."
+    },
+    "accessCode": {
+      "label": "Require access code",
+      "hint": "A short code will be generated and shown after upload. Send it separately from the link."
+    },
+    "deleteLink": "Generate a separate delete link",
+    "sealBtn": "Seal and share",
+    "sealing": "Sealing file in your browser…",
+    "uploading": "Uploading sealed file… {{pct}}%",
+    "shared": {
+      "title": "Shared to SealDrop",
+      "loaded": "Your shared file is ready. Review the options, then seal it.",
+      "textOnly": "Shared text was added as an encrypted note. Choose a file to continue.",
+      "empty": "Nothing was received from the share sheet. Choose a file to continue.",
+      "tooLarge": "The shared file is too large. Choose a smaller file to continue."
+    },
+    "safety": "Your file is encrypted before it leaves your device.\nThe server only stores the sealed version.",
+    "done": {
+      "title": "File sealed",
+      "shareLink": "Share link",
+      "shareLinkWarning": "This link contains key material. Anyone with it may be able to open the file unless an access code or passphrase is also required.",
+      "accessCode": "Access code",
+      "accessCodeHint": "Send the access code separately from the link — both are needed to open the file.",
+      "accessCodeWarning": "Treat this code like a secret. Send it through a different channel than the link.",
+      "deleteLink": "Delete link (keep private)",
+      "deleteLinkWarning": "This link can permanently delete the encrypted file. Keep it private.",
+      "safetyBase": "Locked in your browser · Deleted after expiry",
+      "safetyCode": "Both the link and the access code are required to open this file",
+      "safetyPassphrase": "A passphrase is required to open this file",
+      "safetyDefault": "Anyone with the full link can open the file"
+    }
+  },
+  "sendFile": {
+    "loading": "Opening sealed file…",
+    "passphrase": {
+      "title": "Passphrase required",
+      "subtitle": "This file is protected with a passphrase.",
+      "placeholder": "Enter passphrase",
+      "error": "Wrong passphrase. Please try again.",
+      "unlock": "Unlock"
+    },
+    "accessCode": {
+      "title": "Access code required",
+      "subtitle": "This file is protected. Enter the access code to open it.",
+      "placeholder": "e.g. K7M9-R2QX",
+      "error": "Wrong access code. Please try again.",
+      "safety": "The access code is used in your browser to unlock the file key.\nIt is never sent to SealDrop."
+    },
+    "openOnce": {
+      "title": "Open once",
+      "subtitle": "This file can only be opened once. Opening it now will make it permanently unavailable.",
+      "senderNote": "Sender's note:",
+      "btn": "Open and download",
+      "safety": "Once opened, this file cannot be retrieved again."
+    },
+    "error": {
+      "title": "File unavailable",
+      "missingKey": "This link appears to be incomplete. The decryption key is missing from the URL.",
+      "generic": "Something went wrong. Please check the link and try again.",
+      "expired": "This file is no longer available. It may have expired or already been opened.",
+      "expiredOpen": "This file is no longer available. It was already opened or has expired.",
+      "downloadFailed": "Failed to open the file. Please try again."
+    },
+    "ready": {
+      "title": "Sealed file",
+      "subtitle": "Someone sent you a sealed file.",
+      "openBtn": "Open file",
+      "downloading": "Downloading and unlocking… {{pct}}%",
+      "safety": "This file is sealed before upload and unlocked only in your browser.\nThe server never sees its contents."
+    },
+    "done": {
+      "title": "File opened",
+      "subtitle": "Your download should have started.",
+      "safety": "This file was sealed before upload and decrypted only in your browser."
+    }
+  },
+  "receive": {
+    "title": "Receive a file",
+    "subtitle": "Create a private drop link. Only you can unlock what arrives.",
+    "creating": "Creating your drop…",
+    "createBtn": "Create drop link",
+    "safety": "Your private key is generated in your browser and never sent to the server.",
+    "errorServer": "Server error. Please try again.",
+    "errorGeneric": "Something went wrong.",
+    "done": {
+      "title": "Drop link ready",
+      "subtitle": "Share the drop link. Keep the owner link private.",
+      "dropLabel": "Drop link — safe to share",
+      "warning": "⚠️ Keep this private. The owner link is the only way to unlock files sent to you. Save it somewhere safe — it cannot be recovered.",
+      "ownerLabel": "Owner link — private",
+      "ownerLinkWarning": "This link contains your private key. Anyone with it can unlock files sent to this drop.",
+      "safety": "Files dropped here are sealed before upload.\nOnly your owner link can unlock them."
+    }
+  },
+  "drop": {
+    "loading": "Loading drop…",
+    "closed": {
+      "title": "Drop closed",
+      "subtitle": "This drop is no longer accepting files."
+    },
+    "done": {
+      "title": "File sealed and dropped",
+      "subtitle": "The recipient will be able to unlock it from their owner link."
+    },
+    "ready": {
+      "title": "Someone requested a sealed file",
+      "sealBtn": "Seal and drop",
+      "sealing": "Sealing file in your browser…",
+      "uploading": "Uploading sealed file… {{pct}}%",
+      "safety": "Your file is sealed in your browser before upload.\nOnly the recipient can unlock it."
+    },
+    "errorLoad": "Failed to load drop. Please check the link.",
+    "uploadFailed": "Upload failed. Please try again."
+  },
+  "owner": {
+    "loading": "Loading your drop…",
+    "error": {
+      "title": "Owner view",
+      "missingKey": "This link appears to be incomplete. The private key is missing from the URL.",
+      "expired": "This drop is no longer available.",
+      "loadFailed": "Failed to load files. Please try again."
+    },
+    "title": "Your sealed files",
+    "subtitle": "Files are unlocked in your browser using your private key.",
+    "empty": "No files have been dropped yet.\nKeep this page or your owner link.",
+    "sealedFile": "Sealed file {{n}}",
+    "fileUnavailable": "File no longer available.",
+    "unlockFailed": "Failed to unlock. The link or file may be corrupted.",
+    "saved": "Saved",
+    "unlock": "Unlock",
+    "safety": "Files are decrypted only in your browser.\nYour private key never leaves this device."
+  },
+  "open": {
+    "title": "Open a SealDrop link",
+    "subtitle": "Enter the code you received.",
+    "placeholder": "e.g. A7KP2M 482 913 774",
+    "error": "This code is invalid or expired.",
+    "opening": "Opening…",
+    "openBtn": "Open file",
+    "scanBtn": "Scan QR code",
+    "scanStarting": "Starting camera…",
+    "scanStop": "Stop scan",
+    "scanError": "Could not scan. Enter the code manually instead.",
+    "safety": "The code is only used to retrieve an encrypted link.\nYour file is decrypted in your browser."
+  },
+  "landing": {
+    "nav": {
+      "howItWorks": "How it works",
+      "security": "Security",
+      "createDropLink": "Create a drop link",
+      "sendFile": "Send a file"
+    },
+    "footer": {
+      "tagline": "Temporary encrypted file exchange. No account. Gone after use.",
+      "howItWorks": "How it works",
+      "security": "Security",
+      "privacy": "Privacy",
+      "terms": "Terms",
+      "abuseAndLegal": "Abuse & legal",
+      "source": "Source code"
+    },
+    "preview": {
+      "ariaLabel": "SealDrop upload flow preview",
+      "eyebrow": "Send flow",
+      "heading": "Seal a file",
+      "badge": "Open once",
+      "dropFile": "Drop file here",
+      "orChoose": "or choose from your device",
+      "fileName": "contract.pdf",
+      "fileSize": "2.4 MB · encrypted before upload",
+      "expires": "Expires",
+      "afterFirstDownload": "After first download",
+      "copyLink": "Copy link",
+      "linkPlaceholder": "https://sealdrop.io/s/..."
+    },
+    "hero": {
+      "kicker": "Temporary encrypted exchange",
+      "heading": "Send a private file link that disappears.",
+      "body": "SealDrop encrypts files in your browser, gives you a link to share, and deletes the file after use or expiration. No account. No storage folder to manage.",
+      "sendBtn": "Send a file",
+      "dropBtn": "Create a drop link",
+      "badgeNoAccount": "No account",
+      "badgeEncrypted": "Encrypted before upload",
+      "badgeDeleted": "Automatically deleted"
+    },
+    "howItWorks": {
+      "eyebrow": "How it works",
+      "heading": "Three steps. No account.",
+      "step1Title": "Upload file",
+      "step1Body": "Choose a file and an expiration rule. The default is open once.",
+      "step2Title": "Share secure link",
+      "step2Body": "SealDrop creates a link containing the decryption key in the URL fragment.",
+      "step3Title": "It disappears",
+      "step3Body": "The server removes the encrypted file after download limits or expiry are reached.",
+      "fullWalkthrough": "Full walkthrough"
+    },
+    "features": {
+      "eyebrow": "Benefits",
+      "heading": "Built for files that should not linger.",
+      "f1Title": "Client-side encryption",
+      "f1Body": "Files and filenames are encrypted in the browser before upload.",
+      "f2Title": "No account required",
+      "f2Body": "Every exchange works through links. There are no users, passwords, or profiles.",
+      "f3Title": "Temporary by design",
+      "f3Body": "Use open-once, short expiry windows, and optional delete links.",
+      "f4Title": "Simple link exchange",
+      "f4Body": "Send a file directly or create a drop link so someone can send one to you.",
+      "f5Title": "Privacy-first metadata",
+      "f5Body": "The server stores ciphertext and rounded size information, not plaintext content.",
+      "f6Title": "Developer-friendly",
+      "f6Body": "Open source, self-hostable, and built on standard browser crypto."
+    },
+    "security": {
+      "eyebrow": "Security model",
+      "heading": "The server should never need to read your file.",
+      "body1": "SealDrop uses the Web Crypto API to encrypt files before upload. The server stores encrypted blobs. Decryption keys live in URL fragments, which browsers do not send over HTTP.",
+      "body2": "This does not make every risk disappear. File size and upload timing are visible, link access matters, and high-assurance users should review the source and served JavaScript.",
+      "fullModel": "Full security model"
+    },
+    "verify": {
+      "eyebrow": "Verify it yourself",
+      "heading": "Don't take our word for it.",
+      "body": "SealDrop publishes everything needed to check that the deployed client matches what's documented here.",
+      "linkSecurity": "Full security model",
+      "linkBuild": "Build & checksum verification",
+      "linkSecurityTxt": "Vulnerability disclosure (security.txt)",
+      "linkPrivacy": "Privacy policy",
+      "linkSource": "Frontend source code"
+    },
+    "cta": {
+      "eyebrow": "Ready",
+      "heading": "Seal one file. Share one link. Move on.",
+      "sendBtn": "Send a file",
+      "dropBtn": "Create a drop link"
+    }
+  },
+  "howItWorks": {
+    "eyebrow": "How it works",
+    "heading": "Step by step.",
+    "tabSend": "Send a file",
+    "tabReceive": "Receive mode",
+    "send": {
+      "s1Title": "Pick a file",
+      "s1Body": "Select a file from your device. It loads into browser memory only. Nothing leaves your machine yet.",
+      "s2Title": "Your browser generates a one-time key",
+      "s2Body": "A cryptographically random 256-bit key is created locally using the Web Crypto API. It never touches a server.",
+      "s3Title": "Encryption happens in your browser",
+      "s3Body": "The file contents and filename are encrypted with AES-GCM before any network request is made. Nothing leaves unencrypted.",
+      "s4Title": "Only ciphertext uploads",
+      "s4Body": "The encrypted blob and encrypted metadata are sent to the server. The server stores bytes it cannot read.",
+      "s5Title": "You get a share link",
+      "s5Body": "The decryption key lives in the URL fragment (the part after the #). Browsers never include fragments in HTTP requests, so the server never sees the key.",
+      "s6Title": "The recipient decrypts locally",
+      "s6Body": "When someone opens the link, their browser reads the key from the fragment and decrypts the file on their device. Nothing is sent to the server during this step.",
+      "s7Title": "The file disappears",
+      "s7Body": "After the first download, or when the time limit is reached, the server permanently deletes the encrypted blob and its metadata record."
+    },
+    "receive": {
+      "s1Title": "Create a drop link",
+      "s1Body": "Your browser generates an ECDH P-256 key pair. The public key is sent to the server; the private key stays in your browser and appears only in your owner link.",
+      "s2Title": "Your private key stays with you",
+      "s2Body": "The private key appears only in your owner link's URL fragment. The server has no copy. Losing the owner link means losing the ability to decrypt received files.",
+      "s3Title": "Share the drop link",
+      "s3Body": "The plain drop link contains only a random ID, with no keys in it. Anyone with this link can upload an encrypted file to you.",
+      "s4Title": "Uploaders encrypt to your public key",
+      "s4Body": "Each uploader's browser fetches your public key, generates a random per-file AES key, and encrypts the file with it.",
+      "s5Title": "The file key is wrapped to your public key",
+      "s5Body": "The AES file key is encrypted to you using ECDH key agreement, HKDF key derivation, and AES-KW wrapping. Only your private key can unwrap it.",
+      "s6Title": "The server stores only ciphertext",
+      "s6Body": "The server holds the encrypted file and the wrapped key. Without your private key, neither is readable, not even by the server.",
+      "s7Title": "You decrypt with the owner link",
+      "s7Body": "Opening your owner link lets the browser extract your private key from the fragment, unwrap the file key, and decrypt the file locally."
+    },
+    "expiry": {
+      "eyebrow": "Expiry and deletion",
+      "heading": "Files that can't linger.",
+      "sendTitle": "Send expiry options",
+      "sendBody": "Open once (default), 1 hour, 1 day, or 7 days. The file is deleted as soon as the first condition is met.",
+      "receiveTitle": "Receive drop limits",
+      "receiveBody": "Accept 1 file (default) or up to 3 files. Drops expire today or in 7 days, whichever comes first.",
+      "deletionTitle": "What deletion means",
+      "deletionBody": "The encrypted blob is removed from storage and the database record is permanently erased. No backup, no recovery, no trace."
+    },
+    "securityLink": "Read the security model"
+  },
+  "terms": {
+    "eyebrow": "Terms of service",
+    "title": "Simple terms for a simple service.",
+    "usingService": {
+      "heading": "Using this service",
+      "body": "SealDrop is provided free of charge and without warranty. By using it you agree to these terms. If you do not agree, do not use the service."
+    },
+    "acceptableUse": {
+      "heading": "Acceptable use",
+      "intro": "You may not use SealDrop to upload, share, or distribute:",
+      "item1": "Content that is illegal in your jurisdiction or the jurisdiction where this service operates",
+      "item2": "Content that infringes the intellectual property rights of others",
+      "item3": "Malware, exploits, or tools designed to harm systems or people",
+      "item4": "Content that constitutes abuse, harassment, or threats toward any person"
+    },
+    "contentEncryption": {
+      "heading": "Content and encryption",
+      "body": "Files uploaded to SealDrop are end-to-end encrypted. We cannot inspect their contents. This is fundamental to the service's privacy guarantees, and it means you are solely responsible for the files you upload and share."
+    },
+    "noWarranty": {
+      "heading": "No warranty",
+      "body": "The service is provided \"as is,\" without warranty of any kind. We do not guarantee availability, durability, or delivery. Files may be deleted earlier than their stated expiry if the service experiences technical issues. Do not use SealDrop as the sole copy of important data."
+    },
+    "takedowns": {
+      "heading": "Takedowns and abuse",
+      "body1": "We reserve the right to delete files by ID in response to credible abuse reports or legal requirements, without confirming or disclosing the content of any file. Because files are end-to-end encrypted we cannot inspect their contents, but we can delete them by ID.",
+      "body2Before": "To report abuse or send a legal request, see the ",
+      "body2Link": "abuse & legal page",
+      "body2After": " for what we can do and how to contact us."
+    },
+    "liability": {
+      "heading": "Limitation of liability",
+      "body": "To the maximum extent permitted by applicable law, we are not liable for any loss of data, failure to deliver files, or any other damages arising from your use of this service."
+    },
+    "changes": {
+      "heading": "Changes to these terms",
+      "body": "These terms may be updated at any time. Continued use of the service after changes constitutes acceptance of the revised terms."
+    }
+  },
+  "abuse": {
+    "eyebrow": "Abuse & legal",
+    "title": "How we handle abuse and legal requests.",
+    "whatWeCan": {
+      "heading": "What we can do",
+      "intro": "Upon receiving a credible abuse report or a valid legal request, we can:",
+      "item1": "Delete a file or drop by its random ID",
+      "item2": "Prevent new uploads to a specific drop link",
+      "response": "We aim to act on credible reports within 48 hours of receipt."
+    },
+    "whatWeCannot": {
+      "heading": "What we cannot do",
+      "intro": "SealDrop is end-to-end encrypted. This is not a legal claim — it is a technical fact. Before a file leaves a sender's device, it is encrypted with a key that only the recipient holds. The key is never transmitted to our servers. This means:",
+      "item1": "We cannot inspect the contents of any file",
+      "item2": "We cannot decrypt files on request",
+      "item3": "We cannot identify who uploaded a file or who holds a share link",
+      "item4": "We cannot confirm or deny whether a specific file ID contains certain content",
+      "note": "Deleting a file by ID removes the encrypted blob and its database record. If the recipient has already downloaded the file, deletion has no effect on their copy."
+    },
+    "whatToInclude": {
+      "heading": "What to include in a report",
+      "intro": "To allow us to act quickly, include:",
+      "item1": "The full URL of the file or drop link being reported (the random ID is all we need — do not include any URL fragment, as that is the private decryption key)",
+      "item2": "A brief description of the concern",
+      "item3": "For legal requests: the applicable law or order and jurisdiction"
+    },
+    "contact": {
+      "heading": "How to contact us",
+      "body1Before": "Send reports and legal requests by email to: ",
+      "body2": "We do not maintain a bug bounty programme, but responsible disclosure of security vulnerabilities is welcome at the same address."
+    },
+    "transparency": {
+      "heading": "Transparency",
+      "body1": "We believe in being honest about our capabilities. Requests that ask us to do something technically impossible — such as decrypting a file or identifying a user — will receive an honest response explaining why we cannot comply. This is not a legal or policy position: it is a consequence of how the encryption works.",
+      "body2Before": "For the full technical model, see the ",
+      "body2Link": "security page",
+      "body2After": "."
+    },
+    "acceptableUse": {
+      "heading": "Acceptable use",
+      "bodyBefore": "Using SealDrop to share illegal content, malware, or content that abuses or harasses others violates our ",
+      "bodyLink": "terms of service",
+      "bodyAfter": ". We will act on credible reports within our technical capabilities."
+    }
+  },
+  "deleteFile": {
+    "done": {
+      "title": "File deleted",
+      "subtitle": "The file has been permanently removed from the server."
+    },
+    "error": {
+      "title": "Cannot delete",
+      "missingToken": "This link is incomplete. The delete token is missing from the URL.",
+      "expired": "This file is no longer available. It may have already been deleted or expired.",
+      "failed": "Failed to delete the file. Please try again."
+    },
+    "confirm": {
+      "title": "Delete this file?",
+      "subtitle": "This will permanently remove the file from the server.\nAnyone with the share link will no longer be able to open it.",
+      "deleting": "Deleting…",
+      "deleteBtn": "Delete file"
+    }
+  },
+  "securityPage": {
+    "hero": {
+      "eyebrow": "Security model",
+      "heading": "The server should never read your file."
+    },
+    "cards": {
+      "encryptedEyebrow": "Encrypted before upload",
+      "encryptedBody": "AES-GCM 256-bit in your browser, before a single byte leaves your device. The server receives only ciphertext.",
+      "cannotReadEyebrow": "We cannot read it",
+      "cannotReadBody": "No keys, no filenames, no plaintext ever reach our servers. Even a full database leak reveals nothing readable.",
+      "linkIsKeyEyebrow": "The link is the key",
+      "linkIsKeyBody": "Whoever holds the share link can decrypt the file. Treat it like a password and send it via an encrypted channel."
+    },
+    "storage": {
+      "eyebrow": "Data storage",
+      "heading": "What lives on the server.",
+      "colStored": "Stored",
+      "colNeverStored": "Never stored",
+      "stored": [
+        "Encrypted file blob",
+        "Encrypted filename and MIME type",
+        "Approximate file size (padded to a privacy bucket)",
+        "Expiry timestamp",
+        "Random file and drop IDs",
+        "IVs required for decryption"
+      ],
+      "notStored": [
+        "Plaintext file content",
+        "Plaintext filename or MIME type",
+        "Encryption keys",
+        "Private keys",
+        "URL fragments",
+        "Exact file size or chunk count",
+        "Any identifier linking you to a file"
+      ]
+    },
+    "primitives": {
+      "eyebrow": "Cryptographic primitives",
+      "heading": "What encrypts your file.",
+      "aesTitle": "AES-GCM 256-bit",
+      "aesBody": "Every file is locked with a 256-bit key and a 96-bit IV, both generated fresh per file. AES-GCM provides confidentiality and integrity: any tampering breaks decryption.",
+      "ecdhTitle": "ECDH P-256 (receive mode)",
+      "ecdhBody": "In receive mode, the uploader and owner agree on a shared secret using elliptic-curve Diffie–Hellman without exchanging private keys. The result is processed via HKDF and used for AES-KW key wrapping.",
+      "webCryptoTitle": "Web Crypto API only",
+      "webCryptoBody": "All operations run in the browser's built-in, OS-sandboxed crypto engine. No third-party libraries, no CDN-loaded code. The implementation ships with your browser and is independently audited."
+    },
+    "sizePrivacy": {
+      "eyebrow": "Size privacy",
+      "heading": "Control what your upload size reveals.",
+      "standardTitle": "Standard",
+      "standardBody": "The last chunk of the file is padded to a 4 KB boundary. Upload size closely matches the real file size.",
+      "enhancedTitle": "Enhanced",
+      "enhancedBody": "The entire upload is padded to the next 1 MB boundary. An observer cannot distinguish files within the same megabyte.",
+      "maximumTitle": "Maximum",
+      "maximumBody": "The upload is padded to the nearest bucket: 10 MB, 50 MB, 100 MB, 500 MB, or 1 GB. Random data fills the gap so all files in a bucket look identical on the wire.",
+      "note": "All padding uses cryptographically random fill. The real file size is stored only inside the encrypted metadata, which the server cannot read."
+    },
+    "buildIdentity": {
+      "eyebrow": "Build identity",
+      "heading": "Verify what you're running.",
+      "intro": "The client that handles encryption is identified by its build commit.",
+      "thisBuildLabel": "This build.",
+      "commit": "Commit",
+      "builtAt": "built",
+      "checksumsLabel": "Checksums.",
+      "checksumsBefore": "SHA-256 hashes of the deployed client bundles are published at ",
+      "checksumsMiddle": " after each build. Download it and run ",
+      "checksumsAfter": " against your local copy of the bundle to confirm the files match.",
+      "manifestLabel": "Signed build manifest.",
+      "manifestBefore": "Each build also publishes a signed manifest at ",
+      "manifestMiddle": " containing the commit, build time, and per-asset SHA-256 hashes, signed with an ECDSA key whose public half is published at ",
+      "manifestAfter": ". Verifying the signature confirms the manifest was produced by the real build pipeline and not altered in transit.",
+      "verifyLabel": "How to verify.",
+      "verifyBody": "Open /checksums.txt, confirm the commit matches the build shown here, download the listed JavaScript and CSS assets, then compare their SHA-256 hashes. A mismatch means the deployed client is not the build described by this page.",
+      "sourceLabel": "Source.",
+      "sourceBefore": "The frontend client and browser crypto code are published at ",
+      "sourceAfter": ". This repository is updated periodically rather than mirrored automatically, so the commit referenced in the signed build manifest may not match a commit in this repository — to verify a production build, compare the code itself rather than commit hashes.",
+      "safeBrowsingLabel": "External check.",
+      "safeBrowsingBefore": "You can also check sealdrop.io's reputation in ",
+      "safeBrowsingAfter": ", an independent transparency report on known unsafe sites.",
+      "safeUseLabel": "Safe-use guidance.",
+      "safeUseBody": "For highly sensitive files, use a trusted device and a browser profile with extensions disabled. SealDrop cannot protect against malware, a compromised OS, or a malicious browser extension."
+    },
+    "threatModel": {
+      "eyebrow": "Threat model",
+      "heading": "What this protects against.",
+      "protectsTitle": "Protects against",
+      "doesNotProtectTitle": "Does not protect against",
+      "protects": [
+        "Server compromise or full database dump",
+        "R2 or D1 data leak",
+        "Passive network observer (HTTPS encrypts the transport; the payload is also encrypted)",
+        "Plaintext filename leakage",
+        "File ID enumeration (IDs are cryptographically random)"
+      ],
+      "doesNotProtect": [
+        "Someone who holds the share link; that person is the intended recipient",
+        "A compromised browser or malicious extension",
+        "Traffic analysis: upload timing and transfer size are observable. Enhanced and Maximum privacy modes coarsen sizes to 1 MB or fixed buckets.",
+        "Legal takedown requests; we can delete encrypted blobs when required",
+        "Cloudflare infrastructure access; they run the compute and storage layer"
+      ]
+    },
+    "protectedLinks": {
+      "eyebrow": "Protected links",
+      "heading": "Require an access code.",
+      "intro": "An optional second factor for the link itself.",
+      "howItWorksLabel": "How it works.",
+      "howItWorksBody": "When you enable \"Require access code\", your browser generates a short human-readable code and uses it to lock the file key. Only someone with both the share link and the correct access code can decrypt the file.",
+      "sendSeparatelyLabel": "Send them separately.",
+      "sendSeparatelyBody": "The access code is shown to you after upload. Send it via a different channel than the link — for example, share the link in email and the code in a text message.",
+      "neverLeavesLabel": "The code never leaves your browser.",
+      "neverLeavesBody": "The access code is used locally to derive a wrapping key via PBKDF2-SHA256. Only the wrapped key material is stored. SealDrop never sees the code.",
+      "limitsLabel": "Limits.",
+      "limitsBody": "This helps if a link is exposed in email history, Slack, or a link preview. It does not protect against a compromised device or someone who has obtained both the link and the code."
+    },
+    "responsibilities": {
+      "eyebrow": "Your responsibilities",
+      "heading": "Security is shared.",
+      "intro": "SealDrop handles encryption. The rest is up to you.",
+      "shareLinksLabel": "Share links securely.",
+      "shareLinksBody": "Send share links via Signal, iMessage, or another end-to-end encrypted channel. Email, Slack, and plain SMS expose the link, and the link is the key.",
+      "guardOwnerLabel": "Guard your owner link.",
+      "guardOwnerBody": "The owner link in receive mode gives full access to all files in a drop. Never share it. If you suspect it is compromised, close the drop and create a new one.",
+      "deviceMattersLabel": "Your device matters.",
+      "deviceMattersBody": "A compromised operating system or malicious browser extension can read keys in memory before encryption. SealDrop cannot protect against a device you do not control."
+    },
+    "privacy": {
+      "eyebrow": "Privacy",
+      "heading": "Nothing tracked. Nothing retained.",
+      "noAccountsTitle": "No accounts",
+      "noAccountsBody": "No email, no username, no password. Files and drop links are identified only by random IDs.",
+      "noAnalyticsTitle": "No analytics",
+      "noAnalyticsBody": "No third-party tracking scripts, no fingerprinting, no persistent cookies. The page you load is the page you get.",
+      "cloudflareTitle": "Cloudflare infrastructure",
+      "cloudflareBody": "SealDrop runs on Cloudflare Workers, R2, and D1. Cloudflare processes standard HTTP metadata (IP addresses, timing, headers), but never sees encryption keys or plaintext content.",
+      "fullPolicyBtn": "Full privacy policy"
+    }
+  },
+  "privacy": {
+    "eyebrow": "Privacy policy",
+    "heading": "What we collect and why.",
+    "whatStored": {
+      "title": "What this service stores",
+      "body": "SealDrop stores encrypted file blobs, encrypted filenames and MIME types, approximate file sizes, expiry timestamps, and randomly generated file and drop IDs. None of these are linked to your identity."
+    },
+    "whatNotStored": {
+      "title": "What this service does not store",
+      "items": [
+        "Your name, email address, or any personal identifier",
+        "Plaintext file content or filenames",
+        "Encryption keys or private keys",
+        "URL fragments (browsers never transmit these to servers)",
+        "IP addresses beyond what Cloudflare retains in standard access logs"
+      ]
+    },
+    "retention": {
+      "title": "Data retention",
+      "body": "Files are deleted automatically when their expiry condition is met: first download, time limit, or drop closure. No manual retention period applies. No backups of file content are maintained."
+    },
+    "thirdParty": {
+      "title": "Third-party services",
+      "bodyBefore": "SealDrop runs on Cloudflare infrastructure: Workers, R2 object storage, D1 database, and Pages. Cloudflare processes standard HTTP request metadata (IP addresses, request timing, headers) as part of routing and serving requests. Cloudflare does not have access to encryption keys or plaintext content. See the ",
+      "bodyAfter": " for details on what they retain.",
+      "cfLinkText": "Cloudflare Privacy Policy"
+    },
+    "cookies": {
+      "title": "Cookies and tracking",
+      "body": "No tracking cookies are set. No third-party analytics or advertising scripts are loaded. No fingerprinting is performed. The only browser storage used is temporary in-memory key state during an active encryption or decryption session."
+    },
+    "rights": {
+      "title": "Your rights",
+      "body": "Because SealDrop does not store personal data linked to your identity, there is typically nothing to access, correct, or delete on our end. If you believe we hold personal data you can be identified by, contact us and we will investigate."
+    },
+    "changes": {
+      "title": "Changes to this policy",
+      "body": "If this policy changes materially, we will update this page. We cannot notify you by email because we do not have your email address."
+    },
+    "contact": {
+      "title": "Contact",
+      "bodyBefore": "To ask a privacy question or report a concern, email ",
+      "bodyAfter": "."
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "name": "SealDrop",
+  "url": "https://sealdrop.io/",
+  "description": "Browser-based end-to-end encrypted temporary file exchange. Public pages support Markdown via Accept: text/markdown.",
+  "protocols": [
+    {
+      "id": "https",
+      "endpoint": "https://sealdrop.io/",
+      "contentTypes": ["text/html", "text/markdown"]
+    }
+  ],
+  "resources": [
+    {
+      "name": "Home",
+      "url": "https://sealdrop.io/",
+      "accept": ["text/html", "text/markdown"]
+    },
+    {
+      "name": "How it works",
+      "url": "https://sealdrop.io/how-it-works",
+      "accept": ["text/html", "text/markdown"]
+    },
+    {
+      "name": "Security model",
+      "url": "https://sealdrop.io/security",
+      "accept": ["text/html", "text/markdown"]
+    },
+    {
+      "name": "Security policy (security.txt)",
+      "url": "https://sealdrop.io/.well-known/security.txt",
+      "accept": ["text/plain"]
+    },
+    {
+      "name": "Frontend source code",
+      "url": "https://github.com/sealdrop/sealdrop-web",
+      "accept": ["text/html"]
+    },
+    {
+      "name": "Privacy policy",
+      "url": "https://sealdrop.io/privacy",
+      "accept": ["text/html", "text/markdown"]
+    },
+    {
+      "name": "Terms of service",
+      "url": "https://sealdrop.io/terms",
+      "accept": ["text/html", "text/markdown"]
+    },
+    {
+      "name": "Abuse and legal requests",
+      "url": "https://sealdrop.io/abuse",
+      "accept": ["text/html", "text/markdown"]
+    },
+    {
+      "name": "API catalog",
+      "url": "https://sealdrop.io/.well-known/api-catalog",
+      "accept": ["application/linkset+json"]
+    }
+  ],
+  "rpcAgents": []
+}

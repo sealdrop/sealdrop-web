@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+  "skills": [
+    {
+      "name": "sealdrop-secure-file-exchange",
+      "type": "skill-md",
+      "description": "Guide users through using SealDrop safely, including send vs receive mode, expiry choices, access codes, passphrases, size padding, and security limitations.",
+      "url": "/.well-known/agent-skills/sealdrop-secure-file-exchange/SKILL.md",
+      "digest": "sha256:98f785fe0143e1ccf1e49d425c225aa09bf0f2d10afdfd8bea0662af508e0929"
+    }
+  ]
+}
