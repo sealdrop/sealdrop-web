@@ -82,10 +82,7 @@ test.describe("SendPage — Open on another device", () => {
         body: JSON.stringify({ file_id: "e2e-file", expires_at: new Date(Date.now() + 3600_000).toISOString() }),
       }),
     );
-    await page.route("**/api/send/e2e-file/chunks/status", (route) =>
-      route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ uploaded: [] }) }),
-    );
-    await page.route("**/api/send/e2e-file/chunk/0", (route) =>
+    await page.route("**/api/send/e2e-file/part/0", (route) =>
       route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ ok: true }) }),
     );
     await page.route("**/api/send/e2e-file/complete", (route) =>

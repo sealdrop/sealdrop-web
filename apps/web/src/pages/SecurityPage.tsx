@@ -3,12 +3,14 @@ import { useTranslation } from "react-i18next";
 import "../landing.css";
 import { LandingNav } from "../components/LandingNav";
 import { LandingFooter } from "../components/LandingFooter";
+import { usePageTitle } from "../lib/use-page-title.js";
 
 declare const __BUILD_COMMIT__: string;
 declare const __BUILD_TIME__: string;
 
 export function SecurityPage() {
   const { t } = useTranslation();
+  usePageTitle(t("common.pageTitle.security"));
 
   const stored = t("securityPage.storage.stored", { returnObjects: true }) as string[];
   const notStored = t("securityPage.storage.notStored", { returnObjects: true }) as string[];

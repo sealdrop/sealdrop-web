@@ -1,6 +1,8 @@
 import { lazy, Suspense, type ComponentType } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "./components/LanguageSwitcher.js";
+import { ErrorBoundary } from "./components/ErrorBoundary.js";
 import { LandingPage } from "./pages/LandingPage.js";
 
 function lazyNamed<T extends ComponentType>(loader: () => Promise<{ [k: string]: unknown }>, exportName: string) {
@@ -21,31 +23,39 @@ const OwnerPage = lazyNamed(() => import("./pages/OwnerPage.js"), "OwnerPage");
 const OpenPage = lazyNamed(() => import("./pages/OpenPage.js"), "OpenPage");
 
 function PageFallback() {
-  return <div className="page"><div className="card">Loading…</div></div>;
+  const { t } = useTranslation();
+  return <div className="page"><div className="card">{t("common.loading")}</div></div>;
 }
 
+const LANDING_ROUTES = new Set(["/", "/how-it-works", "/security", "/privacy", "/terms", "/abuse"]);
+
 export function App() {
+  const location = useLocation();
+  const showGlobalLang = !LANDING_ROUTES.has(location.pathname);
+
   return (
     <>
-      <LanguageSwitcher />
-      <Suspense fallback={<PageFallback />}>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/how-it-works" element={<HowItWorksPage />} />
-          <Route path="/security" element={<SecurityPage />} />
-          <Route path="/privacy" element={<PrivacyPage />} />
-          <Route path="/terms" element={<TermsPage />} />
-          <Route path="/abuse" element={<AbuseReportPage />} />
-          <Route path="/send" element={<SendPage />} />
-          <Route path="/send/shared" element={<SendPage />} />
-          <Route path="/receive" element={<ReceivePage />} />
-          <Route path="/s/:fileId" element={<SendFilePage />} />
-          <Route path="/s/:fileId/delete" element={<SendFileDeletePage />} />
-          <Route path="/r/:dropId" element={<DropPage />} />
-          <Route path="/r/:dropId/owner" element={<OwnerPage />} />
-          <Route path="/open" element={<OpenPage />} />
-        </Routes>
-      </Suspense>
+      {showGlobalLang && <LanguageSwitcher />}
+      <ErrorBoundary>
+        <Suspense fallback={<PageFallback />}>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/how-it-works" element={<HowItWorksPage />} />
+            <Route path="/security" element={<SecurityPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/abuse" element={<AbuseReportPage />} />
+            <Route path="/send" element={<SendPage />} />
+            <Route path="/send/shared" element={<SendPage />} />
+            <Route path="/receive" element={<ReceivePage />} />
+            <Route path="/s/:fileId" element={<SendFilePage />} />
+            <Route path="/s/:fileId/delete" element={<SendFileDeletePage />} />
+            <Route path="/r/:dropId" element={<DropPage />} />
+            <Route path="/r/:dropId/owner" element={<OwnerPage />} />
+            <Route path="/open" element={<OpenPage />} />
+          </Routes>
+        </Suspense>
+      </ErrorBoundary>
     </>
   );
 }

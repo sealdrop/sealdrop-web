@@ -2,14 +2,17 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { MotionIconStack } from "../components/MotionIconStack.js";
 import { InstallHint } from "../components/InstallHint.js";
+import { MultiLineText } from "../components/MultiLineText.js";
 import { HandoffQrScanner } from "../components/HandoffQrScanner.js";
 import { parseHandoffCode, decryptHandoffUrl } from "@sealdrop/crypto";
 import { getOpenLink, consumeOpenLink, ApiError } from "../lib/api.js";
+import { usePageTitle } from "../lib/use-page-title.js";
 
 type Step = "idle" | "opening" | "error";
 
 export function OpenPage() {
   const { t } = useTranslation();
+  usePageTitle(t("common.pageTitle.open"));
   const [code, setCode] = useState("");
   const [step, setStep] = useState<Step>("idle");
 
@@ -81,11 +84,7 @@ export function OpenPage() {
           {step === "opening" ? t("open.opening") : t("open.openBtn")}
         </button>
 
-        <p className="safety-label">
-          {t("open.safety").split("\n").map((line, i) => (
-            <span key={i}>{line}{i === 0 ? <br /> : null}</span>
-          ))}
-        </p>
+        <MultiLineText text={t("open.safety")} className="safety-label" />
       </div>
     </div>
   );

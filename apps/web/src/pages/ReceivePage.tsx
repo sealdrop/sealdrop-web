@@ -10,13 +10,16 @@ import { QRCode } from "../components/QRCode.js";
 import { TurnstileWidget, turnstileEnabled } from "../components/TurnstileWidget.js";
 import { MotionIconStack } from "../components/MotionIconStack.js";
 import { InstallHint } from "../components/InstallHint.js";
+import { MultiLineText } from "../components/MultiLineText.js";
 import { receiveInit, ApiError } from "../lib/api.js";
+import { usePageTitle } from "../lib/use-page-title.js";
 
 type Step = "idle" | "creating" | "done" | "error";
 
 export function ReceivePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  usePageTitle(t("common.pageTitle.receive"));
   const [expiry, setExpiry] = useState<ReceiveExpiryPreset>(DEFAULT_RECEIVE_EXPIRY);
   const [step, setStep] = useState<Step>("idle");
   const [dropLink, setDropLink] = useState("");
@@ -72,11 +75,7 @@ export function ReceivePage() {
           <LinkBox label={t("receive.done.ownerLabel")} url={ownerLink} warning={t("receive.done.ownerLinkWarning")} />
 
           <hr className="divider" />
-          <p className="safety-label">
-            {t("receive.done.safety").split("\n").map((line, i) => (
-              <span key={i}>{line}{i === 0 ? <br /> : null}</span>
-            ))}
-          </p>
+          <MultiLineText text={t("receive.done.safety")} className="safety-label" />
         </div>
       </div>
     );

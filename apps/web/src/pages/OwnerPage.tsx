@@ -6,15 +6,17 @@ import {
   fragmentToPrivateKey,
   fromBase64Url,
   unwrapFileKey,
-  decryptChunk,
+  decryptStream,
   decryptMetadata,
+  CHUNK_SIZE_BYTES,
 } from "@sealdrop/crypto";
 import type { FileMetadata } from "@sealdrop/crypto";
 import type { ReceivedFileRecord } from "@sealdrop/shared";
-import { getOwnerFiles, getOwnerFileChunk, ApiError } from "../lib/api.js";
-import { formatBytes, downloadStream, needsLargeDownloadWarning } from "../lib/format.js";
+import { getOwnerFiles, getOwnerFileBlob, ApiError } from "../lib/api.js";
+import { formatBytes, computePaddedTotalLength, downloadStream, needsLargeDownloadWarning, prepareStreamingDownload } from "../lib/format.js";
 import { ProgressBar } from "../components/ProgressBar.js";
 import { MotionIconStack } from "../components/MotionIconStack.js";
+import { MultiLineText } from "../components/MultiLineText.js";
 
 interface FileState {
   record: ReceivedFileRecord;
@@ -68,6 +70,8 @@ export function OwnerPage() {
     );
 
     try {
+      const preparedWritable = prepareStreamingDownload(entry.meta?.filename ?? t("owner.sealedFile", { n: index + 1 }));
+      const writable = preparedWritable ? await preparedWritable : undefined;
       const ownerPrivKey = await fragmentToPrivateKey(privateKeyFragment);
       const r = entry.record;
 
@@ -88,37 +92,33 @@ export function OwnerPage() {
 
       const meta = await decryptMetadata(encMeta, fileKey, metaIv);
 
-      const chunkCount = r.chunk_count;
-      let chunkIdx = 0;
+      const chunkCount = meta.chunkCount ?? r.chunk_count;
+      const chunkSizeBytes = meta.chunkSizeBytes ?? CHUNK_SIZE_BYTES;
+      const decryptLength = meta.paddedSizeBytes
+        ?? (meta.padded
+          ? computePaddedTotalLength(meta.sizeBytes, chunkCount, chunkSizeBytes)
+          : meta.sizeBytes);
 
-      const plaintextStream = new ReadableStream<Uint8Array>({
-        async pull(controller) {
-          if (chunkIdx >= chunkCount) {
-            controller.close();
-            return;
-          }
-          const encChunk = await getOwnerFileChunk(dropId, r.received_file_id, chunkIdx);
-          const plain = await decryptChunk(encChunk, fileKey, fileIv, chunkIdx);
-          chunkIdx++;
-          controller.enqueue(new Uint8Array(plain));
-          setFiles((prev) =>
-            prev.map((f, j) => (j === index ? { ...f, progressPct: 10 + Math.round((chunkIdx / chunkCount) * 90) } : f)),
-          );
-        },
-      });
+      const encryptedStream = await getOwnerFileBlob(dropId, r.received_file_id);
+      const plaintextStream = decryptStream(encryptedStream, fileKey, fileIv, decryptLength, (bytesDecrypted) => {
+        setFiles((prev) =>
+          prev.map((f, j) => (
+            j === index
+              ? { ...f, progressPct: 10 + Math.min(Math.round((bytesDecrypted / decryptLength) * 90), 89) }
+              : f
+          )),
+        );
+      }, chunkSizeBytes);
 
       await downloadStream(meta.filename, plaintextStream, {
         maxBytes: meta.sizeBytes,
         totalBytes: meta.sizeBytes,
         mimeType: meta.mimeType,
+        ...(writable ? { preparedWritable: writable } : {}),
       });
 
       setFiles((prev) =>
-        prev.map((f, i) => (i === index ? { ...f, progressPct: 100 } : f)),
-      );
-
-      setFiles((prev) =>
-        prev.map((f, i) => (i === index ? { ...f, meta, unlocking: false, done: true } : f)),
+        prev.map((f, i) => (i === index ? { ...f, progressPct: 100, meta, unlocking: false, done: true } : f)),
       );
     } catch (err) {
       const msg =
@@ -167,11 +167,7 @@ export function OwnerPage() {
         {files.length === 0 ? (
           <div style={{ textAlign: "center", padding: "2rem 0" }}>
             <p style={{ fontSize: "2rem" }}>📭</p>
-            <p className="subtitle" style={{ marginTop: "0.5rem" }}>
-              {t("owner.empty").split("\n").map((line, i) => (
-                <span key={i}>{line}{i === 0 ? <br /> : null}</span>
-              ))}
-            </p>
+            <MultiLineText text={t("owner.empty")} className="subtitle" />
           </div>
         ) : (
           <div className="stack">
@@ -209,11 +205,7 @@ export function OwnerPage() {
           </div>
         )}
 
-        <p className="safety-label">
-          {t("owner.safety").split("\n").map((line, i) => (
-            <span key={i}>{line}{i === 0 ? <br /> : null}</span>
-          ))}
-        </p>
+        <MultiLineText text={t("owner.safety")} className="safety-label" />
       </div>
     </div>
   );

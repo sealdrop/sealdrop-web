@@ -24,10 +24,10 @@ describe("resolveSendExpiry", () => {
     expect(r.expiresAt.getTime()).toBe(now.getTime() + 7 * 24 * 60 * 60 * 1000);
   });
 
-  it("1h → expires in 1 hour, large download count", () => {
+  it("1h → expires in 1 hour, unlimited download count", () => {
     const r = resolveSendExpiry("1h", now);
     expect(r.expiresAt.getTime()).toBe(now.getTime() + 60 * 60 * 1000);
-    expect(r.remainingDownloads).toBeGreaterThan(1);
+    expect(r.remainingDownloads).toBe(-1);
   });
 
   it("today → expires at end of day", () => {

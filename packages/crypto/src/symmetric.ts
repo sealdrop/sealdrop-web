@@ -5,10 +5,14 @@ export interface FileMetadata {
   filename: string;
   mimeType: string;
   sizeBytes: number;
+  storageFormat?: "stream-v1";
+  chunkSizeBytes?: number;
   chunkCount?: number;
   padded?: true;
   paddedSizeBytes?: number;
   note?: string;
+  /** Base64url SHA-256 chained hash (see integrity.ts) of the original file bytes. */
+  sha256?: string;
 }
 
 export async function generateFileKey(): Promise<CryptoKey> {

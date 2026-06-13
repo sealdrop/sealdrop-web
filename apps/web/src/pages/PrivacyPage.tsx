@@ -2,9 +2,11 @@ import { useTranslation } from "react-i18next";
 import "../landing.css";
 import { LandingNav } from "../components/LandingNav";
 import { LandingFooter } from "../components/LandingFooter";
+import { usePageTitle } from "../lib/use-page-title.js";
 
 export function PrivacyPage() {
   const { t } = useTranslation();
+  usePageTitle(t("common.pageTitle.privacy"));
 
   const notStoredItems = t("privacy.whatNotStored.items", { returnObjects: true }) as string[];
 

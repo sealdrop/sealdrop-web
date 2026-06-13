@@ -12,15 +12,7 @@ test.beforeEach(async ({ page }) => {
     });
   });
 
-  await page.route("**/api/send/e2e-file/chunks/status", async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify({ uploaded: [] }),
-    });
-  });
-
-  await page.route("**/api/send/e2e-file/chunk/0", async (route) => {
+  await page.route("**/api/send/e2e-file/part/0", async (route) => {
     expect(route.request().method()).toBe("PUT");
     await route.fulfill({
       status: 200,

@@ -1,9 +1,11 @@
+import { useId } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../landing.css";
 import { LandingNav } from "../components/LandingNav";
 import { LandingFooter } from "../components/LandingFooter";
+import { usePageTitle } from "../lib/use-page-title.js";
 
 type Tab = "send" | "receive";
 
@@ -27,7 +29,11 @@ function StepList({ steps }: { steps: Step[] }) {
 
 export function HowItWorksPage() {
   const { t } = useTranslation();
+  usePageTitle(t("common.pageTitle.howItWorks"));
   const [tab, setTab] = useState<Tab>("send");
+  const tabId = useId();
+  const sendPanelId = `${tabId}-send`;
+  const receivePanelId = `${tabId}-receive`;
 
   const SEND_STEPS: Step[] = [
     { title: t("howItWorks.send.s1Title"), body: t("howItWorks.send.s1Body") },
@@ -61,7 +67,9 @@ export function HowItWorksPage() {
           <div className="l-tab-switcher" role="tablist">
             <button
               role="tab"
+              id={`${tabId}-send-tab`}
               aria-selected={tab === "send"}
+              aria-controls={sendPanelId}
               className={`l-tab${tab === "send" ? " l-tab--active" : ""}`}
               onClick={() => setTab("send")}
             >
@@ -69,14 +77,21 @@ export function HowItWorksPage() {
             </button>
             <button
               role="tab"
+              id={`${tabId}-receive-tab`}
               aria-selected={tab === "receive"}
+              aria-controls={receivePanelId}
               className={`l-tab${tab === "receive" ? " l-tab--active" : ""}`}
               onClick={() => setTab("receive")}
             >
               {t("howItWorks.tabReceive")}
             </button>
           </div>
-          {tab === "send" ? <StepList steps={SEND_STEPS} /> : <StepList steps={RECEIVE_STEPS} />}
+          <div role="tabpanel" id={sendPanelId} aria-labelledby={`${tabId}-send-tab`}>
+            {tab === "send" && <StepList steps={SEND_STEPS} />}
+          </div>
+          <div role="tabpanel" id={receivePanelId} aria-labelledby={`${tabId}-receive-tab`} hidden={tab !== "receive"}>
+            {tab === "receive" && <StepList steps={RECEIVE_STEPS} />}
+          </div>
         </section>
 
         <section className="l-section">

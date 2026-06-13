@@ -16,7 +16,7 @@
     "typescript": "^5.5.0"
   },
   "engines": {
-    "node": ">=20",
-    "pnpm": ">=9"
+    "node": ">=22",
+    "pnpm": ">=11"
   }
 }

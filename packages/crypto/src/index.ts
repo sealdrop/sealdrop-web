@@ -3,6 +3,7 @@ export * from "./symmetric.js";
 export * from "./asymmetric.js";
 export * from "./fragments.js";
 export * from "./streaming.js";
+export * from "./integrity.js";
 export * from "./passphrase.js";
 export * from "./padding.js";
 export * from "./access-code.js";

@@ -5,19 +5,19 @@ import {
   importPublicKey,
   generateFileKey,
   generateIV,
-  encryptChunk,
   encryptMetadata,
   wrapFileKey,
   toBase64Url,
-  padToBlock,
 } from "@sealdrop/crypto";
 import { CHUNK_SIZE_BYTES } from "@sealdrop/shared";
 import { FilePicker } from "../components/FilePicker.js";
 import { ProgressBar } from "../components/ProgressBar.js";
 import { MotionIconStack } from "../components/MotionIconStack.js";
-import { getReceiveSession, receiveFileInit, receiveChunk, receiveComplete, ApiError } from "../lib/api.js";
+import { MultiLineText } from "../components/MultiLineText.js";
+import { getReceiveSession, receiveFileInit, uploadReceivePart, receiveComplete, ApiError } from "../lib/api.js";
 import { formatExpiry } from "../lib/format.js";
 import type { ReceiveSessionResponse } from "@sealdrop/shared";
+import { createEncryptedUploadPartBlob, TRANSPORT_CHUNKS_PER_PART } from "../lib/encrypted-upload-stream.js";
 
 type Step = "loading" | "ready" | "sealing" | "uploading" | "done" | "error" | "closed";
 
@@ -63,7 +63,15 @@ export function DropPage() {
 
       const [encryptedMeta, wrapping] = await Promise.all([
         encryptMetadata(
-          { filename: file.name, mimeType: file.type || "application/octet-stream", sizeBytes: file.size, padded: true, chunkCount },
+          {
+            filename: file.name,
+            mimeType: file.type || "application/octet-stream",
+            sizeBytes: file.size,
+            storageFormat: "stream-v1",
+            chunkSizeBytes: CHUNK_SIZE_BYTES,
+            padded: true,
+            chunkCount,
+          },
           fileKey,
           metaIv,
         ),
@@ -83,14 +91,22 @@ export function DropPage() {
         wrapped_key_iv: wrapping.wrappedKeyIv,
       });
 
-      for (let i = 0; i < chunkCount; i++) {
-        const start = i * CHUNK_SIZE_BYTES;
-        const end = Math.min(start + CHUNK_SIZE_BYTES, file.size);
-        let chunkData = await file.slice(start, end).arrayBuffer();
-        if (i === chunkCount - 1) chunkData = padToBlock(chunkData);
-        const encrypted = await encryptChunk(chunkData, fileKey, fileIv, i);
-        await receiveChunk(dropId, received_file_id, i, encrypted);
-        setProgressPct(Math.round(((i + 1) / chunkCount) * 100));
+      const partCount = Math.ceil(chunkCount / TRANSPORT_CHUNKS_PER_PART);
+      for (let partIndex = 0; partIndex < partCount; partIndex++) {
+        const startChunkIndex = partIndex * TRANSPORT_CHUNKS_PER_PART;
+        const endChunkIndex = Math.min(startChunkIndex + TRANSPORT_CHUNKS_PER_PART, chunkCount);
+        const encryptedPart = await createEncryptedUploadPartBlob({
+          file,
+          key: fileKey,
+          fileIv,
+          chunkCount,
+          startChunkIndex,
+          endChunkIndex,
+          onProgress: (uploadedChunks) => {
+            setProgressPct(Math.round((uploadedChunks / chunkCount) * 100));
+          },
+        });
+        await uploadReceivePart(dropId, received_file_id, partIndex, encryptedPart);
       }
 
       await receiveComplete(dropId, received_file_id);
@@ -152,7 +168,7 @@ export function DropPage() {
         <div>
           <h1 className="title">{t("drop.ready.title")}</h1>
           {session && (
-            <p className="subtitle">{formatExpiry(session.expires_at)} · {session.received_file_count}/{session.max_files} files</p>
+            <p className="subtitle">{formatExpiry(session.expires_at, undefined, t)} · {session.received_file_count}/{session.max_files} files</p>
           )}
         </div>
 
@@ -178,11 +194,7 @@ export function DropPage() {
           </button>
         )}
 
-        <p className="safety-label">
-          {t("drop.ready.safety").split("\n").map((line, i) => (
-            <span key={i}>{line}{i === 0 ? <br /> : null}</span>
-          ))}
-        </p>
+        <MultiLineText text={t("drop.ready.safety")} className="safety-label" />
       </div>
     </div>
   );

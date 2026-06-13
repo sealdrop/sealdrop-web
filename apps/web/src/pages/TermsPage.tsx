@@ -3,9 +3,11 @@ import { useTranslation } from "react-i18next";
 import "../landing.css";
 import { LandingNav } from "../components/LandingNav";
 import { LandingFooter } from "../components/LandingFooter";
+import { usePageTitle } from "../lib/use-page-title.js";
 
 export function TermsPage() {
   const { t } = useTranslation();
+  usePageTitle(t("common.pageTitle.terms"));
 
   return (
     <div className="l-page">

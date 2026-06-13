@@ -2,6 +2,20 @@
   "common": {
     "back": "← Zpět",
     "goToSealDrop": "Přejít na SealDrop",
+    "loading": "Načítání…",
+    "errorTitle": "Něco se pokazilo",
+    "errorMessage": "Stránku se nepodařilo načíst. Zkuste to znovu.",
+    "pageTitle": {
+      "send": "Poslat soubor — SealDrop",
+      "receive": "Přijmout soubor — SealDrop",
+      "open": "Otevřít odkaz SealDrop — SealDrop",
+      "home": "SealDrop — Dočasná šifrovaná výměna souborů",
+      "howItWorks": "Jak to funguje — SealDrop",
+      "security": "Bezpečnostní model — SealDrop",
+      "privacy": "Zásady ochrany osobních údajů — SealDrop",
+      "terms": "Podmínky služby — SealDrop",
+      "abuse": "Zneužití a právní info — SealDrop"
+    },
     "openOnDevice": {
       "title": "Otevřít na jiném zařízení",
       "sendHint": "Chcete soubor otevřít na počítači? Vytvořte krátký kód místo kopírování dlouhého odkazu.",
@@ -18,7 +32,8 @@
       "copyInstructions": "Zkopírovat pokyny",
       "instructionsText": "Poslal(a) jsem vám soubor přes SealDrop.\n\nPro otevření na počítači:\n1. Přejděte na https://sealdrop.io/open\n2. Zadejte tento kód: {{code}}\n\nPlatnost kódu vyprší za 10 minut.",
       "securityNote": "Tento kód otevírá stejný odkaz na soubor. Sdílejte ho pouze se zamýšleným příjemcem."
-    }
+    },
+    "largeDownloadWarning": "Velký soubor: tento prohlížeč neumí uložit soubor této velikosti bez vyčerpání paměti. Zkuste Chrome, Edge, Firefox nebo Safari a vyhněte se anonymnímu/privátnímu oknu."
   },
   "copyBtn": {
     "copy": "Kopírovat",
@@ -47,6 +62,14 @@
   },
   "expiry": {
     "label": "Platnost",
+    "openOnce": "Otevřít jednou",
+    "expired": "Vypršelo",
+    "lessThanHour": "Platnost vyprší za méně než hodinu",
+    "hours": "Platnost vyprší za {{count}} hodinu",
+    "hours_plural": "Platnost vyprší za {{count}} hodin",
+    "days": "Platnost vyprší za {{count}} den",
+    "days_plural": "Platnost vyprší za {{count}} dní",
+    "loading": "Načítání…",
     "send": {
       "openOnce": "Otevřít jednou (výchozí)",
       "1h": "1 hodina",
@@ -88,6 +111,7 @@
     "deleteLink": "Vygenerovat odkaz pro smazání",
     "sealBtn": "Zapečetit a sdílet",
     "sealing": "Pečetění souboru ve vašem prohlížeči…",
+    "hashing": "Kontrola integrity souboru… {{pct}} %",
     "uploading": "Nahrávání zapečetěného souboru… {{pct}}%",
     "shared": {
       "title": "Sdíleno do SealDrop",
@@ -153,6 +177,8 @@
     "done": {
       "title": "Soubor otevřen",
       "subtitle": "Stahování by mělo začít.",
+      "integrityOk": "Integrita ověřena — soubor odpovídá odeslanému.",
+      "integrityFailed": "Upozornění: tento soubor může být neúplný nebo poškozený. Zkuste jej stáhnout znovu.",
       "safety": "Tento soubor byl zapečetěn před nahráním a dešifrován pouze ve vašem prohlížeči."
     }
   },
@@ -230,7 +256,16 @@
       "howItWorks": "Jak to funguje",
       "security": "Zabezpečení",
       "createDropLink": "Vytvořit odkaz pro příjem",
-      "sendFile": "Poslat soubor"
+      "sendFile": "Poslat soubor",
+      "menu": "Otevřít menu"
+    },
+    "home": {
+      "subtitle": "Pošlete nebo přijměte zapečetěný soubor.<br />Bez účtu. Zmizí po použití.",
+      "sendTitle": "Poslat soubor",
+      "sendDesc": "Zapečetěte soubor a sdílejte odkaz. Po použití zmizí.",
+      "receiveTitle": "Přijmout soubor",
+      "receiveDesc": "Vytvořte soukromý odkaz pro příjem. Jen vy odemknete, co dorazí.",
+      "safety": "Soubory jsou zamčeny ve vašem prohlížeči před nahráním.<br />Server nikdy nevidí obsah souborů ani klíče."
     },
     "footer": {
       "tagline": "Dočasná šifrovaná výměna souborů. Bez účtu. Zmizí po použití.",
@@ -239,7 +274,8 @@
       "privacy": "Soukromí",
       "terms": "Podmínky",
       "abuseAndLegal": "Zneužití a právní info",
-      "source": "Zdrojový kód"
+      "source": "Zdrojový kód",
+      "buildChecksums": "Zobrazit kontrolní součty buildu"
     },
     "preview": {
       "ariaLabel": "Náhled procesu nahrávání v SealDrop",

@@ -165,6 +165,20 @@
   gap: 0.5rem;
 }
 
+.l-nav__lang {
+  display: flex;
+  align-items: center;
+}
+
+/* Override global fixed positioning when inside nav */
+.l-nav__lang .lang-switcher {
+  position: static;
+  z-index: auto;
+  box-shadow: none;
+  border: none;
+  background: transparent;
+}
+
 .l-nav__cta {
   padding: 0.75rem 1rem;
   background: var(--l-surface);
@@ -175,8 +189,88 @@
 .l-nav__cta--ghost {
   background: transparent;
   box-shadow: none;
-  border-color: transparent;
+  border-color: var(--l-muted);
   color: var(--l-muted);
+}
+
+/* ── Hamburger button (mobile) ─────────────────────────────── */
+
+.l-nav__burger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: rgba(247, 251, 255, 0.72);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.l-nav__burger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  margin: 0 auto;
+  background: var(--l-muted);
+  border-radius: 2px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.l-nav__burger--open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.l-nav__burger--open span:nth-child(2) {
+  opacity: 0;
+}
+.l-nav__burger--open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ── Mobile menu overlay ───────────────────────────────────── */
+
+.l-mobile-menu {
+  position: fixed;
+  inset: 0;
+  top: 60px;
+  z-index: 19;
+  background: rgba(237, 243, 248, 0.82);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  padding: 1.5rem 1rem;
+  animation: l-menu-in 0.2s ease;
+}
+
+@keyframes l-menu-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.l-mobile-menu__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.l-mobile-menu__nav a {
+  display: block;
+  padding: 0.85rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--l-border);
+  background: rgba(247, 251, 255, 0.72);
+  color: var(--l-text);
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+  transition: background 0.15s ease;
+}
+
+.l-mobile-menu__nav a:hover {
+  background: rgba(255, 255, 255, 0.85);
 }
 
 .l-hero,
@@ -470,6 +564,7 @@
 @media (min-width: 700px) {
   .l-nav__links,
   .l-nav__actions { display: flex; }
+  .l-nav__burger { display: none; }
   .l-steps { grid-template-columns: repeat(3, 1fr); }
   .l-feature-grid { grid-template-columns: repeat(2, 1fr); }
   .l-security-note,
@@ -761,7 +856,20 @@
   .l-nav__links a:hover { background: rgba(255, 255, 255, 0.04); }
 
   .l-nav__cta { background: var(--l-surface); }
-  .l-nav__cta--ghost { background: transparent; box-shadow: none; }
+  .l-nav__cta--ghost { background: transparent; box-shadow: none; border-color: var(--l-muted); }
+
+  .l-nav__burger { background: rgba(22, 32, 48, 0.82); }
+
+  .l-mobile-menu {
+    background: rgba(9, 17, 27, 0.82);
+  }
+  .l-mobile-menu__nav a {
+    background: rgba(22, 32, 48, 0.82);
+    border-color: rgba(130, 150, 175, 0.1);
+  }
+  .l-mobile-menu__nav a:hover {
+    background: rgba(255, 255, 255, 0.04);
+  }
 
   .l-btn--secondary {
     background: rgba(22, 32, 48, 0.82);

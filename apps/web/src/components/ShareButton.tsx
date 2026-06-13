@@ -39,6 +39,7 @@ export function ShareButton({ text, title = "SealDrop", className = "link-box__b
       className={`${className}${shared ? " link-box__btn--copied" : ""}`}
       onClick={() => void share()}
       type="button"
+      aria-label={shared ? t("shareBtn.shared") : t("shareBtn.share")}
     >
       {shared ? t("shareBtn.shared") : t("shareBtn.share")}
     </button>

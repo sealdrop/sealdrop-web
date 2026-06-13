@@ -171,6 +171,20 @@ async function streamToArrayBuffer(stream: ReadableStream<Uint8Array>): Promise<
   return result.buffer as ArrayBuffer;
 }
 
+function expectBytesEqual(actual: Uint8Array, expected: Uint8Array): void {
+  expect(actual.byteLength).toBe(expected.byteLength);
+  const step = expected.byteLength > 65536 ? 4096 : 1;
+  for (let i = 0; i < expected.byteLength; i += step) {
+    if (actual[i] !== expected[i]) {
+      throw new Error(`byte mismatch at ${i}: ${actual[i]} !== ${expected[i]}`);
+    }
+  }
+  const last = expected.byteLength - 1;
+  if (last >= 0 && actual[last] !== expected[last]) {
+    throw new Error(`byte mismatch at ${last}: ${actual[last]} !== ${expected[last]}`);
+  }
+}
+
 describe("encryptStream / decryptStream", () => {
 
   it("round-trips a small file through streams", async () => {
@@ -190,13 +204,13 @@ describe("encryptStream / decryptStream", () => {
     );
     const decrypted = await streamToArrayBuffer(decryptedStream);
 
-    expect(new Uint8Array(decrypted)).toEqual(original);
+    expectBytesEqual(new Uint8Array(decrypted), original);
   });
 
   it("round-trips a file larger than chunk size", async () => {
     const key = await generateFileKey();
     const baseIv = generateIV();
-    const original = new Uint8Array(CHUNK_SIZE_BYTES * 2 + 500);
+    const original = new Uint8Array(CHUNK_SIZE_BYTES + 500);
     for (let i = 0; i < original.length; i++) original[i] = i & 0xff;
 
     const inputStream = await arrayBufferToStream(original.buffer as ArrayBuffer);
@@ -250,6 +264,36 @@ describe("encryptStream / decryptStream", () => {
       key,
       baseIv,
       100,
+    );
+
+    let threw = false;
+    try {
+      await streamToArrayBuffer(decryptedStream);
+    } catch {
+      threw = true;
+    }
+    expect(threw).toBe(true);
+  });
+
+  it("rejects a stream that ends before the expected plaintext length", async () => {
+    const key = await generateFileKey();
+    const baseIv = generateIV();
+    const original = new Uint8Array(CHUNK_SIZE_BYTES + 500);
+    for (let i = 0; i < original.length; i++) original[i] = i & 0xff;
+
+    const inputStream = await arrayBufferToStream(original.buffer as ArrayBuffer);
+    const encryptedStream = encryptStream(inputStream, key, baseIv);
+    const encrypted = await streamToArrayBuffer(encryptedStream);
+
+    // Truncate to only the first encrypted chunk, simulating a server
+    // that stops sending data partway through (e.g. a missing part).
+    const truncated = encrypted.slice(0, encryptedChunkLength(CHUNK_SIZE_BYTES));
+
+    const decryptedStream = decryptStream(
+      await arrayBufferToStream(truncated),
+      key,
+      baseIv,
+      original.byteLength,
     );
 
     let threw = false;
