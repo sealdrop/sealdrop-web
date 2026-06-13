@@ -75,9 +75,28 @@ export function encryptStream(
   onProgress?: (chunkIndex: number) => void,
 ): ReadableStream<Uint8Array> {
   let chunkIndex = 0;
-  let buffer = new Uint8Array(0);
+  const buffers: Uint8Array[] = [];
+  let bufferedBytes = 0;
   let reader: ReadableStreamDefaultReader<Uint8Array> | null = null;
   let inputExhausted = false;
+
+  function takeBytes(byteLength: number): Uint8Array<ArrayBuffer> {
+    const out = new Uint8Array(byteLength) as Uint8Array<ArrayBuffer>;
+    let offset = 0;
+    while (offset < byteLength) {
+      const next = buffers[0]!;
+      const n = Math.min(next.byteLength, byteLength - offset);
+      out.set(next.subarray(0, n), offset);
+      offset += n;
+      bufferedBytes -= n;
+      if (n === next.byteLength) {
+        buffers.shift();
+      } else {
+        buffers[0] = next.subarray(n);
+      }
+    }
+    return out;
+  }
 
   return new ReadableStream({
     start() {
@@ -85,26 +104,23 @@ export function encryptStream(
     },
     async pull(controller) {
       try {
-        while (!inputExhausted && buffer.length < CHUNK_SIZE_BYTES) {
+        while (!inputExhausted && bufferedBytes < CHUNK_SIZE_BYTES) {
           const { done, value } = await reader!.read();
           if (done) {
             inputExhausted = true;
             break;
           }
-          const newBuf = new Uint8Array(buffer.length + value.length);
-          newBuf.set(buffer);
-          newBuf.set(value, buffer.length);
-          buffer = newBuf;
+          buffers.push(value);
+          bufferedBytes += value.byteLength;
         }
 
-        if (buffer.length === 0) {
+        if (bufferedBytes === 0) {
           controller.close();
           return;
         }
 
-        const chunkSize = inputExhausted ? buffer.length : CHUNK_SIZE_BYTES;
-        const chunk = buffer.slice(0, chunkSize);
-        buffer = buffer.slice(chunkSize);
+        const chunkSize = inputExhausted ? bufferedBytes : CHUNK_SIZE_BYTES;
+        const chunk = takeBytes(chunkSize);
         const encrypted = await encryptChunk(chunk.buffer as ArrayBuffer, key, baseIv, chunkIndex);
         chunkIndex++;
         onProgress?.(chunkIndex);
@@ -125,12 +141,32 @@ export function decryptStream(
   baseIv: Uint8Array<ArrayBuffer>,
   plaintextLength: number,
   onProgress?: (bytesDecrypted: number) => void,
+  chunkSizeBytes = CHUNK_SIZE_BYTES,
 ): ReadableStream<Uint8Array> {
   let chunkIndex = 0;
-  let buffer = new Uint8Array(0);
+  const buffers: Uint8Array[] = [];
+  let bufferedBytes = 0;
   let bytesDecrypted = 0;
   let reader: ReadableStreamDefaultReader<Uint8Array> | null = null;
   let inputExhausted = false;
+
+  function takeBytes(byteLength: number): Uint8Array<ArrayBuffer> {
+    const out = new Uint8Array(byteLength) as Uint8Array<ArrayBuffer>;
+    let offset = 0;
+    while (offset < byteLength) {
+      const next = buffers[0]!;
+      const n = Math.min(next.byteLength, byteLength - offset);
+      out.set(next.subarray(0, n), offset);
+      offset += n;
+      bufferedBytes -= n;
+      if (n === next.byteLength) {
+        buffers.shift();
+      } else {
+        buffers[0] = next.subarray(n);
+      }
+    }
+    return out;
+  }
 
   return new ReadableStream({
     start() {
@@ -138,29 +174,31 @@ export function decryptStream(
     },
     async pull(controller) {
       try {
+        if (bytesDecrypted >= plaintextLength) {
+          controller.close();
+          return;
+        }
+
         const chunkEncLen = encryptedChunkLength(
-          Math.min(CHUNK_SIZE_BYTES, plaintextLength - bytesDecrypted),
+          Math.min(chunkSizeBytes, plaintextLength - bytesDecrypted),
         );
 
-        while (!inputExhausted && buffer.length < chunkEncLen) {
+        while (!inputExhausted && bufferedBytes < chunkEncLen) {
           const { done, value } = await reader!.read();
           if (done) {
             inputExhausted = true;
             break;
           }
-          const newBuf = new Uint8Array(buffer.length + value.length);
-          newBuf.set(buffer);
-          newBuf.set(value, buffer.length);
-          buffer = newBuf;
+          buffers.push(value);
+          bufferedBytes += value.byteLength;
         }
 
-        if (buffer.length < chunkEncLen) {
-          controller.close();
+        if (bufferedBytes < chunkEncLen) {
+          controller.error(new Error("stream ended before expected length was reached"));
           return;
         }
 
-        const encChunk = buffer.slice(0, chunkEncLen);
-        buffer = buffer.slice(chunkEncLen);
+        const encChunk = takeBytes(chunkEncLen);
         const decrypted = await decryptChunk(encChunk.buffer as ArrayBuffer, key, baseIv, chunkIndex);
         chunkIndex++;
         bytesDecrypted += decrypted.byteLength;

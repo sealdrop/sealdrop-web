@@ -1,12 +1,10 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { CopyButton } from "../components/CopyButton.js";
 import {
   generateFileKey,
   generateIV,
   encryptMetadata,
-  encryptChunk,
   keyToFragment,
   toBase64Url,
   buildSendLink,
@@ -15,26 +13,26 @@ import {
   generateAccessCode,
   wrapKeyWithAccessCode,
   buildAccessCodeLink,
-  padToBlock,
   enhancedPaddedSize,
   maximumPaddedSize,
-  padToSize,
-  fillRandom,
   encryptHandoffUrl,
+  createChainedHasher,
 } from "@sealdrop/crypto";
 import { CHUNK_SIZE_BYTES, DEFAULT_SEND_EXPIRY, MAX_FILE_SIZE_BYTES } from "@sealdrop/shared";
 import type { SendExpiryPreset } from "@sealdrop/shared";
 import { FilePicker } from "../components/FilePicker.js";
 import { ExpirySelector } from "../components/ExpirySelector.js";
-import { LinkBox } from "../components/LinkBox.js";
-import { QRCode } from "../components/QRCode.js";
 import { TurnstileWidget, turnstileEnabled } from "../components/TurnstileWidget.js";
 import { ProgressBar } from "../components/ProgressBar.js";
 import { MotionIconStack } from "../components/MotionIconStack.js";
 import { InstallHint } from "../components/InstallHint.js";
-import { sendInit, sendChunk, sendComplete, getChunkStatus, createOpenLink, ApiError } from "../lib/api.js";
+import { SendDoneView } from "../components/SendDoneView.js";
+import { MultiLineText } from "../components/MultiLineText.js";
+import { sendInit, uploadSendPart, sendComplete, createOpenLink, ApiError } from "../lib/api.js";
 import { formatBytes, formatExpiry } from "../lib/format.js";
+import { usePageTitle } from "../lib/use-page-title.js";
 import { clearSharedTargetPayload, getSharedTargetPayload } from "../lib/share-target.js";
+import { createEncryptedUploadPartBlob, TRANSPORT_CHUNKS_PER_PART } from "../lib/encrypted-upload-stream.js";
 
 type Step = "idle" | "sealing" | "uploading" | "done" | "error";
 
@@ -42,6 +40,7 @@ export function SendPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
+  usePageTitle(t("common.pageTitle.send"));
   const [file, setFile] = useState<File | null>(null);
   const [expiry, setExpiry] = useState<SendExpiryPreset>(DEFAULT_SEND_EXPIRY);
   const [step, setStep] = useState<Step>("idle");
@@ -102,7 +101,7 @@ export function SendPage() {
     return () => { cancelled = true; };
   }, [location.pathname, t]);
 
-  async function handleCreateOpenCode() {
+  const handleCreateOpenCode = useCallback(async () => {
     if (!shareLink) return;
     setHandoffStep("creating");
     try {
@@ -121,9 +120,9 @@ export function SendPage() {
     } catch {
       setHandoffStep("error");
     }
-  }
+  }, [shareLink, t]);
 
-  async function handleSeal() {
+  const handleSeal = useCallback(async () => {
     if (!file) return;
     try {
       setStep("sealing");
@@ -154,13 +153,29 @@ export function SendPage() {
         totalChunkCount = realChunkCount;
       }
 
+      // Hash the original (unpadded) file in the same CHUNK_SIZE_BYTES-aligned
+      // chunks used for encryption, so the recipient can recompute and verify
+      // it against the decrypted output.
+      const hasher = createChainedHasher();
+      for (let i = 0; i < realChunkCount; i++) {
+        const start = i * CHUNK_SIZE_BYTES;
+        const end = Math.min(start + CHUNK_SIZE_BYTES, file.size);
+        await hasher.update(await file.slice(start, end).arrayBuffer());
+        setProgressPct(Math.round(((i + 1) / realChunkCount) * 100));
+      }
+      const sha256 = toBase64Url(hasher.digest()!);
+      setProgressPct(0);
+
       const encryptedMeta = await encryptMetadata(
         {
           filename: file.name,
           mimeType: file.type || "application/octet-stream",
           sizeBytes: file.size,
+          storageFormat: "stream-v1",
+          chunkSizeBytes: CHUNK_SIZE_BYTES,
           chunkCount: totalChunkCount,
           padded: true,
+          sha256,
           ...(paddedSizeBytes !== undefined ? { paddedSizeBytes } : {}),
           ...(note ? { note } : {}),
         },
@@ -181,44 +196,23 @@ export function SendPage() {
         ...(turnstileToken ? { turnstile_token: turnstileToken } : {}),
       }) as { file_id: string; expires_at: string; delete_token?: string };
 
-      // Resume: check which chunks are already uploaded
-      let uploaded: number[] = [];
-      try { uploaded = await getChunkStatus(file_id); } catch { /* assume none */ }
-      const uploadedSet = new Set(uploaded);
-
-      for (let i = 0; i < totalChunkCount; i++) {
-        if (uploadedSet.has(i)) {
-          setProgressPct(Math.round(((i + 1) / totalChunkCount) * 100));
-          continue;
-        }
-
-        let chunkData: ArrayBuffer;
-
-        if (paddedSizeBytes !== undefined) {
-          // Enhanced or Maximum: each chunk is filled to its target size with random padding.
-          const thisChunkSize = Math.min(CHUNK_SIZE_BYTES, paddedSizeBytes - i * CHUNK_SIZE_BYTES);
-          if (i < realChunkCount) {
-            const start = i * CHUNK_SIZE_BYTES;
-            const end = Math.min(start + CHUNK_SIZE_BYTES, file.size);
-            const realData = await file.slice(start, end).arrayBuffer();
-            chunkData = padToSize(realData, thisChunkSize);
-          } else {
-            // Pure random padding chunk — no real file data.
-            const buf = new Uint8Array(thisChunkSize);
-            fillRandom(buf);
-            chunkData = buf.buffer as ArrayBuffer;
-          }
-        } else {
-          // Standard: pad only the last chunk to a 4 KiB boundary.
-          const start = i * CHUNK_SIZE_BYTES;
-          const end = Math.min(start + CHUNK_SIZE_BYTES, file.size);
-          chunkData = await file.slice(start, end).arrayBuffer();
-          if (i === totalChunkCount - 1) chunkData = padToBlock(chunkData);
-        }
-
-        const encrypted = await encryptChunk(chunkData, key, fileIv, i);
-        await sendChunk(file_id, i, encrypted);
-        setProgressPct(Math.round(((i + 1) / totalChunkCount) * 100));
+      const partCount = Math.ceil(totalChunkCount / TRANSPORT_CHUNKS_PER_PART);
+      for (let partIndex = 0; partIndex < partCount; partIndex++) {
+        const startChunkIndex = partIndex * TRANSPORT_CHUNKS_PER_PART;
+        const endChunkIndex = Math.min(startChunkIndex + TRANSPORT_CHUNKS_PER_PART, totalChunkCount);
+        const encryptedPart = await createEncryptedUploadPartBlob({
+          file,
+          key,
+          fileIv,
+          chunkCount: totalChunkCount,
+          startChunkIndex,
+          endChunkIndex,
+          ...(paddedSizeBytes !== undefined ? { paddedSizeBytes } : {}),
+          onProgress: (uploadedChunks) => {
+            setProgressPct(Math.round((uploadedChunks / totalChunkCount) * 100));
+          },
+        });
+        await uploadSendPart(file_id, partIndex, encryptedPart);
       }
 
       await sendComplete(file_id);
@@ -243,7 +237,7 @@ export function SendPage() {
         const origin = window.location.origin;
         setDeleteLink(`${origin}/s/${file_id}/delete#token=${delete_token}`);
       }
-      setShareExpiry(formatExpiry(expires_at, expiry === "open-once" ? 1 : 999));
+      setShareExpiry(formatExpiry(expires_at, expiry === "open-once" ? 1 : 999, t));
       setShareSize(file.size);
       setStep("done");
     } catch (err) {
@@ -253,89 +247,22 @@ export function SendPage() {
       setErrorMsg(msg);
       setStep("error");
     }
-  }
+  }, [file, expiry, paddingLevel, passphrase, useAccessCode, wantDeleteLink, note, turnstileToken, t, navigate]);
 
   if (step === "done") {
     return (
-      <div className="page">
-        <div className="card stack">
-          <MotionIconStack variant="send" />
-          <div className="nav">
-            <button className="back" onClick={() => navigate("/")}>{t("common.back")}</button>
-          </div>
-          <div className="success-icon">✅</div>
-          <div className="stack-sm" style={{ textAlign: "center" }}>
-            <h1 className="title">{t("send.done.title")}</h1>
-            <div className="chip-row" style={{ justifyContent: "center" }}>
-              <span className="chip">{formatBytes(shareSize)}</span>
-              <span className="chip">{shareExpiry}</span>
-            </div>
-          </div>
-          <LinkBox label={t("send.done.shareLink")} url={shareLink} warning={t("send.done.shareLinkWarning")} />
-          {generatedCode && (
-            <>
-              <LinkBox label={t("send.done.accessCode")} url={generatedCode} warning={t("send.done.accessCodeWarning")} />
-              <p className="hint" style={{ textAlign: "center" }}>
-                {t("send.done.accessCodeHint")}
-              </p>
-            </>
-          )}
-          {deleteLink && <LinkBox label={t("send.done.deleteLink")} url={deleteLink} warning={t("send.done.deleteLinkWarning")} />}
-          <QRCode url={shareLink} />
-          <hr className="divider" />
-
-          <div className="stack-sm">
-            <p className="label">{t("common.openOnDevice.title")}</p>
-            <p className="hint">{t("common.openOnDevice.sendHint")}</p>
-            {handoffStep === "idle" && (
-              <button className="btn btn-secondary" onClick={() => void handleCreateOpenCode()}>
-                {t("common.openOnDevice.createCode")}
-              </button>
-            )}
-            {handoffStep === "creating" && (
-              <button className="btn btn-secondary" disabled>{t("common.openOnDevice.creating")}</button>
-            )}
-            {handoffStep === "error" && (
-              <p className="hint motion-reveal" style={{ color: "var(--color-error)" }}>
-                {t("common.openOnDevice.error")}
-              </p>
-            )}
-            {handoffStep === "ready" && (
-              <div className="stack-sm motion-reveal">
-                <ol className="hint" style={{ paddingLeft: "1.25rem", margin: 0 }}>
-                  <li>{t("common.openOnDevice.step1")} <strong>sealdrop.io/open</strong></li>
-                  <li>{t("common.openOnDevice.step2")}</li>
-                </ol>
-                <div className="link-box handoff-code">
-                  <span className="link-box__url" style={{ fontFamily: "monospace", letterSpacing: "0.05em" }}>
-                    {handoffCode}
-                  </span>
-                  <CopyButton text={handoffCode} />
-                </div>
-                <p className="hint">{t("common.openOnDevice.expires")}</p>
-                <CopyButton
-                  className="btn btn-secondary"
-                  text={t("common.openOnDevice.instructionsText", { code: handoffCode, expiry: handoffExpiry })}
-                  label={t("common.openOnDevice.copyInstructions")}
-                />
-                <p className="hint" style={{ color: "var(--color-muted, #888)" }}>
-                  {t("common.openOnDevice.securityNote")}
-                </p>
-              </div>
-            )}
-          </div>
-
-          <hr className="divider" />
-          <p className="safety-label">
-            {t("send.done.safetyBase")}<br />
-            {generatedCode
-              ? t("send.done.safetyCode")
-              : passphrase
-                ? t("send.done.safetyPassphrase")
-                : t("send.done.safetyDefault")}
-          </p>
-        </div>
-      </div>
+      <SendDoneView
+        shareLink={shareLink}
+        deleteLink={deleteLink}
+        shareExpiry={shareExpiry}
+        shareSize={shareSize}
+        generatedCode={generatedCode}
+        passphrase={passphrase}
+        handoffStep={handoffStep}
+        handoffCode={handoffCode}
+        handoffExpiry={handoffExpiry}
+        onCreateOpenCode={() => void handleCreateOpenCode()}
+      />
     );
   }
 
@@ -463,10 +390,10 @@ export function SendPage() {
           <div className="stack-sm motion-reveal">
             <ProgressBar
               value={progressPct}
-              label={step === "sealing" ? t("send.sealing") : t("send.uploading", { pct: progressPct })}
+              label={step === "sealing" ? t("send.hashing", { pct: progressPct }) : t("send.uploading", { pct: progressPct })}
             />
             <p className="hint" style={{ textAlign: "center" }}>
-              {step === "sealing" ? t("send.sealing") : t("send.uploading", { pct: progressPct })}
+              {step === "sealing" ? t("send.hashing", { pct: progressPct }) : t("send.uploading", { pct: progressPct })}
             </p>
           </div>
         ) : (
@@ -485,11 +412,7 @@ export function SendPage() {
           </>
         )}
 
-        <p className="safety-label">
-          {t("send.safety").split("\n").map((line, i) => (
-            <span key={i}>{line}{i === 0 ? <br /> : null}</span>
-          ))}
-        </p>
+        <MultiLineText text={t("send.safety")} className="safety-label" />
       </div>
     </div>
   );

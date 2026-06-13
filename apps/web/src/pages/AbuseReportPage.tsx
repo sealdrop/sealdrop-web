@@ -3,9 +3,11 @@ import { useTranslation } from "react-i18next";
 import "../landing.css";
 import { LandingNav } from "../components/LandingNav";
 import { LandingFooter } from "../components/LandingFooter";
+import { usePageTitle } from "../lib/use-page-title.js";
 
 export function AbuseReportPage() {
   const { t } = useTranslation();
+  usePageTitle(t("common.pageTitle.abuse"));
 
   return (
     <div className="l-page">

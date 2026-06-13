@@ -2,11 +2,11 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   consumeOpenLink,
   deleteSendFile,
-  getOwnerFileChunk,
+  getOwnerFileBlob,
   getReceiveSession,
   getSendMetadata,
-  receiveChunk,
-  sendChunk,
+  uploadReceivePart,
+  uploadSendPart,
 } from "./api.js";
 
 function mockJsonFetch(body: unknown = {}) {
@@ -19,7 +19,7 @@ function mockJsonFetch(body: unknown = {}) {
 }
 
 function mockOkFetch() {
-  const fetchMock = vi.fn().mockResolvedValue(new Response(null, { status: 204 }));
+  const fetchMock = vi.fn().mockResolvedValue(new Response(new Uint8Array(0), { status: 200 }));
   vi.stubGlobal("fetch", fetchMock);
   return fetchMock;
 }
@@ -54,16 +54,16 @@ describe("API client secret hygiene", () => {
   it("keeps passphrases and access codes out of request URLs", async () => {
     const fetchMock = mockOkFetch();
 
-    await sendChunk("file#key=secret", 0, new ArrayBuffer(0));
-    await receiveChunk("drop#owner=private", "received#wrapped=key", 1, new ArrayBuffer(0));
-    await getOwnerFileChunk("drop#owner=private", "received#wrapped=key", 2);
+    await uploadSendPart("file#key=secret", 0, new Blob());
+    await uploadReceivePart("drop#owner=private", "received#wrapped=key", 1, new Blob());
+    await getOwnerFileBlob("drop#owner=private", "received#wrapped=key");
     await consumeOpenLink("A7KP2M#482913774");
 
     const urls = fetchMock.mock.calls.map((call) => String(call[0]));
     expect(urls).toEqual([
-      "/api/send/file%23key%3Dsecret/chunk/0",
-      "/api/receive/drop%23owner%3Dprivate/files/received%23wrapped%3Dkey/chunk/1",
-      "/api/receive/drop%23owner%3Dprivate/owner/files/received%23wrapped%3Dkey/chunk/2",
+      "/api/send/file%23key%3Dsecret/part/0",
+      "/api/receive/drop%23owner%3Dprivate/files/received%23wrapped%3Dkey/part/1",
+      "/api/receive/drop%23owner%3Dprivate/owner/files/received%23wrapped%3Dkey/blob",
       "/api/open-links/A7KP2M%23482913774/consume",
     ]);
     expect(urls.join("\n")).not.toMatch(/#|passphrase|access[_-]?code/i);

@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import "../landing.css";
 import { LandingNav } from "../components/LandingNav";
 import { LandingFooter } from "../components/LandingFooter";
+import { usePageTitle } from "../lib/use-page-title.js";
 
 function ButtonLink({ to, children, variant = "primary" }: { to: string; children: React.ReactNode; variant?: "primary" | "secondary" }) {
   return <Link to={to} className={`l-btn l-btn--${variant}`}>{children}</Link>;
@@ -245,6 +246,8 @@ function FinalCta() {
 }
 
 export function LandingPage() {
+  const { t } = useTranslation();
+  usePageTitle(t("common.pageTitle.home"));
   return (
     <div className="l-page">
       <LandingNav />

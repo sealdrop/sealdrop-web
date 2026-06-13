@@ -16,13 +16,27 @@ precacheAndRoute(self.__WB_MANIFEST);
  * one-time token, then navigates to /__sw-download/<token>; this fetch
  * handler turns the port's messages into the response body.
  */
-const downloadPorts = new Map<string, MessagePort>();
+const downloadPorts = new Map<string, { port: MessagePort; registeredAt: number }>();
+
+/** Entries older than this are evicted on the next register-download message. */
+const DOWNLOAD_PORT_TTL_MS = 10 * 60 * 1000; // 10 minutes
+
+function evictExpiredPorts() {
+  const now = Date.now();
+  for (const [token, entry] of downloadPorts) {
+    if (now - entry.registeredAt > DOWNLOAD_PORT_TTL_MS) {
+      entry.port.close();
+      downloadPorts.delete(token);
+    }
+  }
+}
 
 self.addEventListener("message", (event: ExtendableMessageEvent) => {
   const data = event.data as { type?: string; token?: string } | undefined;
   if (data?.type === "register-download" && data.token) {
+    evictExpiredPorts();
     const port = event.ports[0];
-    if (port) downloadPorts.set(data.token, port);
+    if (port) downloadPorts.set(data.token, { port, registeredAt: Date.now() });
   }
 });
 
@@ -40,16 +54,25 @@ self.addEventListener("fetch", (event: FetchEvent) => {
   if (!match) return;
 
   const token = match[1] as string;
-  const port = downloadPorts.get(token);
+  const entry = downloadPorts.get(token);
   downloadPorts.delete(token);
 
-  if (!port) {
+  if (!entry) {
     event.respondWith(new Response("Not found", { status: 404 }));
     return;
   }
 
+  const port = entry.port;
+
   const filename = url.searchParams.get("filename") ?? "download";
   const size = url.searchParams.get("size");
+
+  // Once respondWith() resolves, the fetch event's extended lifetime ends and
+  // the browser may terminate this worker as idle — even though the relayed
+  // download is still streaming. waitUntil() keeps it alive until the page
+  // has posted every chunk (or the response is cancelled).
+  let finished: () => void;
+  const donePromise = new Promise<void>((resolve) => { finished = resolve; });
 
   const stream = new ReadableStream<Uint8Array>({
     start(controller) {
@@ -57,6 +80,7 @@ self.addEventListener("fetch", (event: FetchEvent) => {
         if (e.data === null) {
           controller.close();
           port.close();
+          finished();
           return;
         }
         controller.enqueue(new Uint8Array(e.data));
@@ -66,8 +90,11 @@ self.addEventListener("fetch", (event: FetchEvent) => {
     cancel() {
       port.postMessage("cancel");
       port.close();
+      finished();
     },
   });
+
+  event.waitUntil(donePromise);
 
   const headers: Record<string, string> = {
     "Content-Type": "application/octet-stream",

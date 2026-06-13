@@ -9,17 +9,19 @@ import {
   unwrapKeyWithPassphrase,
   unwrapKeyWithAccessCode,
   fromBase64Url,
+  toBase64Url,
   decryptStream,
   decryptMetadata,
-  paddedLength,
   CHUNK_SIZE_BYTES,
   encryptHandoffUrl,
+  createChainedHasher,
 } from "@sealdrop/crypto";
 import type { FileMetadata } from "@sealdrop/crypto";
-import { getSendMetadata, getSendChunk, openSendFile, createOpenLink, ApiError } from "../lib/api.js";
+import { getSendMetadata, getSendBlob, createOpenLink, ApiError } from "../lib/api.js";
 import { CopyButton } from "../components/CopyButton.js";
 import { MotionIconStack } from "../components/MotionIconStack.js";
-import { formatBytes, formatExpiry, downloadStream, needsLargeDownloadWarning } from "../lib/format.js";
+import { MultiLineText } from "../components/MultiLineText.js";
+import { formatBytes, formatExpiry, computePaddedTotalLength, downloadStream, needsLargeDownloadWarning, prepareStreamingDownload } from "../lib/format.js";
 
 type HandoffStep = "idle" | "creating" | "ready" | "error";
 
@@ -71,12 +73,6 @@ function OpenOnDeviceSection({
   );
 }
 
-function computePaddedTotalLength(sizeBytes: number, chunkCount: number): number {
-  if (chunkCount === 0) return 0;
-  const lastChunkOrigSize = sizeBytes - (chunkCount - 1) * CHUNK_SIZE_BYTES;
-  return (chunkCount - 1) * CHUNK_SIZE_BYTES + paddedLength(lastChunkOrigSize);
-}
-
 type Step = "loading" | "passphrase" | "access-code" | "open-once-confirm" | "ready" | "downloading" | "done" | "error";
 
 export function SendFilePage() {
@@ -96,6 +92,7 @@ export function SendFilePage() {
   const [accessCodeError, setAccessCodeError] = useState("");
   const [isOpenOnce, setIsOpenOnce] = useState(false);
   const [progressPct, setProgressPct] = useState(0);
+  const [integrityVerified, setIntegrityVerified] = useState<boolean | null>(null);
 
   const [handoffStep, setHandoffStep] = useState<HandoffStep>("idle");
   const [handoffCode, setHandoffCode] = useState("");
@@ -158,7 +155,7 @@ export function SendFilePage() {
       const encMeta = fromBase64Url(apiMeta.encrypted_metadata);
       const decrypted = await decryptMetadata(encMeta, key, iv);
       setMeta(decrypted);
-      setExpiryLabel(formatExpiry(apiMeta.expires_at, apiMeta.remaining_downloads));
+      setExpiryLabel(formatExpiry(apiMeta.expires_at, apiMeta.remaining_downloads, t));
       setChunkCount(decrypted.chunkCount ?? apiMeta.chunk_count ?? 1);
       const openOnce = apiMeta.remaining_downloads === 1;
       setIsOpenOnce(openOnce);
@@ -220,7 +217,6 @@ export function SendFilePage() {
   async function handleContinueOpenOnce() {
     if (!fileId) return;
     try {
-      await openSendFile(fileId);
       await handleOpen();
     } catch (err) {
       if (err instanceof ApiError && (err.code === "gone" || err.code === "not_found")) {
@@ -235,40 +231,43 @@ export function SendFilePage() {
   async function handleOpen() {
     if (!fileId || !meta || !keyFragment) return;
     try {
+      const preparedWritable = prepareStreamingDownload(meta.filename);
+      const writable = preparedWritable ? await preparedWritable : undefined;
       setStep("downloading");
       setProgressPct(0);
       const serverMeta = await getSendMetadata(fileId);
       const key = await fragmentToKey(keyFragment);
       const fileIv = new Uint8Array(fromBase64Url(serverMeta.file_iv)) as Uint8Array<ArrayBuffer>;
       const count = meta.chunkCount ?? chunkCount;
+      const chunkSizeBytes = meta.chunkSizeBytes ?? CHUNK_SIZE_BYTES;
 
       // paddedSizeBytes is stored for Enhanced/Maximum; fall back to computed value for Standard.
       const decryptLength = meta.paddedSizeBytes
         ?? (meta.padded
-          ? computePaddedTotalLength(meta.sizeBytes, count)
+          ? computePaddedTotalLength(meta.sizeBytes, count, chunkSizeBytes)
           : meta.sizeBytes);
 
-      const stream = new ReadableStream({
-        async start(controller) {
-          for (let i = 0; i < count; i++) {
-            const encChunk = await getSendChunk(fileId, i);
-            controller.enqueue(new Uint8Array(encChunk));
-            setProgressPct(Math.round(((i + 1) / count) * 70));
-          }
-          controller.close();
-        },
-      });
+      const stream = await getSendBlob(fileId);
 
       const decrypted = decryptStream(stream, key, fileIv, decryptLength, (bytesDecrypted) => {
-        const pct = 70 + Math.round((bytesDecrypted / decryptLength) * 30);
+        const pct = Math.round((bytesDecrypted / decryptLength) * 100);
         setProgressPct(Math.min(pct, 99));
-      });
+      }, chunkSizeBytes);
+
+      const hasher = createChainedHasher();
 
       await downloadStream(meta.filename, decrypted, {
         ...(meta.padded ? { maxBytes: meta.sizeBytes } : {}),
         totalBytes: meta.sizeBytes,
         mimeType: meta.mimeType,
+        ...(writable ? { preparedWritable: writable } : {}),
+        onChunk: (chunk) => hasher.update(chunk),
       });
+
+      if (meta.sha256) {
+        const digest = hasher.digest();
+        setIntegrityVerified(digest !== null && toBase64Url(digest) === meta.sha256);
+      }
 
       setProgressPct(100);
       setStep("done");
@@ -346,11 +345,7 @@ export function SendFilePage() {
               {t("sendFile.passphrase.unlock")}
             </button>
           </div>
-          <p className="safety-label">
-            {t("sendFile.accessCode.safety").split("\n").map((line, i) => (
-              <span key={i}>{line}{i === 0 ? <br /> : null}</span>
-            ))}
-          </p>
+          <MultiLineText text={t("sendFile.accessCode.safety")} className="safety-label" />
         </div>
       </div>
     );
@@ -413,6 +408,14 @@ export function SendFilePage() {
           <div className="success-icon">✅</div>
           <h1 className="title">{t("sendFile.done.title")}</h1>
           <p className="subtitle">{t("sendFile.done.subtitle")}</p>
+          {integrityVerified === true && (
+            <p className="hint motion-reveal">{t("sendFile.done.integrityOk")}</p>
+          )}
+          {integrityVerified === false && (
+            <p className="hint motion-reveal" style={{ color: "var(--color-error)" }}>
+              {t("sendFile.done.integrityFailed")}
+            </p>
+          )}
           <p className="safety-label">{t("sendFile.done.safety")}</p>
           <a href="/" className="btn btn-secondary">{t("common.goToSealDrop")}</a>
         </div>
@@ -455,11 +458,7 @@ export function SendFilePage() {
             {t("sendFile.ready.openBtn")}
           </button>
         )}
-        <p className="safety-label">
-          {t("sendFile.ready.safety").split("\n").map((line, i) => (
-            <span key={i}>{line}{i === 0 ? <br /> : null}</span>
-          ))}
-        </p>
+        <MultiLineText text={t("sendFile.ready.safety")} className="safety-label" />
         <hr className="divider" />
         <OpenOnDeviceSection
           handoffStep={handoffStep}

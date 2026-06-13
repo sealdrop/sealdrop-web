@@ -35,26 +35,26 @@ export function resolveSendExpiry(preset: SendExpiryPreset, now = new Date()): S
         preset,
         label: "1 hour",
         expiresAt: new Date(now.getTime() + 60 * 60 * 1000),
-        remainingDownloads: 999,
+        remainingDownloads: -1,
       };
     case "today": {
       const end = new Date(now);
       end.setHours(23, 59, 59, 999);
-      return { preset, label: "Today", expiresAt: end, remainingDownloads: 999 };
+      return { preset, label: "Today", expiresAt: end, remainingDownloads: -1 };
     }
     case "3d":
       return {
         preset,
         label: "3 days",
         expiresAt: new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000),
-        remainingDownloads: 999,
+        remainingDownloads: -1,
       };
     case "7d":
       return {
         preset,
         label: "7 days",
         expiresAt: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000),
-        remainingDownloads: 999,
+        remainingDownloads: -1,
       };
   }
 }

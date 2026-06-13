@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { deleteSendFile, ApiError } from "../lib/api.js";
+import { MultiLineText } from "../components/MultiLineText.js";
 
 type Step = "confirming" | "deleting" | "done" | "error";
 
@@ -23,6 +24,8 @@ export function SendFileDeletePage() {
     if (!fileId) return;
     const match = /[#&]token=([^&]+)/.exec(window.location.hash);
     if (!match) return;
+
+    if (!window.confirm(t("deleteFile.confirm.title"))) return;
 
     try {
       setStep("deleting");
@@ -69,11 +72,7 @@ export function SendFileDeletePage() {
       <div className="card stack" style={{ textAlign: "center" }}>
         <div className="success-icon">🗑️</div>
         <h1 className="title">{t("deleteFile.confirm.title")}</h1>
-        <p className="subtitle">
-          {t("deleteFile.confirm.subtitle").split("\n").map((line, i) => (
-            <span key={i}>{line}{i === 0 ? <br /> : null}</span>
-          ))}
-        </p>
+        <MultiLineText text={t("deleteFile.confirm.subtitle")} className="subtitle" />
         {step === "deleting" ? (
           <div className="stack-sm">
             <div className="progress"><div className="progress__bar" style={{ width: "70%" }} /></div>

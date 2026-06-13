@@ -19,6 +19,7 @@ export function LanguageSwitcher() {
             className={`lang-btn${current === lang.code ? " lang-btn--active" : ""}`}
             onClick={() => void i18n.changeLanguage(lang.code)}
             aria-label={lang.aria}
+            aria-current={current === lang.code ? "true" : undefined}
           >
             {lang.label}
           </button>

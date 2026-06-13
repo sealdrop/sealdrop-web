@@ -2,6 +2,20 @@
   "common": {
     "back": "← Back",
     "goToSealDrop": "Go to SealDrop",
+    "loading": "Loading…",
+    "errorTitle": "Something went wrong",
+    "errorMessage": "The page failed to load. Please try again.",
+    "pageTitle": {
+      "send": "Send a file — SealDrop",
+      "receive": "Receive a file — SealDrop",
+      "open": "Open a SealDrop link — SealDrop",
+      "home": "SealDrop — Temporary encrypted file exchange",
+      "howItWorks": "How it works — SealDrop",
+      "security": "Security model — SealDrop",
+      "privacy": "Privacy policy — SealDrop",
+      "terms": "Terms of service — SealDrop",
+      "abuse": "Abuse & legal — SealDrop"
+    },
     "openOnDevice": {
       "title": "Open on another device",
       "sendHint": "Need to open this on a computer? Create a short code instead of copying the long link.",
@@ -18,7 +32,8 @@
       "copyInstructions": "Copy instructions",
       "instructionsText": "I sent you a file with SealDrop.\n\nTo open it on your computer:\n1. Go to https://sealdrop.io/open\n2. Enter this code: {{code}}\n\nThis code expires in {{expiry}}.",
       "securityNote": "This code opens the same file link. Share it only with the intended recipient."
-    }
+    },
+    "largeDownloadWarning": "Large file: this browser can't save a file this large without running out of memory. Try Chrome, Edge, Firefox, or Safari, and avoid private/incognito windows."
   },
   "copyBtn": {
     "copy": "Copy",
@@ -47,6 +62,14 @@
   },
   "expiry": {
     "label": "Expires",
+    "openOnce": "Open once",
+    "expired": "Expired",
+    "lessThanHour": "Expires in less than an hour",
+    "hours": "Expires in {{count}} hour",
+    "hours_plural": "Expires in {{count}} hours",
+    "days": "Expires in {{count}} day",
+    "days_plural": "Expires in {{count}} days",
+    "loading": "Loading…",
     "send": {
       "openOnce": "Open once (default)",
       "1h": "1 hour",
@@ -88,6 +111,7 @@
     "deleteLink": "Generate a separate delete link",
     "sealBtn": "Seal and share",
     "sealing": "Sealing file in your browser…",
+    "hashing": "Checking file integrity… {{pct}}%",
     "uploading": "Uploading sealed file… {{pct}}%",
     "shared": {
       "title": "Shared to SealDrop",
@@ -153,6 +177,8 @@
     "done": {
       "title": "File opened",
       "subtitle": "Your download should have started.",
+      "integrityOk": "Integrity verified — the file matches what was sent.",
+      "integrityFailed": "Warning: this file may be incomplete or corrupted. Try downloading it again.",
       "safety": "This file was sealed before upload and decrypted only in your browser."
     }
   },
@@ -230,7 +256,16 @@
       "howItWorks": "How it works",
       "security": "Security",
       "createDropLink": "Create a drop link",
-      "sendFile": "Send a file"
+      "sendFile": "Send a file",
+      "menu": "Open menu"
+    },
+    "home": {
+      "subtitle": "Send or receive a sealed file.<br />No account. Gone after use.",
+      "sendTitle": "Send a file",
+      "sendDesc": "Seal a file and share a link. It disappears after use.",
+      "receiveTitle": "Receive a file",
+      "receiveDesc": "Create a private drop link. Only you can unlock what arrives.",
+      "safety": "Files are locked in your browser before upload.<br />The server never sees your file contents or keys."
     },
     "footer": {
       "tagline": "Temporary encrypted file exchange. No account. Gone after use.",
@@ -238,8 +273,9 @@
       "security": "Security",
       "privacy": "Privacy",
       "terms": "Terms",
-      "abuseAndLegal": "Abuse & legal",
-      "source": "Source code"
+    "abuseAndLegal": "Abuse & legal",
+    "source": "Source code",
+    "buildChecksums": "View build checksums"
     },
     "preview": {
       "ariaLabel": "SealDrop upload flow preview",

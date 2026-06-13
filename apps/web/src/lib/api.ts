@@ -55,11 +55,11 @@ export async function sendInit(body: SendInitBody): Promise<SendInitResponse> {
   });
 }
 
-export async function sendChunk(fileId: string, chunkIndex: number, data: ArrayBuffer): Promise<void> {
-  const res = await fetch(`${BASE}/api/send/${segment(fileId)}/chunk/${segment(chunkIndex)}`, {
+export async function uploadSendPart(fileId: string, partIndex: number, body: Blob): Promise<void> {
+  const res = await fetch(`${BASE}/api/send/${segment(fileId)}/part/${segment(partIndex)}`, {
     method: "PUT",
     headers: { "Content-Type": "application/octet-stream" },
-    body: data,
+    body,
   });
   if (!res.ok) throw new ApiError("server_error", res.status);
 }
@@ -73,23 +73,14 @@ export async function getSendMetadata(fileId: string): Promise<SendMetadataRespo
   return req(`/api/send/${segment(fileId)}/metadata`);
 }
 
-export async function getSendChunk(fileId: string, chunkIndex: number): Promise<ArrayBuffer> {
-  const res = await fetch(`${BASE}/api/send/${segment(fileId)}/chunk/${segment(chunkIndex)}`);
+export async function getSendBlob(fileId: string): Promise<ReadableStream<Uint8Array>> {
+  const res = await fetch(`${BASE}/api/send/${segment(fileId)}/blob`);
   if (!res.ok) {
     if (res.status === 404 || res.status === 410) throw new ApiError("not_found", res.status);
     throw new ApiError("server_error", res.status);
   }
-  return res.arrayBuffer();
-}
-
-export async function deleteSendFile(fileId: string, deleteToken: string): Promise<void> {
-  const res = await fetch(`${BASE}/api/send/${segment(fileId)}?token=${encodeURIComponent(deleteToken)}`, {
-    method: "DELETE",
-  });
-  if (!res.ok) {
-    if (res.status === 404) throw new ApiError("not_found", res.status);
-    throw new ApiError("server_error", res.status);
-  }
+  if (!res.body) throw new ApiError("server_error", res.status);
+  return res.body;
 }
 
 export async function openSendFile(fileId: string): Promise<void> {
@@ -99,13 +90,6 @@ export async function openSendFile(fileId: string): Promise<void> {
     if (res.status === 404) throw new ApiError("not_found", res.status);
     throw new ApiError("server_error", res.status);
   }
-}
-
-export async function getChunkStatus(fileId: string): Promise<number[]> {
-  const res = await fetch(`${BASE}/api/send/${segment(fileId)}/chunks/status`);
-  if (!res.ok) throw new ApiError("server_error", res.status);
-  const data = await res.json() as { uploaded: number[] };
-  return data.uploaded;
 }
 
 // ─── Receive ─────────────────────────────────────────────────────────────────
@@ -150,16 +134,26 @@ export async function receiveFileInit(
   });
 }
 
-export async function receiveChunk(
+export async function deleteSendFile(fileId: string, deleteToken: string): Promise<void> {
+  const res = await fetch(`${BASE}/api/send/${segment(fileId)}?token=${encodeURIComponent(deleteToken)}`, {
+    method: "DELETE",
+  });
+  if (!res.ok) {
+    if (res.status === 404) throw new ApiError("not_found", res.status);
+    throw new ApiError("server_error", res.status);
+  }
+}
+
+export async function uploadReceivePart(
   dropId: string,
   receivedFileId: string,
-  chunkIndex: number,
-  data: ArrayBuffer,
+  partIndex: number,
+  body: Blob,
 ): Promise<void> {
-  const res = await fetch(`${BASE}/api/receive/${segment(dropId)}/files/${segment(receivedFileId)}/chunk/${segment(chunkIndex)}`, {
+  const res = await fetch(`${BASE}/api/receive/${segment(dropId)}/files/${segment(receivedFileId)}/part/${segment(partIndex)}`, {
     method: "PUT",
     headers: { "Content-Type": "application/octet-stream" },
-    body: data,
+    body,
   });
   if (!res.ok) throw new ApiError("server_error", res.status);
 }
@@ -175,17 +169,17 @@ export async function getOwnerFiles(dropId: string): Promise<OwnerFilesResponse>
   return req(`/api/receive/${segment(dropId)}/owner/files`);
 }
 
-export async function getOwnerFileChunk(
+export async function getOwnerFileBlob(
   dropId: string,
   receivedFileId: string,
-  chunkIndex: number,
-): Promise<ArrayBuffer> {
-  const res = await fetch(`${BASE}/api/receive/${segment(dropId)}/owner/files/${segment(receivedFileId)}/chunk/${segment(chunkIndex)}`);
+): Promise<ReadableStream<Uint8Array>> {
+  const res = await fetch(`${BASE}/api/receive/${segment(dropId)}/owner/files/${segment(receivedFileId)}/blob`);
   if (!res.ok) {
     if (res.status === 404 || res.status === 410) throw new ApiError("not_found", res.status);
     throw new ApiError("server_error", res.status);
   }
-  return res.arrayBuffer();
+  if (!res.body) throw new ApiError("server_error", res.status);
+  return res.body;
 }
 
 // ─── Open links (handoff) ─────────────────────────────────────────────────────
