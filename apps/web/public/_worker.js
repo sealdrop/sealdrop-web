@@ -2,7 +2,7 @@ const MARKDOWN_ROUTES = {
   "/": `---
 title: SealDrop — Temporary encrypted file exchange
 description: Send or receive a sealed file with end-to-end encryption. No account required. Files auto-delete after use or expiry.
-image: https://sealdrop.io/og-image.png
+image: https://sealdrop.io/og-image.jpg
 ---
 
 # SealDrop
@@ -164,11 +164,11 @@ description: What SealDrop collects, stores, and does not store.
 
 ## What this service stores
 
-SealDrop stores encrypted file blobs, encrypted filenames and MIME types, approximate file sizes, expiry timestamps, and randomly generated file and drop IDs. None of these are linked to your identity.
+For file transfers, SealDrop stores encrypted file blobs, encrypted filenames and MIME types, approximate file sizes, expiry timestamps, and randomly generated file and drop IDs. These transfer records are not linked to your identity.
 
 ## What this service does not store
 
-- Your name, email address, or any personal identifier
+- An account identity for anonymous file transfers
 - Plaintext file content or filenames
 - Encryption keys or private keys
 - URL fragments, because browsers never transmit them to servers
@@ -177,6 +177,10 @@ SealDrop stores encrypted file blobs, encrypted filenames and MIME types, approx
 ## Data retention
 
 Files are deleted automatically when their expiry condition is met: first download, time limit, or drop closure. No manual retention period applies. No backups of file content are maintained.
+
+## SealDrop Pro pilot waitlist
+
+If you voluntarily join the SealDrop Pro pilot, we store your work email, profession, document-receipt frequency, language, campaign source, and consent time. We use them only for research and the pilot. Inactive records are deleted within 90 days. You may withdraw consent at pro@sealdrop.io. This data is not linked to your encrypted transfers.
 
 ## Third-party services
 
@@ -190,7 +194,7 @@ No tracking cookies are set. No third-party analytics or advertising scripts are
 
 ## Your rights
 
-Because SealDrop does not store personal data linked to your identity, there is typically nothing to access, correct, or delete on our end. If you believe we hold personal data you can be identified by, contact us and we will investigate.
+Anonymous transfer records are not linked to your identity. If you joined the Pro pilot waitlist, you may ask to access, correct, or delete that contact record by emailing pro@sealdrop.io.
 
 ## Contact
 
@@ -351,6 +355,16 @@ function isMachineDiscoveryPath(pathname) {
     || pathname === "/.well-known";
 }
 
+function isDotfileOrBuildArtifact(pathname) {
+  const segments = pathname.split("/");
+  const filename = segments[segments.length - 1] ?? "";
+  if (filename.startsWith(".")) return true;
+  if (segments.includes(".env") || segments.includes(".git")) return true;
+  if (filename.endsWith(".map") || filename.endsWith(".ts") || filename.endsWith(".tsx")) return true;
+  if (filename === "package.json" || filename === "vite.config.ts" || filename === "wrangler.toml") return true;
+  return false;
+}
+
 function isHtmlFallback(response) {
   return response.headers.get("Content-Type")?.toLowerCase().includes("text/html");
 }
@@ -358,6 +372,11 @@ function isHtmlFallback(response) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    if (url.hostname === "www.sealdrop.io") {
+      const redirectUrl = new URL(url.pathname + url.search, "https://sealdrop.io");
+      return Response.redirect(redirectUrl.href, 301);
+    }
 
     if (url.pathname === "/api" || url.pathname === "/api/") {
       return jsonResponse({ error: "not found" }, 404);
@@ -370,6 +389,7 @@ export default {
 
     const response = await env.ASSETS.fetch(request);
     if (isMachineDiscoveryPath(url.pathname) && isHtmlFallback(response)) return notFoundResponse(request);
+    if (isDotfileOrBuildArtifact(url.pathname) && isHtmlFallback(response)) return notFoundResponse(request);
 
     return response;
   },

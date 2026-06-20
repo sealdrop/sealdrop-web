@@ -52,6 +52,7 @@ async function deriveHandoffKey(secret: string, salt: Uint8Array): Promise<Crypt
 
 export interface HandoffEncryptResult {
   handoffId: string;
+  secret: string;
   displayCode: string;
   encryptedPayload: string;
   payloadIv: string;
@@ -72,6 +73,7 @@ export async function encryptHandoffUrl(fullUrl: string): Promise<HandoffEncrypt
   );
   return {
     handoffId,
+    secret,
     displayCode: formatHandoffCode(handoffId, secret),
     encryptedPayload: toBase64Url(ciphertext),
     payloadIv: toBase64Url(iv.buffer as ArrayBuffer),

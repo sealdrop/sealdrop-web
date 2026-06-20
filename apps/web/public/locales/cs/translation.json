@@ -54,7 +54,7 @@
   },
   "filePicker": {
     "tapToChoose": "Klepněte pro výběr souboru",
-    "hint": "nebo přetáhněte · až 50 GB",
+    "hint": "nebo přetáhněte · až 200 GB",
     "tapToChange": "klepněte pro změnu",
     "tooLarge": "Soubor je příliš velký. Maximální velikost je {{size}}.",
     "ariaChoose": "Vyberte soubor k nahrání",
@@ -165,14 +165,17 @@
       "generic": "Něco se pokazilo. Zkontrolujte prosím odkaz a zkuste to znovu.",
       "expired": "Tento soubor již není dostupný. Možná vypršel nebo byl již otevřen.",
       "expiredOpen": "Tento soubor již není dostupný. Byl již otevřen nebo mu vypršela platnost.",
-      "downloadFailed": "Nepodařilo se otevřít soubor. Zkuste to znovu."
+      "downloadFailed": "Nepodařilo se otevřít soubor. Zkuste to znovu.",
+      "downloadTooLarge": "Tento prohlížeč neumí uložit soubor této velikosti bez vyčerpání paměti. Zkuste Chrome, Edge, Firefox nebo Safari v běžném okně."
     },
     "ready": {
       "title": "Zapečetěný soubor",
       "subtitle": "Někdo vám poslal zapečetěný soubor.",
       "openBtn": "Otevřít soubor",
       "downloading": "Stahování a odemykání… {{pct}}%",
-      "safety": "Tento soubor je zapečetěn před nahráním a odemknut pouze ve vašem prohlížeči.\nServer nikdy nevidí jeho obsah."
+      "safety": "Tento soubor je zapečetěn před nahráním a odemknut pouze ve vašem prohlížeči.\nServer nikdy nevidí jeho obsah.",
+      "privateBrowsingTitle": "Zjištěno soukromé/inkognito okno",
+      "privateBrowsingHint": "Velké soubory nemusí v soukromém prohlížení fungovat. Pro nejlepší zážitek použijte běžné okno."
     },
     "done": {
       "title": "Soubor otevřen",
@@ -632,9 +635,9 @@
     },
     "privacy": {
       "eyebrow": "Soukromí",
-      "heading": "Nic se nesleduje. Nic se neuchovává.",
+      "heading": "Přenosy zůstávají anonymní. Nic se nesleduje.",
       "noAccountsTitle": "Žádné účty",
-      "noAccountsBody": "Žádný e-mail, žádné uživatelské jméno, žádné heslo. Soubory a přijímací místa jsou identifikovány pouze náhodnými ID.",
+      "noAccountsBody": "Anonymní přenos souborů nevyžaduje e-mail, jméno ani heslo. Volitelný seznam zájemců o pilot Pro je veden odděleně od přenosů.",
       "noAnalyticsTitle": "Žádná analytika",
       "noAnalyticsBody": "Žádné sledovací skripty třetích stran, žádné fingerprinting, žádné trvalé cookies. Stránka, kterou načtete, je stránka, kterou dostanete.",
       "cloudflareTitle": "Infrastruktura Cloudflare",
@@ -647,12 +650,12 @@
     "heading": "Co sbíráme a proč.",
     "whatStored": {
       "title": "Co tato služba ukládá",
-      "body": "SealDrop ukládá zašifrované soubory, zašifrované názvy souborů a MIME typy, přibližné velikosti souborů, časová razítka vypršení a náhodně vygenerovaná ID souborů a přijímacích míst. Nic z toho není spojeno s vaší identitou."
+      "body": "Pro přenosy souborů SealDrop ukládá zašifrované soubory a metadata, přibližné velikosti, dobu platnosti a náhodná ID. Tyto záznamy nejsou spojeny s vaší identitou. Volitelný seznam zájemců o pilot SealDrop Pro je popsán samostatně níže."
     },
     "whatNotStored": {
       "title": "Co tato služba neukládá",
       "items": [
-        "Vaše jméno, e-mailovou adresu ani žádný osobní identifikátor",
+        "Identitu účtu pro anonymní přenosy souborů",
         "Obsah souboru nebo názvy souborů v nešifrované podobě",
         "Šifrovací klíče ani soukromé klíče",
         "Fragmenty URL (prohlížeče je nikdy nepřenášejí na servery)",
@@ -675,11 +678,11 @@
     },
     "rights": {
       "title": "Vaše práva",
-      "body": "Protože SealDrop neukládá osobní údaje spojené s vaší identitou, obvykle neexistuje nic, k čemu by bylo možné přistupovat, opravovat nebo mazat. Pokud se domníváte, že uchováváme osobní údaje, podle nichž vás lze identifikovat, kontaktujte nás a budeme to prošetřovat."
+      "body": "Anonymní přenosy nejsou spojeny s vaší identitou. Pokud jste se přihlásili do pilotu Pro, můžete požádat o přístup, opravu nebo smazání kontaktního záznamu na pro@sealdrop.io."
     },
     "changes": {
       "title": "Změny těchto zásad",
-      "body": "Pokud se tyto zásady podstatně změní, tuto stránku aktualizujeme. Nemůžeme vás informovat e-mailem, protože vaši e-mailovou adresu nemáme."
+      "body": "Pokud se tyto zásady podstatně změní, tuto stránku aktualizujeme. Přihlášení do pilotu Pro vás nepřihlašuje k nesouvisejícím marketingovým e-mailům."
     },
     "contact": {
       "title": "Kontakt",

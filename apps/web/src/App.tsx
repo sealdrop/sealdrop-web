@@ -1,5 +1,6 @@
-import { lazy, Suspense, type ComponentType } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { lazy, Suspense, useEffect, useState, type ComponentType } from "react";
+import { Routes, Route, useLocation } from "react-router";
+import { AnimatePresence, motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "./components/LanguageSwitcher.js";
 import { ErrorBoundary } from "./components/ErrorBoundary.js";
@@ -21,39 +22,85 @@ const ReceivePage = lazyNamed(() => import("./pages/ReceivePage.js"), "ReceivePa
 const DropPage = lazyNamed(() => import("./pages/DropPage.js"), "DropPage");
 const OwnerPage = lazyNamed(() => import("./pages/OwnerPage.js"), "OwnerPage");
 const OpenPage = lazyNamed(() => import("./pages/OpenPage.js"), "OpenPage");
+const NotFoundPage = lazyNamed(() => import("./pages/NotFoundPage.js"), "NotFoundPage");
+const ProPage = lazyNamed(() => import("./pages/ProPage.js"), "ProPage");
 
-function PageFallback() {
-  const { t } = useTranslation();
-  return <div className="page"><div className="card">{t("common.loading")}</div></div>;
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  return null;
 }
 
-const LANDING_ROUTES = new Set(["/", "/how-it-works", "/security", "/privacy", "/terms", "/abuse"]);
+function PageFallback() {
+  return null;
+}
+
+function LoadingBar() {
+  const location = useLocation();
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    setVisible(true);
+    const t = setTimeout(() => setVisible(false), 400);
+    return () => clearTimeout(t);
+  }, [location.pathname]);
+
+  if (!visible) return null;
+  return <div className="loading-bar" aria-hidden="true" />;
+}
+
+function PageTransition({ children }: { children: React.ReactNode }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.98 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.98 }}
+      transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+const LANDING_ROUTES = new Set(["/", "/how-it-works", "/security", "/privacy", "/terms", "/abuse", "/pro", "/404"]);
 
 export function App() {
+  const { t } = useTranslation();
   const location = useLocation();
   const showGlobalLang = !LANDING_ROUTES.has(location.pathname);
 
   return (
     <>
+      <ScrollToTop />
+      <LoadingBar />
+      {/* a11y: 2.4.1 - skip link as first focusable element */}
+      <a href="#main-content" className="skip-link">{t("common.skipToContent")}</a>
       {showGlobalLang && <LanguageSwitcher />}
       <ErrorBoundary>
         <Suspense fallback={<PageFallback />}>
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/how-it-works" element={<HowItWorksPage />} />
-            <Route path="/security" element={<SecurityPage />} />
-            <Route path="/privacy" element={<PrivacyPage />} />
-            <Route path="/terms" element={<TermsPage />} />
-            <Route path="/abuse" element={<AbuseReportPage />} />
-            <Route path="/send" element={<SendPage />} />
-            <Route path="/send/shared" element={<SendPage />} />
-            <Route path="/receive" element={<ReceivePage />} />
-            <Route path="/s/:fileId" element={<SendFilePage />} />
-            <Route path="/s/:fileId/delete" element={<SendFileDeletePage />} />
-            <Route path="/r/:dropId" element={<DropPage />} />
-            <Route path="/r/:dropId/owner" element={<OwnerPage />} />
-            <Route path="/open" element={<OpenPage />} />
-          </Routes>
+          {/* a11y: 2.4.1 - skip link target */}
+          <div id="main-content" tabIndex={-1}>
+            <AnimatePresence mode="wait">
+              <Routes location={location} key={location.pathname}>
+                <Route path="/" element={<PageTransition><LandingPage /></PageTransition>} />
+                <Route path="/how-it-works" element={<PageTransition><HowItWorksPage /></PageTransition>} />
+                <Route path="/security" element={<PageTransition><SecurityPage /></PageTransition>} />
+                <Route path="/privacy" element={<PageTransition><PrivacyPage /></PageTransition>} />
+                <Route path="/terms" element={<PageTransition><TermsPage /></PageTransition>} />
+                <Route path="/abuse" element={<PageTransition><AbuseReportPage /></PageTransition>} />
+                <Route path="/pro" element={<PageTransition><ProPage /></PageTransition>} />
+                <Route path="/send" element={<PageTransition><SendPage /></PageTransition>} />
+                <Route path="/send/shared" element={<PageTransition><SendPage /></PageTransition>} />
+                <Route path="/receive" element={<PageTransition><ReceivePage /></PageTransition>} />
+                <Route path="/s/:fileId" element={<PageTransition><SendFilePage /></PageTransition>} />
+                <Route path="/s/:fileId/delete" element={<PageTransition><SendFileDeletePage /></PageTransition>} />
+                <Route path="/r/:dropId" element={<PageTransition><DropPage /></PageTransition>} />
+                <Route path="/r/:dropId/owner" element={<PageTransition><OwnerPage /></PageTransition>} />
+                <Route path="/open" element={<PageTransition><OpenPage /></PageTransition>} />
+                <Route path="*" element={<PageTransition><NotFoundPage /></PageTransition>} />
+              </Routes>
+            </AnimatePresence>
+          </div>
         </Suspense>
       </ErrorBoundary>
     </>

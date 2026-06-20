@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
 import { generateOwnerKeyPair, exportPublicKey, privateKeyToFragment, buildOwnerLink } from "@sealdrop/crypto";
 import { DEFAULT_RECEIVE_EXPIRY } from "@sealdrop/shared";
@@ -8,7 +8,6 @@ import { ExpirySelector } from "../components/ExpirySelector.js";
 import { LinkBox } from "../components/LinkBox.js";
 import { QRCode } from "../components/QRCode.js";
 import { TurnstileWidget, turnstileEnabled } from "../components/TurnstileWidget.js";
-import { MotionIconStack } from "../components/MotionIconStack.js";
 import { InstallHint } from "../components/InstallHint.js";
 import { MultiLineText } from "../components/MultiLineText.js";
 import { receiveInit, ApiError } from "../lib/api.js";
@@ -55,7 +54,6 @@ export function ReceivePage() {
     return (
       <div className="page">
         <div className="card stack">
-          <MotionIconStack variant="receive" />
           <div className="nav">
             <button className="back" onClick={() => navigate("/")}>{t("common.back")}</button>
           </div>
@@ -84,7 +82,6 @@ export function ReceivePage() {
   return (
     <div className="page">
       <div className="card stack">
-        <MotionIconStack variant="receive" />
         <div className="nav">
           <button className="back" onClick={() => navigate("/")}>{t("common.back")}</button>
         </div>
@@ -96,11 +93,14 @@ export function ReceivePage() {
 
         <ExpirySelector mode="receive" value={expiry} onChange={setExpiry} />
 
-        {step === "error" && <div className="error-box motion-reveal">{errorMsg}</div>}
+        {step === "error" && <div className="error-box motion-reveal" role="alert">{errorMsg}</div>}
 
         {step === "creating" ? (
           <div className="stack-sm motion-reveal">
-            <div className="progress"><div className="progress__bar" style={{ width: "60%" }} /></div>
+            {/* a11y: 4.1.2/4.1.3 - expose progress state to assistive tech */}
+            <div className="progress" role="progressbar" aria-label={t("receive.creating")} aria-valuenow={60} aria-valuemin={0} aria-valuemax={100}>
+              <div className="progress__bar" style={{ width: "60%" }} />
+            </div>
             <p className="hint" style={{ textAlign: "center" }}>{t("receive.creating")}</p>
           </div>
         ) : (

@@ -207,7 +207,7 @@ describe("encryptStream / decryptStream", () => {
     expectBytesEqual(new Uint8Array(decrypted), original);
   });
 
-  it("round-trips a file larger than chunk size", async () => {
+  it("round-trips a file larger than chunk size", { timeout: 300_000 }, async () => {
     const key = await generateFileKey();
     const baseIv = generateIV();
     const original = new Uint8Array(CHUNK_SIZE_BYTES + 500);

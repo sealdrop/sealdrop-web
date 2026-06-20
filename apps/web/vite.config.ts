@@ -40,6 +40,12 @@ function sriAndChecksums(): Plugin {
           `${attr}="/${assetPath}" integrity="sha384-${hash}" crossorigin="anonymous"`,
         );
       }
+
+      // Defer service worker registration to unblock rendering
+      html = html.replace(
+        /<script id="vite-plugin-pwa:register-sw" src="\/registerSW\.js"><\/script>/,
+        '<script id="vite-plugin-pwa:register-sw" src="/registerSW.js" defer></script>',
+      );
       writeFileSync(htmlPath, html, "utf-8");
       console.log("SRI integrity attributes injected into index.html");
 

@@ -5,6 +5,7 @@ import type {
   ReceiveSessionResponse,
   ReceiveFileInitResponse,
   OwnerFilesResponse,
+  UploadStatusResponse,
 } from "@sealdrop/shared";
 
 const BASE = import.meta.env["VITE_API_URL"] ?? "";
@@ -67,6 +68,40 @@ export async function uploadSendPart(fileId: string, partIndex: number, body: Bl
 export async function sendComplete(fileId: string): Promise<void> {
   const res = await fetch(`${BASE}/api/send/${segment(fileId)}/complete`, { method: "PUT" });
   if (!res.ok) throw new ApiError("server_error", res.status);
+}
+
+export async function getSendUploadStatus(fileId: string): Promise<UploadStatusResponse> {
+  return req(`/api/send/${segment(fileId)}/upload-status`);
+}
+
+export async function getReceiveUploadStatus(dropId: string, receivedFileId: string): Promise<UploadStatusResponse> {
+  return req(`/api/receive/${segment(dropId)}/files/${segment(receivedFileId)}/upload-status`);
+}
+
+export async function retryWithBackoff<T>(
+  fn: () => Promise<T>,
+  maxAttempts = 3,
+  baseDelayMs = 1000,
+): Promise<T> {
+  let lastError: unknown;
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    try {
+      return await fn();
+    } catch (err) {
+      lastError = err;
+      if (
+        err instanceof ApiError &&
+        err.status >= 400 && err.status < 500 &&
+        err.status !== 408 && err.status !== 429
+      ) {
+        throw err;
+      }
+      if (attempt < maxAttempts - 1) {
+        await new Promise<void>((resolve) => setTimeout(resolve, baseDelayMs * (attempt + 1)));
+      }
+    }
+  }
+  throw lastError;
 }
 
 export async function getSendMetadata(fileId: string): Promise<SendMetadataResponse> {
@@ -135,8 +170,9 @@ export async function receiveFileInit(
 }
 
 export async function deleteSendFile(fileId: string, deleteToken: string): Promise<void> {
-  const res = await fetch(`${BASE}/api/send/${segment(fileId)}?token=${encodeURIComponent(deleteToken)}`, {
+  const res = await fetch(`${BASE}/api/send/${segment(fileId)}`, {
     method: "DELETE",
+    headers: { "X-Delete-Token": deleteToken },
   });
   if (!res.ok) {
     if (res.status === 404) throw new ApiError("not_found", res.status);
@@ -185,7 +221,6 @@ export async function getOwnerFileBlob(
 // ─── Open links (handoff) ─────────────────────────────────────────────────────
 
 export interface CreateOpenLinkBody {
-  handoff_id: string;
   encrypted_payload: string;
   payload_iv: string;
   kdf_salt: string;
@@ -220,4 +255,24 @@ export async function getOpenLink(handoffId: string): Promise<OpenLinkPayload> {
 export async function consumeOpenLink(handoffId: string): Promise<void> {
   const res = await fetch(`${BASE}/api/open-links/${segment(handoffId)}/consume`, { method: "POST" });
   if (!res.ok && res.status !== 204) throw new ApiError("server_error", res.status);
+}
+
+// ─── Pro validation waitlist ───────────────────────────────────────────────
+
+export interface ProWaitlistBody {
+  email: string;
+  role: "accountant" | "tax-advisor" | "bookkeeper" | "other";
+  frequency: "weekly" | "monthly" | "quarterly" | "rarely";
+  language: "cs" | "en" | "mk";
+  source: "pro-page" | "accounting-outreach";
+  contact_consent: true;
+  turnstile_token?: string;
+}
+
+export async function joinProWaitlist(body: ProWaitlistBody): Promise<{ accepted: true }> {
+  return req("/api/pro/waitlist", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
 }

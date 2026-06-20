@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { MotionIconStack } from "../components/MotionIconStack.js";
 import { InstallHint } from "../components/InstallHint.js";
 import { MultiLineText } from "../components/MultiLineText.js";
 import { HandoffQrScanner } from "../components/HandoffQrScanner.js";
@@ -44,7 +43,6 @@ export function OpenPage() {
   return (
     <div className="page">
       <div className="card stack">
-        <MotionIconStack variant="open" />
         <div className="nav">
           <a className="back" href="/">{t("common.back")}</a>
         </div>
@@ -56,7 +54,10 @@ export function OpenPage() {
         <InstallHint />
 
         <div className="stack-sm">
+          {/* a11y: 3.3.2 - associate visible field with an accessible label */}
+          <label className="sr-only" htmlFor="open-code">{t("open.placeholder")}</label>
           <input
+            id="open-code"
             className="input"
             type="text"
             placeholder={t("open.placeholder")}
@@ -68,7 +69,7 @@ export function OpenPage() {
             spellCheck={false}
           />
           {step === "error" && (
-            <p className="hint motion-reveal" style={{ color: "var(--color-error)" }}>
+            <p className="hint motion-reveal" role="alert" style={{ color: "var(--de-error)" }}>
               {t("open.error")}
             </p>
           )}

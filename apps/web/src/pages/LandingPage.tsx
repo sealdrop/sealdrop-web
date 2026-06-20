@@ -1,9 +1,11 @@
 import { useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { useTranslation } from "react-i18next";
+import { motion } from "motion/react";
 import "../landing.css";
 import { LandingNav } from "../components/LandingNav";
 import { LandingFooter } from "../components/LandingFooter";
+import { FadeIn } from "../components/FadeIn";
 import { usePageTitle } from "../lib/use-page-title.js";
 
 function ButtonLink({ to, children, variant = "primary" }: { to: string; children: React.ReactNode; variant?: "primary" | "secondary" }) {
@@ -67,7 +69,14 @@ function UploadPreview() {
   }, []);
 
   return (
-    <div ref={ref} className="l-preview" aria-label={t("landing.preview.ariaLabel")}>
+    <motion.div
+      ref={ref}
+      className="l-preview"
+      aria-label={t("landing.preview.ariaLabel")}
+      initial={{ opacity: 0, scale: 0.95, rotateY: -8 }}
+      animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+      transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+    >
       <div className="l-preview__top">
         <div>
           <p className="l-preview__eyebrow">{t("landing.preview.eyebrow")}</p>
@@ -100,7 +109,7 @@ function UploadPreview() {
         <span>{t("landing.preview.linkPlaceholder")}</span>
         <button type="button">{t("landing.preview.copyLink")}</button>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -109,18 +118,48 @@ function Hero() {
   return (
     <section className="l-hero">
       <div className="l-hero__content">
-        <div className="l-kicker"><span /> {t("landing.hero.kicker")}</div>
-        <h1>{t("landing.hero.heading")}</h1>
-        <p>{t("landing.hero.body")}</p>
-        <div className="l-hero__actions">
+        <motion.div
+          className="l-kicker"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <span /> {t("landing.hero.kicker")}
+        </motion.div>
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+        >
+          {t("landing.hero.heading")}
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        >
+          {t("landing.hero.body")}
+        </motion.p>
+        <motion.div
+          className="l-hero__actions"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        >
           <ButtonLink to="/send">{t("landing.hero.sendBtn")}</ButtonLink>
           <ButtonLink to="/receive" variant="secondary">{t("landing.hero.dropBtn")}</ButtonLink>
-        </div>
-        <div className="l-trust-note" aria-label="Trust notes">
+        </motion.div>
+        <motion.div
+          className="l-trust-note"
+          aria-label="Trust notes"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.45 }}
+        >
           <Badge>{t("landing.hero.badgeNoAccount")}</Badge>
           <Badge>{t("landing.hero.badgeEncrypted")}</Badge>
           <Badge>{t("landing.hero.badgeDeleted")}</Badge>
-        </div>
+        </motion.div>
       </div>
       <UploadPreview />
     </section>
@@ -137,22 +176,28 @@ function HowItWorks() {
 
   return (
     <section id="how-it-works" className="l-section">
-      <div className="l-section__heading">
-        <p className="l-eyebrow">{t("landing.howItWorks.eyebrow")}</p>
-        <h2>{t("landing.howItWorks.heading")}</h2>
-      </div>
+      <FadeIn>
+        <div className="l-section__heading">
+          <p className="l-eyebrow">{t("landing.howItWorks.eyebrow")}</p>
+          <h2>{t("landing.howItWorks.heading")}</h2>
+        </div>
+      </FadeIn>
       <div className="l-steps">
         {steps.map(([title, text], index) => (
-          <article className="l-card" key={index}>
-            <span className="l-step-number">{index + 1}</span>
-            <h3>{title}</h3>
-            <p>{text}</p>
-          </article>
+          <FadeIn key={index} delay={index * 0.1}>
+            <article className="l-card">
+              <span className="l-step-number">{index + 1}</span>
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </article>
+          </FadeIn>
         ))}
       </div>
-      <div className="l-section__action">
-        <Link to="/how-it-works" className="l-btn l-btn--secondary">{t("landing.howItWorks.fullWalkthrough")}</Link>
-      </div>
+      <FadeIn delay={0.3}>
+        <div className="l-section__action">
+          <Link to="/how-it-works" className="l-btn l-btn--secondary">{t("landing.howItWorks.fullWalkthrough")}</Link>
+        </div>
+      </FadeIn>
     </section>
   );
 }
@@ -170,16 +215,20 @@ function FeatureGrid() {
 
   return (
     <section className="l-section l-section--wide">
-      <div className="l-section__heading">
-        <p className="l-eyebrow">{t("landing.features.eyebrow")}</p>
-        <h2>{t("landing.features.heading")}</h2>
-      </div>
+      <FadeIn>
+        <div className="l-section__heading">
+          <p className="l-eyebrow">{t("landing.features.eyebrow")}</p>
+          <h2>{t("landing.features.heading")}</h2>
+        </div>
+      </FadeIn>
       <div className="l-feature-grid">
         {features.map(([title, text], index) => (
-          <article className="l-card l-card--compact" key={index}>
-            <h3>{title}</h3>
-            <p>{text}</p>
-          </article>
+          <FadeIn key={index} delay={index * 0.07}>
+            <article className="l-card l-card--compact">
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </article>
+          </FadeIn>
         ))}
       </div>
     </section>
@@ -190,17 +239,19 @@ function SecurityNote() {
   const { t } = useTranslation();
   return (
     <section id="security" className="l-section">
-      <div className="l-security-note">
-        <div>
-          <p className="l-eyebrow">{t("landing.security.eyebrow")}</p>
-          <h2>{t("landing.security.heading")}</h2>
+      <FadeIn>
+        <div className="l-security-note">
+          <div>
+            <p className="l-eyebrow">{t("landing.security.eyebrow")}</p>
+            <h2>{t("landing.security.heading")}</h2>
+          </div>
+          <div className="l-security-note__copy">
+            <p>{t("landing.security.body1")}</p>
+            <p>{t("landing.security.body2")}</p>
+            <Link to="/security" className="l-btn l-btn--secondary">{t("landing.security.fullModel")}</Link>
+          </div>
         </div>
-        <div className="l-security-note__copy">
-          <p>{t("landing.security.body1")}</p>
-          <p>{t("landing.security.body2")}</p>
-          <Link to="/security" className="l-btn l-btn--secondary">{t("landing.security.fullModel")}</Link>
-        </div>
-      </div>
+      </FadeIn>
     </section>
   );
 }
@@ -209,22 +260,24 @@ function VerifySection() {
   const { t } = useTranslation();
   return (
     <section className="l-section">
-      <div className="l-security-note">
-        <div>
-          <p className="l-eyebrow">{t("landing.verify.eyebrow")}</p>
-          <h2>{t("landing.verify.heading")}</h2>
+      <FadeIn>
+        <div className="l-security-note">
+          <div>
+            <p className="l-eyebrow">{t("landing.verify.eyebrow")}</p>
+            <h2>{t("landing.verify.heading")}</h2>
+          </div>
+          <div className="l-security-note__copy">
+            <p>{t("landing.verify.body")}</p>
+            <ul className="l-verify-list">
+              <li><Link to="/security">{t("landing.verify.linkSecurity")}</Link></li>
+              <li><Link to="/security">{t("landing.verify.linkBuild")}</Link></li>
+              <li><a href="/.well-known/security.txt">{t("landing.verify.linkSecurityTxt")}</a></li>
+              <li><Link to="/privacy">{t("landing.verify.linkPrivacy")}</Link></li>
+              <li><a href="https://github.com/sealdrop/sealdrop-web" target="_blank" rel="noreferrer">{t("landing.verify.linkSource")}</a></li>
+            </ul>
+          </div>
         </div>
-        <div className="l-security-note__copy">
-          <p>{t("landing.verify.body")}</p>
-          <ul className="l-verify-list">
-            <li><Link to="/security">{t("landing.verify.linkSecurity")}</Link></li>
-            <li><Link to="/security">{t("landing.verify.linkBuild")}</Link></li>
-            <li><a href="/.well-known/security.txt">{t("landing.verify.linkSecurityTxt")}</a></li>
-            <li><Link to="/privacy">{t("landing.verify.linkPrivacy")}</Link></li>
-            <li><a href="https://github.com/sealdrop/sealdrop-web" target="_blank" rel="noreferrer">{t("landing.verify.linkSource")}</a></li>
-          </ul>
-        </div>
-      </div>
+      </FadeIn>
     </section>
   );
 }
@@ -232,16 +285,18 @@ function VerifySection() {
 function FinalCta() {
   const { t } = useTranslation();
   return (
-    <section className="l-final">
-      <div>
-        <p className="l-eyebrow">{t("landing.cta.eyebrow")}</p>
-        <h2>{t("landing.cta.heading")}</h2>
-      </div>
-      <div className="l-final__actions">
-        <ButtonLink to="/send">{t("landing.cta.sendBtn")}</ButtonLink>
-        <ButtonLink to="/receive" variant="secondary">{t("landing.cta.dropBtn")}</ButtonLink>
-      </div>
-    </section>
+    <FadeIn>
+      <section className="l-final">
+        <div>
+          <p className="l-eyebrow">{t("landing.cta.eyebrow")}</p>
+          <h2>{t("landing.cta.heading")}</h2>
+        </div>
+        <div className="l-final__actions">
+          <ButtonLink to="/send">{t("landing.cta.sendBtn")}</ButtonLink>
+          <ButtonLink to="/receive" variant="secondary">{t("landing.cta.dropBtn")}</ButtonLink>
+        </div>
+      </section>
+    </FadeIn>
   );
 }
 

@@ -53,20 +53,20 @@ export function FilePicker({ file, onFile }: Props) {
         />
         {file ? (
           <>
-            <span className="file-picker__icon">📄</span>
+            <span className="file-picker__icon" aria-hidden="true">📄</span>
             <span className="file-picker__text">{file.name}</span>
             <span className="file-picker__hint">{formatBytes(file.size)} · {t("filePicker.tapToChange")}</span>
           </>
         ) : (
           <>
-            <span className="file-picker__icon">📁</span>
+            <span className="file-picker__icon" aria-hidden="true">📁</span>
             <span className="file-picker__text">{t("filePicker.tapToChoose")}</span>
             <span className="file-picker__hint">{t("filePicker.hint")}</span>
           </>
         )}
       </div>
       {sizeError && (
-        <p className="hint" style={{ color: "var(--color-error)" }}>
+        <p className="hint" role="alert" style={{ color: "var(--de-error)" }}>
           {t("filePicker.tooLarge", { size: formatBytes(MAX_FILE_SIZE_BYTES) })}
         </p>
       )}

@@ -1,5 +1,6 @@
 {
   "common": {
+    "skipToContent": "Skip to main content",
     "back": "← Back",
     "goToSealDrop": "Go to SealDrop",
     "loading": "Loading…",
@@ -54,7 +55,7 @@
   },
   "filePicker": {
     "tapToChoose": "Tap to choose a file",
-    "hint": "or drag and drop · up to 50 GB",
+    "hint": "or drag and drop · up to 200 GB",
     "tapToChange": "tap to change",
     "tooLarge": "File is too large. Maximum size is {{size}}.",
     "ariaChoose": "Choose a file to upload",
@@ -109,6 +110,13 @@
       "hint": "A short code will be generated and shown after upload. Send it separately from the link."
     },
     "deleteLink": "Generate a separate delete link",
+    "resume": {
+      "bannerTitle": "Interrupted upload found.",
+      "bannerBody": "Re-select {{filename}} to continue where you left off.",
+      "resumeBtn": "Resume upload",
+      "dismiss": "Start over",
+      "expiredError": "Previous upload expired — please start over."
+    },
     "sealBtn": "Seal and share",
     "sealing": "Sealing file in your browser…",
     "hashing": "Checking file integrity… {{pct}}%",
@@ -632,9 +640,9 @@
     },
     "privacy": {
       "eyebrow": "Privacy",
-      "heading": "Nothing tracked. Nothing retained.",
+      "heading": "Transfers stay anonymous. Nothing tracked.",
       "noAccountsTitle": "No accounts",
-      "noAccountsBody": "No email, no username, no password. Files and drop links are identified only by random IDs.",
+      "noAccountsBody": "Anonymous file transfers need no email, username, or password. The optional Pro pilot waitlist is kept separate from transfer records.",
       "noAnalyticsTitle": "No analytics",
       "noAnalyticsBody": "No third-party tracking scripts, no fingerprinting, no persistent cookies. The page you load is the page you get.",
       "cloudflareTitle": "Cloudflare infrastructure",
@@ -647,12 +655,12 @@
     "heading": "What we collect and why.",
     "whatStored": {
       "title": "What this service stores",
-      "body": "SealDrop stores encrypted file blobs, encrypted filenames and MIME types, approximate file sizes, expiry timestamps, and randomly generated file and drop IDs. None of these are linked to your identity."
+      "body": "For file transfers, SealDrop stores encrypted file blobs, encrypted filenames and MIME types, approximate file sizes, expiry timestamps, and randomly generated file and drop IDs. These transfer records are not linked to your identity. The optional SealDrop Pro pilot waitlist is described separately below."
     },
     "whatNotStored": {
       "title": "What this service does not store",
       "items": [
-        "Your name, email address, or any personal identifier",
+        "An account identity for anonymous file transfers",
         "Plaintext file content or filenames",
         "Encryption keys or private keys",
         "URL fragments (browsers never transmit these to servers)",
@@ -675,11 +683,11 @@
     },
     "rights": {
       "title": "Your rights",
-      "body": "Because SealDrop does not store personal data linked to your identity, there is typically nothing to access, correct, or delete on our end. If you believe we hold personal data you can be identified by, contact us and we will investigate."
+      "body": "Anonymous transfer records are not linked to your identity. If you joined the Pro pilot waitlist, you may ask to access, correct, or delete that contact record by emailing pro@sealdrop.io."
     },
     "changes": {
       "title": "Changes to this policy",
-      "body": "If this policy changes materially, we will update this page. We cannot notify you by email because we do not have your email address."
+      "body": "If this policy changes materially, we will update this page. Joining the Pro pilot does not subscribe you to unrelated policy or marketing email."
     },
     "contact": {
       "title": "Contact",

@@ -1,8 +1,9 @@
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { useTranslation } from "react-i18next";
 import "../landing.css";
 import { LandingNav } from "../components/LandingNav";
 import { LandingFooter } from "../components/LandingFooter";
+import { FadeIn } from "../components/FadeIn";
 import { usePageTitle } from "../lib/use-page-title.js";
 
 declare const __BUILD_COMMIT__: string;
@@ -21,34 +22,47 @@ export function SecurityPage() {
     <div className="l-page">
       <LandingNav />
       <main>
+        {/* a11y: 1.3.1 - page must have exactly one h1; visible heading below is styled as h2 */}
+        <h1 className="sr-only">{t("securityPage.hero.heading")}</h1>
         <section className="l-section">
-          <div className="l-section__heading">
-            <p className="l-eyebrow">{t("securityPage.hero.eyebrow")}</p>
-            <h2>{t("securityPage.hero.heading")}</h2>
-          </div>
+          <FadeIn>
+            <div className="l-section__heading">
+              <p className="l-eyebrow">{t("securityPage.hero.eyebrow")}</p>
+              <h2>{t("securityPage.hero.heading")}</h2>
+            </div>
+          </FadeIn>
           <div className="l-summary-cards">
-            <div className="l-summary-card l-summary-card--yes">
-              <p className="l-eyebrow">{t("securityPage.cards.encryptedEyebrow")}</p>
-              <p>{t("securityPage.cards.encryptedBody")}</p>
-            </div>
-            <div className="l-summary-card l-summary-card--no">
-              <p className="l-eyebrow">{t("securityPage.cards.cannotReadEyebrow")}</p>
-              <p>{t("securityPage.cards.cannotReadBody")}</p>
-            </div>
-            <div className="l-summary-card l-summary-card--warn">
-              <p className="l-eyebrow">{t("securityPage.cards.linkIsKeyEyebrow")}</p>
-              <p>{t("securityPage.cards.linkIsKeyBody")}</p>
-            </div>
+            <FadeIn delay={0.1}>
+              <div className="l-summary-card l-summary-card--yes">
+                <p className="l-eyebrow">{t("securityPage.cards.encryptedEyebrow")}</p>
+                <p>{t("securityPage.cards.encryptedBody")}</p>
+              </div>
+            </FadeIn>
+            <FadeIn delay={0.2}>
+              <div className="l-summary-card l-summary-card--no">
+                <p className="l-eyebrow">{t("securityPage.cards.cannotReadEyebrow")}</p>
+                <p>{t("securityPage.cards.cannotReadBody")}</p>
+              </div>
+            </FadeIn>
+            <FadeIn delay={0.3}>
+              <div className="l-summary-card l-summary-card--warn">
+                <p className="l-eyebrow">{t("securityPage.cards.linkIsKeyEyebrow")}</p>
+                <p>{t("securityPage.cards.linkIsKeyBody")}</p>
+              </div>
+            </FadeIn>
           </div>
         </section>
 
         <section className="l-section">
-          <div className="l-section__heading">
-            <p className="l-eyebrow">{t("securityPage.storage.eyebrow")}</p>
-            <h2>{t("securityPage.storage.heading")}</h2>
-          </div>
-          <div className="l-table-wrap">
-            <table className="l-table">
+          <FadeIn>
+            <div className="l-section__heading">
+              <p className="l-eyebrow">{t("securityPage.storage.eyebrow")}</p>
+              <h2>{t("securityPage.storage.heading")}</h2>
+            </div>
+          </FadeIn>
+          <FadeIn delay={0.1}>
+            <div className="l-table-wrap">
+              <table className="l-table">
               <thead>
                 <tr>
                   <th>{t("securityPage.storage.colStored")}</th>
@@ -64,7 +78,8 @@ export function SecurityPage() {
                 ))}
               </tbody>
             </table>
-          </div>
+            </div>
+          </FadeIn>
         </section>
 
         <section className="l-section">
@@ -194,23 +209,29 @@ export function SecurityPage() {
         </section>
 
         <section className="l-section">
-          <div className="l-section__heading">
-            <p className="l-eyebrow">{t("securityPage.threatModel.eyebrow")}</p>
-            <h2>{t("securityPage.threatModel.heading")}</h2>
-          </div>
+          <FadeIn>
+            <div className="l-section__heading">
+              <p className="l-eyebrow">{t("securityPage.threatModel.eyebrow")}</p>
+              <h2>{t("securityPage.threatModel.heading")}</h2>
+            </div>
+          </FadeIn>
           <div className="l-threat-grid">
-            <div className="l-threat-col l-threat-col--yes">
-              <h3>{t("securityPage.threatModel.protectsTitle")}</h3>
-              <ul>
-                {protects.map(item => <li key={item}>{item}</li>)}
-              </ul>
-            </div>
-            <div className="l-threat-col l-threat-col--no">
-              <h3>{t("securityPage.threatModel.doesNotProtectTitle")}</h3>
-              <ul>
-                {doesNotProtect.map(item => <li key={item}>{item}</li>)}
-              </ul>
-            </div>
+            <FadeIn delay={0.1}>
+              <div className="l-threat-col l-threat-col--yes">
+                <h3>{t("securityPage.threatModel.protectsTitle")}</h3>
+                <ul>
+                  {protects.map(item => <li key={item}>{item}</li>)}
+                </ul>
+              </div>
+            </FadeIn>
+            <FadeIn delay={0.2}>
+              <div className="l-threat-col l-threat-col--no">
+                <h3>{t("securityPage.threatModel.doesNotProtectTitle")}</h3>
+                <ul>
+                  {doesNotProtect.map(item => <li key={item}>{item}</li>)}
+                </ul>
+              </div>
+            </FadeIn>
           </div>
         </section>
 

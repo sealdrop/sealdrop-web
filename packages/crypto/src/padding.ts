@@ -50,7 +50,7 @@ export function maximumPaddedSize(fileSize: number): number {
 }
 
 /** Fill a Uint8Array with cryptographically random bytes, respecting the 65,536-byte getRandomValues limit. */
-export function fillRandom(buf: Uint8Array): void {
+export function fillRandom(buf: Uint8Array<ArrayBuffer>): void {
   const MAX = 65536;
   for (let offset = 0; offset < buf.length; offset += MAX) {
     crypto.getRandomValues(buf.subarray(offset, Math.min(offset + MAX, buf.length)));

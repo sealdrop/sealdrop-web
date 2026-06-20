@@ -11,7 +11,7 @@ const EN = {
   filePicker: {
     tapToChoose: "Choose a file",
     tapToChange: "Tap to change",
-    hint: "Up to 50 GB",
+    hint: "Up to 200 GB",
     tooLarge: "File too large (max {{size}})",
     ariaChoose: "Choose a file to upload",
     ariaSelected: "Selected file {{name}}. Press Enter to choose a different file.",
@@ -21,7 +21,7 @@ const CS = {
   filePicker: {
     tapToChoose: "Vyberte soubor",
     tapToChange: "Klepnutím změníte",
-    hint: "Až 50 GB",
+    hint: "Až 200 GB",
     tooLarge: "Soubor je příliš velký (max {{size}})",
     ariaChoose: "Vyberte soubor k nahrání",
     ariaSelected: "Vybraný soubor {{name}}. Stiskněte Enter pro výběr jiného souboru.",

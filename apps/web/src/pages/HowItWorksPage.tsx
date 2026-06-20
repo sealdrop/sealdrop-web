@@ -1,10 +1,11 @@
 import { useId } from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { useTranslation } from "react-i18next";
 import "../landing.css";
 import { LandingNav } from "../components/LandingNav";
 import { LandingFooter } from "../components/LandingFooter";
+import { FadeIn } from "../components/FadeIn";
 import { usePageTitle } from "../lib/use-page-title.js";
 
 type Tab = "send" | "receive";
@@ -59,11 +60,15 @@ export function HowItWorksPage() {
     <div className="l-page">
       <LandingNav />
       <main>
+        {/* a11y: 1.3.1 - page must have exactly one h1; visible heading below is styled as h2 */}
+        <h1 className="sr-only">{t("howItWorks.heading")}</h1>
         <section className="l-section">
-          <div className="l-section__heading">
-            <p className="l-eyebrow">{t("howItWorks.eyebrow")}</p>
-            <h2>{t("howItWorks.heading")}</h2>
-          </div>
+          <FadeIn>
+            <div className="l-section__heading">
+              <p className="l-eyebrow">{t("howItWorks.eyebrow")}</p>
+              <h2>{t("howItWorks.heading")}</h2>
+            </div>
+          </FadeIn>
           <div className="l-tab-switcher" role="tablist">
             <button
               role="tab"
@@ -95,10 +100,12 @@ export function HowItWorksPage() {
         </section>
 
         <section className="l-section">
-          <div className="l-section__heading">
-            <p className="l-eyebrow">{t("howItWorks.expiry.eyebrow")}</p>
-            <h2>{t("howItWorks.expiry.heading")}</h2>
-          </div>
+          <FadeIn>
+            <div className="l-section__heading">
+              <p className="l-eyebrow">{t("howItWorks.expiry.eyebrow")}</p>
+              <h2>{t("howItWorks.expiry.heading")}</h2>
+            </div>
+          </FadeIn>
           <div className="l-steps">
             <article className="l-card">
               <h3>{t("howItWorks.expiry.sendTitle")}</h3>

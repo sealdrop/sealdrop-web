@@ -1,53 +1,89 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link } from "react-router";
 import { useTranslation } from "react-i18next";
 import { BrandLogo } from "./BrandLogo";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+
+const FAB_ITEMS = [
+  { to: "/how-it-works", labelKey: "landing.nav.howItWorks" },
+  { to: "/security",     labelKey: "landing.nav.security" },
+  { to: "/pro",          labelKey: "pro" },
+  { to: "/receive",      labelKey: "landing.nav.createDropLink" },
+  { to: "/send",         labelKey: "landing.nav.sendFile" },
+] as const;
 
 export function LandingNav() {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [open]);
+
   return (
-    <header className="l-nav">
-      <div className="l-nav__inner">
-        <Link to="/" className="l-brand" aria-label="SealDrop home">
-          <BrandLogo height={36} />
-        </Link>
-        <nav className="l-nav__links" aria-label="Landing navigation">
-          <Link to="/how-it-works">{t("landing.nav.howItWorks")}</Link>
-          <Link to="/security">{t("landing.nav.security")}</Link>
-        </nav>
-        <div className="l-nav__actions">
-          <Link to="/receive" className="l-nav__cta">{t("landing.nav.createDropLink")}</Link>
-          <Link to="/send" className="l-nav__cta">{t("landing.nav.sendFile")}</Link>
+    <>
+      <header className="l-nav">
+        <div className="l-nav__inner">
+          <Link to="/" className="l-brand" aria-label="SealDrop home">
+            <BrandLogo height={36} />
+          </Link>
+          <nav className="l-nav__links" aria-label="Landing navigation">
+            <Link to="/how-it-works">{t("landing.nav.howItWorks")}</Link>
+            <Link to="/security">{t("landing.nav.security")}</Link>
+            <Link to="/pro" className="l-nav__pro">
+              <span>Pro</span>
+              <span className="l-nav__pilot-badge"><i aria-hidden="true" />Pilot</span>
+            </Link>
+          </nav>
+          <div className="l-nav__actions">
+            <Link to="/receive" className="l-nav__cta">{t("landing.nav.createDropLink")}</Link>
+            <Link to="/send" className="l-nav__cta">{t("landing.nav.sendFile")}</Link>
+          </div>
+          <div className="l-nav__lang">
+            <LanguageSwitcher />
+          </div>
         </div>
-        <div className="l-nav__lang">
-          <LanguageSwitcher />
+      </header>
+
+      <div
+        className={`l-fab__backdrop${open ? " l-fab__backdrop--open" : ""}`}
+        onClick={() => setOpen(false)}
+        aria-hidden="true"
+      />
+      <div className="l-fab">
+        <div
+          className={`l-fab__items${open ? " l-fab__items--open" : ""}`}
+          aria-hidden={!open}
+        >
+          {FAB_ITEMS.map(({ to, labelKey }, i) => (
+            <Link
+              key={to}
+              to={to}
+              className={`l-fab__item${to === "/pro" ? " l-nav__pro" : ""}`}
+              style={{ "--i": i } as React.CSSProperties}
+              onClick={() => setOpen(false)}
+              tabIndex={open ? 0 : -1}
+            >
+              {to === "/pro" ? <><span>Pro</span><span className="l-nav__pilot-badge"><i aria-hidden="true" />Pilot</span></> : t(labelKey)}
+            </Link>
+          ))}
         </div>
         <button
-          className={`l-nav__burger${open ? " l-nav__burger--open" : ""}`}
+          className={`l-fab__trigger${open ? " l-fab__trigger--open" : ""}`}
           onClick={() => setOpen((o) => !o)}
           aria-expanded={open}
-          aria-controls="l-mobile-menu"
           aria-label={t("landing.nav.menu")}
           type="button"
         >
-          <span />
-          <span />
-          <span />
+          <span className="l-fab__plus" aria-hidden="true">
+            <span />
+            <span />
+          </span>
         </button>
       </div>
-      {open && (
-        <div className="l-mobile-menu" id="l-mobile-menu" role="dialog" aria-label={t("landing.nav.menu")}>
-          <nav className="l-mobile-menu__nav" aria-label="Mobile landing navigation">
-            <Link to="/how-it-works" onClick={() => setOpen(false)}>{t("landing.nav.howItWorks")}</Link>
-            <Link to="/security" onClick={() => setOpen(false)}>{t("landing.nav.security")}</Link>
-            <Link to="/receive" onClick={() => setOpen(false)}>{t("landing.nav.createDropLink")}</Link>
-            <Link to="/send" onClick={() => setOpen(false)}>{t("landing.nav.sendFile")}</Link>
-          </nav>
-        </div>
-      )}
-    </header>
+    </>
   );
 }
