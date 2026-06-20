@@ -2,6 +2,8 @@ import { z } from "zod";
 import { MAX_FILE_SIZE_BYTES, CHUNK_SIZE_BYTES } from "./limits.js";
 import { SEND_EXPIRY_PRESETS, RECEIVE_EXPIRY_PRESETS } from "./expiry.js";
 
+const base64url = z.string().regex(/^[A-Za-z0-9_-]+$/, "must be base64url");
+
 export const SendInitSchema = z.object({
   size_bytes: z.number().int().positive().max(MAX_FILE_SIZE_BYTES),
   expiry_preset: z.enum(SEND_EXPIRY_PRESETS),
@@ -30,15 +32,30 @@ export const ReceiveFileInitSchema = z.object({
   wrapped_key_iv: z.string().min(1),
 });
 
+export const HANDOFF_KDF_ITERATIONS = 100_000;
+
 export const CreateOpenLinkSchema = z.object({
-  handoff_id: z.string().min(6).max(6),
-  encrypted_payload: z.string().min(1).max(4096),
-  payload_iv: z.string().min(1).max(64),
-  kdf_salt: z.string().min(1).max(64),
-  kdf_iterations: z.number().int().min(1).max(1_000_000),
+  encrypted_payload: base64url.min(20).max(4096),
+  payload_iv: base64url.length(16, "must be 12 bytes (16 base64url chars)"),
+  kdf_salt: base64url.length(22, "must be 16 bytes (22 base64url chars)"),
+  kdf_iterations: z.literal(HANDOFF_KDF_ITERATIONS),
+});
+
+export const PRO_WAITLIST_ROLES = ["accountant", "tax-advisor", "bookkeeper", "other"] as const;
+export const PRO_WAITLIST_FREQUENCIES = ["weekly", "monthly", "quarterly", "rarely"] as const;
+
+export const ProWaitlistSchema = z.object({
+  email: z.string().trim().email().max(254),
+  role: z.enum(PRO_WAITLIST_ROLES),
+  frequency: z.enum(PRO_WAITLIST_FREQUENCIES),
+  language: z.enum(["cs", "en", "mk"]).default("cs"),
+  source: z.enum(["pro-page", "accounting-outreach"]).default("pro-page"),
+  contact_consent: z.literal(true),
+  turnstile_token: z.string().optional(),
 });
 
 export type SendInitInput = z.infer<typeof SendInitSchema>;
 export type ReceiveInitInput = z.infer<typeof ReceiveInitSchema>;
 export type ReceiveFileInitInput = z.infer<typeof ReceiveFileInitSchema>;
 export type CreateOpenLinkInput = z.infer<typeof CreateOpenLinkSchema>;
+export type ProWaitlistInput = z.infer<typeof ProWaitlistSchema>;

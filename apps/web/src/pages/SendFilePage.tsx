@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import { useTranslation } from "react-i18next";
 import {
   parseSendFragment,
@@ -14,14 +14,14 @@ import {
   decryptMetadata,
   CHUNK_SIZE_BYTES,
   encryptHandoffUrl,
+  formatHandoffCode,
   createChainedHasher,
 } from "@sealdrop/crypto";
 import type { FileMetadata } from "@sealdrop/crypto";
 import { getSendMetadata, getSendBlob, createOpenLink, ApiError } from "../lib/api.js";
 import { CopyButton } from "../components/CopyButton.js";
-import { MotionIconStack } from "../components/MotionIconStack.js";
 import { MultiLineText } from "../components/MultiLineText.js";
-import { formatBytes, formatExpiry, computePaddedTotalLength, downloadStream, needsLargeDownloadWarning, prepareStreamingDownload } from "../lib/format.js";
+import { formatBytes, formatExpiry, computePaddedTotalLength, downloadStream, needsLargeDownloadWarning, prepareStreamingDownload, detectPrivateBrowsing, DownloadTooLargeForMemoryError } from "../lib/format.js";
 
 type HandoffStep = "idle" | "creating" | "ready" | "error";
 
@@ -50,7 +50,7 @@ function OpenOnDeviceSection({
         <button className="btn btn-secondary" disabled>{t("common.openOnDevice.creating")}</button>
       )}
       {handoffStep === "error" && (
-        <p className="hint motion-reveal" style={{ color: "var(--color-error)" }}>
+        <p className="hint motion-reveal" role="alert" style={{ color: "var(--de-error)" }}>
           {t("common.openOnDevice.error")}
         </p>
       )}
@@ -96,21 +96,21 @@ export function SendFilePage() {
 
   const [handoffStep, setHandoffStep] = useState<HandoffStep>("idle");
   const [handoffCode, setHandoffCode] = useState("");
+  const [isPrivate, setIsPrivate] = useState(false);
 
   async function handleCreateOpenCode() {
     setHandoffStep("creating");
     try {
       const fullUrl = window.location.href;
-      const { handoffId, displayCode, encryptedPayload, payloadIv, kdfSalt, kdfIterations } =
+      const { secret, encryptedPayload, payloadIv, kdfSalt, kdfIterations } =
         await encryptHandoffUrl(fullUrl);
-      await createOpenLink({
-        handoff_id: handoffId,
+      const { handoff_id } = await createOpenLink({
         encrypted_payload: encryptedPayload,
         payload_iv: payloadIv,
         kdf_salt: kdfSalt,
         kdf_iterations: kdfIterations,
       });
-      setHandoffCode(displayCode);
+      setHandoffCode(formatHandoffCode(handoff_id, secret));
       setHandoffStep("ready");
     } catch {
       setHandoffStep("error");
@@ -145,6 +145,10 @@ export function SendFilePage() {
 
     void loadMetadata(fragment);
   }, [fileId]);
+
+  useEffect(() => {
+    void detectPrivateBrowsing().then(setIsPrivate);
+  }, []);
 
   async function loadMetadata(fragment: string) {
     try {
@@ -274,6 +278,8 @@ export function SendFilePage() {
     } catch (err) {
       if (err instanceof ApiError && (err.code === "not_found" || err.code === "gone")) {
         setErrorMsg(t("sendFile.error.expiredOpen"));
+      } else if (err instanceof DownloadTooLargeForMemoryError) {
+        setErrorMsg(t("sendFile.error.downloadTooLarge"));
       } else {
         setErrorMsg(t("sendFile.error.downloadFailed"));
       }
@@ -295,8 +301,7 @@ export function SendFilePage() {
     return (
       <div className="page">
         <div className="card stack">
-          <MotionIconStack variant="file" />
-          <div className="success-icon">🔒</div>
+          <div className="success-icon" aria-hidden="true">🔒</div>
           <h1 className="title" style={{ textAlign: "center" }}>{t("sendFile.passphrase.title")}</h1>
           <p className="subtitle" style={{ textAlign: "center" }}>{t("sendFile.passphrase.subtitle")}</p>
           <div className="stack-sm">
@@ -310,7 +315,7 @@ export function SendFilePage() {
               autoFocus
               autoComplete="off"
             />
-            {passphraseError && <p className="hint motion-reveal" style={{ color: "var(--color-error)" }}>{passphraseError}</p>}
+            {passphraseError && <p className="hint motion-reveal" role="alert" style={{ color: "var(--de-error)" }}>{passphraseError}</p>}
             <button className="btn btn-primary" disabled={!passphrase} onClick={() => void handlePassphraseSubmit()}>
               {t("sendFile.passphrase.unlock")}
             </button>
@@ -324,8 +329,7 @@ export function SendFilePage() {
     return (
       <div className="page">
         <div className="card stack">
-          <MotionIconStack variant="file" />
-          <div className="success-icon">🔑</div>
+          <div className="success-icon" aria-hidden="true">🔑</div>
           <h1 className="title" style={{ textAlign: "center" }}>{t("sendFile.accessCode.title")}</h1>
           <p className="subtitle" style={{ textAlign: "center" }}>{t("sendFile.accessCode.subtitle")}</p>
           <div className="stack-sm">
@@ -340,7 +344,7 @@ export function SendFilePage() {
               autoComplete="off"
               style={{ textTransform: "uppercase", letterSpacing: "0.1em" }}
             />
-            {accessCodeError && <p className="hint motion-reveal" style={{ color: "var(--color-error)" }}>{accessCodeError}</p>}
+            {accessCodeError && <p className="hint motion-reveal" role="alert" style={{ color: "var(--de-error)" }}>{accessCodeError}</p>}
             <button className="btn btn-primary" disabled={!accessCode} onClick={() => void handleAccessCodeSubmit()}>
               {t("sendFile.passphrase.unlock")}
             </button>
@@ -355,8 +359,7 @@ export function SendFilePage() {
     return (
       <div className="page">
         <div className="card stack">
-          <MotionIconStack variant="file" />
-          <div className="success-icon">⚠️</div>
+          <div className="success-icon" aria-hidden="true">⚠️</div>
           <h1 className="title" style={{ textAlign: "center" }}>{t("sendFile.openOnce.title")}</h1>
           <p className="subtitle" style={{ textAlign: "center" }}>{t("sendFile.openOnce.subtitle")}</p>
           {meta && (
@@ -390,10 +393,9 @@ export function SendFilePage() {
     return (
       <div className="page">
         <div className="card stack">
-          <MotionIconStack variant="file" />
-          <div className="success-icon">🔒</div>
+          <div className="success-icon" aria-hidden="true">🔒</div>
           <h1 className="title" style={{ textAlign: "center" }}>{t("sendFile.error.title")}</h1>
-          <div className="error-box motion-reveal">{errorMsg}</div>
+          <div className="error-box motion-reveal" role="alert">{errorMsg}</div>
           <a href="/" className="btn btn-secondary">{t("common.goToSealDrop")}</a>
         </div>
       </div>
@@ -404,15 +406,14 @@ export function SendFilePage() {
     return (
       <div className="page">
         <div className="card stack" style={{ textAlign: "center" }}>
-          <MotionIconStack variant="file" />
-          <div className="success-icon">✅</div>
+          <div className="success-icon" aria-hidden="true">✅</div>
           <h1 className="title">{t("sendFile.done.title")}</h1>
           <p className="subtitle">{t("sendFile.done.subtitle")}</p>
           {integrityVerified === true && (
             <p className="hint motion-reveal">{t("sendFile.done.integrityOk")}</p>
           )}
           {integrityVerified === false && (
-            <p className="hint motion-reveal" style={{ color: "var(--color-error)" }}>
+            <p className="hint motion-reveal" role="alert" style={{ color: "var(--de-error)" }}>
               {t("sendFile.done.integrityFailed")}
             </p>
           )}
@@ -426,8 +427,7 @@ export function SendFilePage() {
   return (
     <div className="page">
       <div className="card stack">
-        <MotionIconStack variant="file" />
-        <div className="success-icon">📨</div>
+        <div className="success-icon" aria-hidden="true">📨</div>
         <div style={{ textAlign: "center" }}>
           <h1 className="title">{t("sendFile.ready.title")}</h1>
           <p className="subtitle">{t("sendFile.ready.subtitle")}</p>
@@ -442,6 +442,12 @@ export function SendFilePage() {
         {meta && needsLargeDownloadWarning(meta.sizeBytes) && (
           <p className="hint" style={{ textAlign: "center" }}>{t("common.largeDownloadWarning")}</p>
         )}
+        {isPrivate && (
+          <div className="note-box" style={{ borderColor: "var(--de-warning-border)" }}>
+            <p className="note-box__label">{t("sendFile.ready.privateBrowsingTitle")}</p>
+            <p className="note-box__text">{t("sendFile.ready.privateBrowsingHint")}</p>
+          </div>
+        )}
         {meta?.note && (
           <div className="note-box">
             <p className="note-box__label">{t("sendFile.openOnce.senderNote")}</p>
@@ -450,7 +456,10 @@ export function SendFilePage() {
         )}
         {step === "downloading" ? (
           <div className="stack-sm motion-reveal">
-            <div className="progress"><div className="progress__bar" style={{ width: `${progressPct}%` }} /></div>
+            {/* a11y: 4.1.2/4.1.3 - expose progress state to assistive tech */}
+            <div className="progress" role="progressbar" aria-label={t("sendFile.ready.downloading", { pct: progressPct })} aria-valuenow={progressPct} aria-valuemin={0} aria-valuemax={100}>
+              <div className="progress__bar" style={{ width: `${progressPct}%` }} />
+            </div>
             <p className="hint" style={{ textAlign: "center" }}>{t("sendFile.ready.downloading", { pct: progressPct })}</p>
           </div>
         ) : (

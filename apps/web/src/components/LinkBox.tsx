@@ -16,7 +16,7 @@ export function LinkBox({ label, url, warning }: Props) {
         <ShareButton text={url} />
         <CopyButton text={url} />
       </div>
-      {warning && <p className="hint" style={{ color: "var(--color-muted)" }}>{warning}</p>}
+      {warning && <p className="hint" style={{ color: "var(--de-text-tertiary)" }}>{warning}</p>}
     </div>
   );
 }

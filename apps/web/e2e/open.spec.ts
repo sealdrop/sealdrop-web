@@ -134,9 +134,14 @@ test.describe("SendPage — Open on another device", () => {
 
     // Verify request body — server must not receive plaintext URL or fragment
     expect(capturedBody).not.toBeNull();
-    expect(capturedBody!["handoff_id"]).toBeTruthy();
+    // Client sends only encrypted fields; server generates handoff_id
     expect(capturedBody!["encrypted_payload"]).toBeTruthy();
     expect(typeof capturedBody!["encrypted_payload"]).toBe("string");
+    expect(capturedBody!["payload_iv"]).toBeTruthy();
+    expect(capturedBody!["kdf_salt"]).toBeTruthy();
+    expect(capturedBody!["kdf_iterations"]).toBe(100_000);
+    // handoff_id is NOT sent by the client — it is server-generated
+    expect(capturedBody!["handoff_id"]).toBeUndefined();
     // The plaintext share URL and fragment must NOT appear in the request body
     const bodyStr = JSON.stringify(capturedBody);
     expect(bodyStr).not.toContain("#key=");

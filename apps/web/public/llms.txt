@@ -1,0 +1,43 @@
+# SealDrop
+
+> End-to-end encrypted file exchange. Encrypt files in the browser, share a link, auto-delete after use. No account required.
+
+SealDrop is a browser-based encrypted file exchange deployed at https://sealdrop.io. Files are encrypted client-side with AES-GCM-256 before upload. Decryption keys live in URL fragments, which browsers never send to servers.
+
+## Key features
+
+- Client-side encryption (AES-GCM-256, ECDH P-256, HKDF)
+- Auto-delete on expiry (open-once, 1h, 1d, 7d)
+- Send mode: encrypt and share a file link
+- Receive mode: create a drop link, others encrypt files to your public key
+- File size padding for privacy
+- Optional passphrase protection
+- Open-on-device handoff codes
+- No account, no tracking, no cookies
+
+## Docs
+
+- [How it works](https://sealdrop.io/how-it-works)
+- [Security model](https://sealdrop.io/security)
+- [Privacy policy](https://sealdrop.io/privacy)
+- [Terms of service](https://sealdrop.io/terms)
+- [Abuse and legal requests](https://sealdrop.io/abuse)
+
+## Source
+
+- Frontend: https://github.com/sealdrop/sealdrop-web
+- Monorepo (full): https://git.voioo.cz/voyo/sealdrop
+
+## API
+
+Base URL: `https://sealdrop.io/api`
+
+- `POST /api/send/init` — initialize an upload, get pre-signed URL
+- `POST /api/send/confirm` — confirm upload complete
+- `GET /api/send/:fileId` — get file metadata (encrypted)
+- `DELETE /api/send/:fileId` — delete a file
+- `POST /api/receive/init` — create a drop link
+- `GET /api/receive/:dropId` — get drop metadata
+- `POST /api/receive/:dropId/claim` — mark drop consumed
+- `POST /api/open-links` — create handoff code
+- `GET /api/open-links/:id` — retrieve handoff payload

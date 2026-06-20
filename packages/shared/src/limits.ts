@@ -1,4 +1,4 @@
-export const MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024 * 1024; // 50 GiB
+export const MAX_FILE_SIZE_BYTES = 200 * 1024 * 1024 * 1024; // 200 GiB
 export const MAX_SEND_EXPIRY_DAYS = 7;
 export const MAX_RECEIVE_EXPIRY_DAYS = 7;
 export const MAX_FILES_PER_DROP = 3;

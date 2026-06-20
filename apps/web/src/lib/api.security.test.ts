@@ -69,11 +69,13 @@ describe("API client secret hygiene", () => {
     expect(urls.join("\n")).not.toMatch(/#|passphrase|access[_-]?code/i);
   });
 
-  it("only sends delete tokens in the explicit token query parameter", async () => {
+  it("sends delete tokens in X-Delete-Token header, not in the URL", async () => {
     const fetchMock = mockOkFetch();
 
     await deleteSendFile("file#key=secret", "delete#token&value");
 
-    expect(requestedUrl(fetchMock)).toBe("/api/send/file%23key%3Dsecret?token=delete%23token%26value");
+    expect(requestedUrl(fetchMock)).toBe("/api/send/file%23key%3Dsecret");
+    const [, init] = fetchMock.mock.calls[0] ?? [];
+    expect(init?.headers?.["X-Delete-Token"]).toBe("delete#token&value");
   });
 });

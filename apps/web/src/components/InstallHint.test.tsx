@@ -26,7 +26,7 @@ beforeEach(async () => {
     resources,
     interpolation: { escapeValue: false },
   });
-  vi.spyOn(window, "matchMedia").mockReturnValue({
+  vi.stubGlobal("matchMedia", vi.fn().mockReturnValue({
     matches: false,
     media: "(display-mode: standalone)",
     onchange: null,
@@ -35,7 +35,7 @@ beforeEach(async () => {
     addEventListener: vi.fn(),
     removeEventListener: vi.fn(),
     dispatchEvent: vi.fn(),
-  });
+  }));
 });
 
 afterEach(() => {

@@ -1,0 +1,264 @@
+/* ═══════════════════════════════════════════════════════════════════════════════
+   SealDark Editorial — Design Tokens
+   Premium dark editorial aesthetic for an encrypted file exchange
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* ── Font Faces ────────────────────────────────────────────────────────────── */
+
+/* Newsreader — editorial serif for headings */
+@font-face {
+  font-family: 'Newsreader';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/newsreader-normal-400.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Newsreader';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/newsreader-italic-400.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Newsreader';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/newsreader-normal-700.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Newsreader';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/newsreader-italic-700.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Newsreader';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/newsreader-normal-800.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Newsreader';
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/newsreader-italic-800.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* DM Sans — geometric sans for body + UI */
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/dm-sans-normal-400.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'DM Sans';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/dm-sans-italic-400.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/dm-sans-normal-500.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'DM Sans';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/dm-sans-italic-500.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/dm-sans-normal-600.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'DM Sans';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/dm-sans-italic-600.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/dm-sans-normal-700.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'DM Sans';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/dm-sans-italic-700.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* ── CSS Custom Properties (Dark-first) ───────────────────────────────────── */
+
+:root {
+  /* Background layers (darkest → lightest) */
+  --de-bg-deep:        #070b10;
+  --de-bg:             #0c1319;
+  --de-bg-raised:      #111c26;
+  --de-bg-surface:     #172636;
+
+  /* Surface colors */
+  --de-surface:        #1a2f42;
+  --de-surface-hover:  #1f3850;
+  --de-surface-active: #243f58;
+
+  /* Accent — royal blue (from logo) */
+  --de-accent:         #3b82f6;
+  --de-accent-dim:     #2563eb;
+  --de-accent-deep:    #1d4ed8;
+  --de-accent-glow:    rgba(59, 130, 246, 0.15);
+
+  /* Secondary accent — indigo (contrast) */
+  --de-indigo:         #6366f1;
+  --de-indigo-dim:     #4f46e5;
+  --de-indigo-glow:    rgba(99, 102, 241, 0.12);
+
+  /* Text hierarchy */
+  --de-text:           #e8edf4;
+  --de-text-secondary: #a3b4c8;
+  --de-text-tertiary:  #647b94;
+  --de-text-inverse:   #070b10;
+
+  /* Borders */
+  --de-border:         rgba(130, 160, 190, 0.12);
+  --de-border-subtle:  rgba(130, 160, 190, 0.06);
+  --de-border-accent:  rgba(59, 130, 246, 0.25);
+
+  /* Semantic: success / error / warning */
+  --de-success:        #34d399;
+  --de-success-bg:     rgba(52, 211, 153, 0.08);
+  --de-success-border: rgba(52, 211, 153, 0.2);
+
+  --de-error:          #f87171;
+  --de-error-bg:       rgba(248, 113, 113, 0.08);
+  --de-error-border:   rgba(248, 113, 113, 0.2);
+
+  --de-warning:        #fbbf24;
+  --de-warning-bg:     rgba(251, 191, 36, 0.08);
+  --de-warning-border: rgba(251, 191, 36, 0.2);
+
+  /* Shadows — single-direction dark (no neumorphism) */
+  --de-shadow-xs:      0 1px 2px rgba(0, 0, 0, 0.35);
+  --de-shadow-sm:      0 2px 6px rgba(0, 0, 0, 0.4);
+  --de-shadow-md:      0 4px 16px rgba(0, 0, 0, 0.5);
+  --de-shadow-lg:      0 8px 32px rgba(0, 0, 0, 0.6);
+  --de-shadow-xl:      0 16px 48px rgba(0, 0, 0, 0.7);
+  --de-shadow-glow:    0 0 40px rgba(59, 130, 246, 0.08);
+
+  /* Radii */
+  --de-radius-xs:      0.375rem;
+  --de-radius-sm:      0.5rem;
+  --de-radius-md:      0.875rem;
+  --de-radius-lg:      1.25rem;
+  --de-radius-xl:      2rem;
+  --de-radius-full:    9999px;
+
+  /* Typography */
+  --de-font-heading:   'Newsreader', Georgia, 'Times New Roman', serif;
+  --de-font-body:      'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --de-font-mono:      ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* Spacing scale */
+  --de-space-1:        0.25rem;
+  --de-space-2:        0.5rem;
+  --de-space-3:        0.75rem;
+  --de-space-4:        1rem;
+  --de-space-5:        1.25rem;
+  --de-space-6:        1.5rem;
+  --de-space-8:        2rem;
+  --de-space-10:       2.5rem;
+  --de-space-12:       3rem;
+  --de-space-16:       4rem;
+  --de-space-20:       5rem;
+
+  /* Transitions */
+  --de-ease-out:       cubic-bezier(0.16, 1, 0.3, 1);
+  --de-ease-in-out:    cubic-bezier(0.65, 0, 0.35, 1);
+  --de-duration-fast:  120ms;
+  --de-duration-base:  200ms;
+  --de-duration-slow:  350ms;
+}
+
+/* ── Light mode override ───────────────────────────────────────────────────── */
+@media (prefers-color-scheme: light) {
+  :root {
+    --de-bg-deep:        #f0f4f8;
+    --de-bg:             #f5f8fb;
+    --de-bg-raised:      #ffffff;
+    --de-bg-surface:     #ffffff;
+
+    --de-surface:        #f0f4f8;
+    --de-surface-hover:  #e4eaf1;
+    --de-surface-active: #d8e0ea;
+
+    --de-accent:         #2563eb;
+    --de-accent-dim:     #1d4ed8;
+    --de-accent-deep:    #1e40af;
+    --de-accent-glow:    rgba(37, 99, 235, 0.1);
+
+    --de-indigo:         #4f46e5;
+    --de-indigo-dim:     #4338ca;
+    --de-indigo-glow:    rgba(79, 70, 229, 0.08);
+
+    --de-text:           #0f172a;
+    --de-text-secondary: #475569;
+    --de-text-tertiary:  #94a3b8;
+    --de-text-inverse:   #ffffff;
+
+    --de-border:         rgba(15, 23, 42, 0.1);
+    --de-border-subtle:  rgba(15, 23, 42, 0.05);
+    --de-border-accent:  rgba(37, 99, 235, 0.3);
+
+    --de-success:        #16a34a;
+    --de-success-bg:     rgba(22, 163, 74, 0.06);
+    --de-success-border: rgba(22, 163, 74, 0.18);
+
+    --de-error:          #dc2626;
+    --de-error-bg:       rgba(220, 38, 38, 0.06);
+    --de-error-border:   rgba(220, 38, 38, 0.18);
+
+    --de-warning:        #d97706;
+    --de-warning-bg:     rgba(217, 119, 6, 0.06);
+    --de-warning-border: rgba(217, 119, 6, 0.18);
+
+    --de-shadow-xs:      0 1px 2px rgba(15, 23, 42, 0.05);
+    --de-shadow-sm:      0 2px 6px rgba(15, 23, 42, 0.06);
+    --de-shadow-md:      0 4px 16px rgba(15, 23, 42, 0.08);
+    --de-shadow-lg:      0 8px 32px rgba(15, 23, 42, 0.1);
+    --de-shadow-xl:      0 16px 48px rgba(15, 23, 42, 0.12);
+    --de-shadow-glow:    0 0 40px rgba(37, 99, 235, 0.05);
+  }
+}

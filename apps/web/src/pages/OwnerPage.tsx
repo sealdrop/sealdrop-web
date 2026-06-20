@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import { useTranslation } from "react-i18next";
 import {
   parseOwnerFragment,
@@ -15,7 +15,6 @@ import type { ReceivedFileRecord } from "@sealdrop/shared";
 import { getOwnerFiles, getOwnerFileBlob, ApiError } from "../lib/api.js";
 import { formatBytes, computePaddedTotalLength, downloadStream, needsLargeDownloadWarning, prepareStreamingDownload } from "../lib/format.js";
 import { ProgressBar } from "../components/ProgressBar.js";
-import { MotionIconStack } from "../components/MotionIconStack.js";
 import { MultiLineText } from "../components/MultiLineText.js";
 
 interface FileState {
@@ -145,10 +144,9 @@ export function OwnerPage() {
     return (
       <div className="page">
         <div className="card stack">
-          <MotionIconStack variant="owner" />
-          <div className="success-icon">🔒</div>
+          <div className="success-icon" aria-hidden="true">🔒</div>
           <h1 className="title" style={{ textAlign: "center" }}>{t("owner.error.title")}</h1>
-          <div className="error-box motion-reveal">{pageError}</div>
+          <div className="error-box motion-reveal" role="alert">{pageError}</div>
           <a href="/" className="btn btn-secondary">{t("common.goToSealDrop")}</a>
         </div>
       </div>
@@ -158,7 +156,6 @@ export function OwnerPage() {
   return (
     <div className="page">
       <div className="card stack">
-        <MotionIconStack variant="owner" />
         <div>
           <h1 className="title">{t("owner.title")}</h1>
           <p className="subtitle">{t("owner.subtitle")}</p>
@@ -166,14 +163,14 @@ export function OwnerPage() {
 
         {files.length === 0 ? (
           <div style={{ textAlign: "center", padding: "2rem 0" }}>
-            <p style={{ fontSize: "2rem" }}>📭</p>
+            <p style={{ fontSize: "2rem" }} aria-hidden="true">📭</p>
             <MultiLineText text={t("owner.empty")} className="subtitle" />
           </div>
         ) : (
           <div className="stack">
             {files.map((f, i) => (
               <div key={f.record.received_file_id} className="file-card motion-reveal">
-                <span className="file-card__icon">{f.done ? "✅" : "📄"}</span>
+                <span className="file-card__icon" aria-hidden="true">{f.done ? "✅" : "📄"}</span>
                 <div className="file-card__info">
                   <p className="file-card__name">
                     {f.meta ? f.meta.filename : t("owner.sealedFile", { n: i + 1 })}
@@ -183,7 +180,7 @@ export function OwnerPage() {
                       ? `${formatBytes(f.meta.sizeBytes)} · ${f.meta.mimeType}`
                       : formatBytes(f.record.size_bytes)}
                   </p>
-                  {f.error && <p className="motion-reveal" style={{ color: "var(--color-error)", fontSize: "0.8125rem" }}>{f.error}</p>}
+                  {f.error && <p className="motion-reveal" role="alert" style={{ color: "var(--de-error)", fontSize: "0.8125rem" }}>{f.error}</p>}
                   {!f.done && needsLargeDownloadWarning(f.meta ? f.meta.sizeBytes : f.record.size_bytes) && (
                     <p className="hint">{t("common.largeDownloadWarning")}</p>
                   )}

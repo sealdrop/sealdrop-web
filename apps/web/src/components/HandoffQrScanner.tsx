@@ -27,8 +27,7 @@ export function extractHandoffCode(text: string) {
 }
 
 function hasCameraSupport() {
-  const win = window as ScannerWindow;
-  return Boolean(win.BarcodeDetector && navigator.mediaDevices?.getUserMedia);
+  return Boolean(navigator.mediaDevices?.getUserMedia);
 }
 
 export function HandoffQrScanner({ onCode }: Props) {
@@ -51,8 +50,7 @@ export function HandoffQrScanner({ onCode }: Props) {
   }
 
   async function start() {
-    const win = window as ScannerWindow;
-    if (!win.BarcodeDetector || !navigator.mediaDevices?.getUserMedia) {
+    if (!navigator.mediaDevices?.getUserMedia) {
       setStep("unsupported");
       return;
     }
@@ -70,13 +68,34 @@ export function HandoffQrScanner({ onCode }: Props) {
       video.srcObject = stream;
       await video.play();
 
-      const detector = new win.BarcodeDetector({ formats: ["qr_code"] });
+      // Build a detect function: prefer native BarcodeDetector, fall back to jsQR.
+      const win = window as ScannerWindow;
+      let detect: (video: HTMLVideoElement) => Promise<BarcodeResult[]>;
+
+      if (win.BarcodeDetector) {
+        const nativeDetector = new win.BarcodeDetector({ formats: ["qr_code"] });
+        detect = (v) => nativeDetector.detect(v);
+      } else {
+        // jsQR fallback: draw each frame to a canvas and decode with pure JS.
+        const { default: jsQR } = await import("jsqr");
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d")!;
+        detect = async (v) => {
+          canvas.width = v.videoWidth;
+          canvas.height = v.videoHeight;
+          ctx.drawImage(v, 0, 0);
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const result = jsQR(imageData.data, imageData.width, imageData.height);
+          return result ? [{ rawValue: result.data }] : [];
+        };
+      }
+
       setStep("scanning");
 
       const scan = async () => {
         try {
           if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
-            const results = await detector.detect(video);
+            const results = await detect(video);
             for (const result of results) {
               const code = extractHandoffCode(result.rawValue);
               if (code) {
@@ -121,7 +140,7 @@ export function HandoffQrScanner({ onCode }: Props) {
           )}
         </div>
       )}
-      {step === "error" && <p className="hint" style={{ color: "var(--color-error)" }}>{t("open.scanError")}</p>}
+      {step === "error" && <p className="hint" style={{ color: "var(--de-error)" }}>{t("open.scanError")}</p>}
     </div>
   );
 }

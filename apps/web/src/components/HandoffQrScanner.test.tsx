@@ -56,8 +56,21 @@ describe("extractHandoffCode", () => {
 });
 
 describe("HandoffQrScanner", () => {
-  it("is hidden when BarcodeDetector is unavailable", () => {
+  it("is hidden when getUserMedia is unavailable", () => {
+    // jsdom has no mediaDevices — scanner should not render
     renderScanner();
     expect(screen.queryByRole("button", { name: "Scan QR code" })).not.toBeInTheDocument();
+  });
+
+  it("shows the scan button when getUserMedia is available", () => {
+    // Simulate a browser that has camera support but no BarcodeDetector
+    Object.defineProperty(navigator, "mediaDevices", {
+      value: { getUserMedia: () => Promise.resolve({} as MediaStream) },
+      configurable: true,
+    });
+    renderScanner();
+    expect(screen.getByRole("button", { name: "Scan QR code" })).toBeInTheDocument();
+    // Restore
+    Object.defineProperty(navigator, "mediaDevices", { value: undefined, configurable: true });
   });
 });

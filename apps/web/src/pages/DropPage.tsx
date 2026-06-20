@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import { useTranslation } from "react-i18next";
 import {
   importPublicKey,
@@ -12,9 +12,9 @@ import {
 import { CHUNK_SIZE_BYTES } from "@sealdrop/shared";
 import { FilePicker } from "../components/FilePicker.js";
 import { ProgressBar } from "../components/ProgressBar.js";
-import { MotionIconStack } from "../components/MotionIconStack.js";
+import { EncryptionGrid } from "../components/EncryptionGrid.js";
 import { MultiLineText } from "../components/MultiLineText.js";
-import { getReceiveSession, receiveFileInit, uploadReceivePart, receiveComplete, ApiError } from "../lib/api.js";
+import { getReceiveSession, receiveFileInit, uploadReceivePart, receiveComplete, getReceiveUploadStatus, retryWithBackoff, ApiError } from "../lib/api.js";
 import { formatExpiry } from "../lib/format.js";
 import type { ReceiveSessionResponse } from "@sealdrop/shared";
 import { createEncryptedUploadPartBlob, TRANSPORT_CHUNKS_PER_PART } from "../lib/encrypted-upload-stream.js";
@@ -92,7 +92,23 @@ export function DropPage() {
       });
 
       const partCount = Math.ceil(chunkCount / TRANSPORT_CHUNKS_PER_PART);
+
+      // Query which parts already landed (in-session resume after a failed part).
+      let alreadyUploadedParts: number[] = [];
+      try {
+        const status = await getReceiveUploadStatus(dropId, received_file_id);
+        alreadyUploadedParts = status.uploaded_parts;
+      } catch {
+        // 404 or network error — proceed from scratch.
+      }
+
+      // Pre-fill progress bar with already-completed parts.
+      const alreadyDoneChunks = alreadyUploadedParts.length * TRANSPORT_CHUNKS_PER_PART;
+      setProgressPct(Math.round((alreadyDoneChunks / chunkCount) * 100));
+
       for (let partIndex = 0; partIndex < partCount; partIndex++) {
+        if (alreadyUploadedParts.includes(partIndex)) continue;
+
         const startChunkIndex = partIndex * TRANSPORT_CHUNKS_PER_PART;
         const endChunkIndex = Math.min(startChunkIndex + TRANSPORT_CHUNKS_PER_PART, chunkCount);
         const encryptedPart = await createEncryptedUploadPartBlob({
@@ -106,7 +122,7 @@ export function DropPage() {
             setProgressPct(Math.round((uploadedChunks / chunkCount) * 100));
           },
         });
-        await uploadReceivePart(dropId, received_file_id, partIndex, encryptedPart);
+        await retryWithBackoff(() => uploadReceivePart(dropId, received_file_id, partIndex, encryptedPart));
       }
 
       await receiveComplete(dropId, received_file_id);
@@ -136,8 +152,7 @@ export function DropPage() {
     return (
       <div className="page">
         <div className="card stack" style={{ textAlign: "center" }}>
-          <MotionIconStack variant="drop" />
-          <div className="success-icon">🔒</div>
+          <div className="success-icon" aria-hidden="true">🔒</div>
           <h1 className="title">{t("drop.closed.title")}</h1>
           <p className="subtitle">{t("drop.closed.subtitle")}</p>
           <a href="/" className="btn btn-secondary">{t("common.goToSealDrop")}</a>
@@ -150,8 +165,7 @@ export function DropPage() {
     return (
       <div className="page">
         <div className="card stack" style={{ textAlign: "center" }}>
-          <MotionIconStack variant="drop" />
-          <div className="success-icon">✅</div>
+          <div className="success-icon" aria-hidden="true">✅</div>
           <h1 className="title">{t("drop.done.title")}</h1>
           <p className="subtitle">{t("drop.done.subtitle")}</p>
           <a href="/" className="btn btn-secondary">{t("common.goToSealDrop")}</a>
@@ -163,8 +177,7 @@ export function DropPage() {
   return (
     <div className="page">
       <div className="card stack">
-        <MotionIconStack variant="drop" />
-        <div className="success-icon" style={{ textAlign: "center" }}>📥</div>
+        <div className="success-icon" style={{ textAlign: "center" }} aria-hidden="true">📥</div>
         <div>
           <h1 className="title">{t("drop.ready.title")}</h1>
           {session && (
@@ -174,19 +187,28 @@ export function DropPage() {
 
         <FilePicker file={file} onFile={setFile} />
 
-        {step === "error" && <div className="error-box motion-reveal">{errorMsg}</div>}
+        {step === "error" && <div className="error-box motion-reveal" role="alert">{errorMsg}</div>}
 
         {step === "sealing" || step === "uploading" ? (
           <div className="stack-sm motion-reveal">
-            <ProgressBar
-              value={progressPct}
-              label={step === "sealing" ? t("drop.ready.sealing") : t("drop.ready.uploading", { pct: progressPct })}
-            />
-            <p className="hint" style={{ textAlign: "center" }}>
-              {step === "sealing"
-                ? t("drop.ready.sealing")
-                : t("drop.ready.uploading", { pct: progressPct })}
-            </p>
+            {step === "sealing" ? (
+              <>
+                <EncryptionGrid progress={progressPct} />
+                <p className="hint" style={{ textAlign: "center" }}>
+                  {t("drop.ready.sealing")}
+                </p>
+              </>
+            ) : (
+              <>
+                <ProgressBar
+                  value={progressPct}
+                  label={t("drop.ready.uploading", { pct: progressPct })}
+                />
+                <p className="hint" style={{ textAlign: "center" }}>
+                  {t("drop.ready.uploading", { pct: progressPct })}
+                </p>
+              </>
+            )}
           </div>
         ) : (
           <button className="btn btn-primary" disabled={!file} onClick={() => void handleUpload()}>

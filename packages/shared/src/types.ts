@@ -14,6 +14,7 @@ export interface SendFile {
   remaining_downloads: number;
   upload_complete: boolean;
   deleted_at: string | null;
+  uploaded_parts: string; // JSON: number[]
 }
 
 export interface ReceiveSession {
@@ -41,6 +42,7 @@ export interface ReceivedFile {
   created_at: string;
   upload_complete: boolean;
   deleted_at: string | null;
+  uploaded_parts: string; // JSON: number[]
 }
 
 // API response types
@@ -98,7 +100,11 @@ export interface OwnerFilesResponse {
   files: ReceivedFileRecord[];
 }
 
-export interface ExpiryMessage {
-  file_id: string;
-  object_key: string;
+export type ExpiryMessage =
+  | { type: "send_file"; file_id: string; object_key: string; expires_at: string }
+  | { type: "receive_session"; drop_id: string; expires_at: string };
+
+export interface UploadStatusResponse {
+  part_count: number;
+  uploaded_parts: number[];
 }

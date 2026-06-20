@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import { useTranslation } from "react-i18next";
 import { deleteSendFile, ApiError } from "../lib/api.js";
 import { MultiLineText } from "../components/MultiLineText.js";
@@ -45,7 +45,7 @@ export function SendFileDeletePage() {
     return (
       <div className="page">
         <div className="card stack" style={{ textAlign: "center" }}>
-          <div className="success-icon">🗑️</div>
+          <div className="success-icon" aria-hidden="true">🗑️</div>
           <h1 className="title">{t("deleteFile.done.title")}</h1>
           <p className="subtitle">{t("deleteFile.done.subtitle")}</p>
           <a href="/" className="btn btn-secondary">{t("common.goToSealDrop")}</a>
@@ -58,9 +58,9 @@ export function SendFileDeletePage() {
     return (
       <div className="page">
         <div className="card stack">
-          <div className="success-icon">🔒</div>
+          <div className="success-icon" aria-hidden="true">🔒</div>
           <h1 className="title" style={{ textAlign: "center" }}>{t("deleteFile.error.title")}</h1>
-          <div className="error-box">{errorMsg}</div>
+          <div className="error-box" role="alert">{errorMsg}</div>
           <a href="/" className="btn btn-secondary">{t("common.goToSealDrop")}</a>
         </div>
       </div>
@@ -70,16 +70,19 @@ export function SendFileDeletePage() {
   return (
     <div className="page">
       <div className="card stack" style={{ textAlign: "center" }}>
-        <div className="success-icon">🗑️</div>
+        <div className="success-icon" aria-hidden="true">🗑️</div>
         <h1 className="title">{t("deleteFile.confirm.title")}</h1>
         <MultiLineText text={t("deleteFile.confirm.subtitle")} className="subtitle" />
         {step === "deleting" ? (
           <div className="stack-sm">
-            <div className="progress"><div className="progress__bar" style={{ width: "70%" }} /></div>
+            {/* a11y: 4.1.2/4.1.3 - expose progress state to assistive tech */}
+            <div className="progress" role="progressbar" aria-label={t("deleteFile.confirm.deleting")} aria-valuenow={70} aria-valuemin={0} aria-valuemax={100}>
+              <div className="progress__bar" style={{ width: "70%" }} />
+            </div>
             <p className="hint" style={{ textAlign: "center" }}>{t("deleteFile.confirm.deleting")}</p>
           </div>
         ) : (
-          <button className="btn btn-primary" onClick={() => void handleDelete()} style={{ background: "var(--color-error)" }}>
+          <button className="btn btn-primary" onClick={() => void handleDelete()} style={{ background: "var(--de-error)" }}>
             {t("deleteFile.confirm.deleteBtn")}
           </button>
         )}

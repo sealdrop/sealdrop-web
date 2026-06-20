@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { SendInitSchema, ReceiveInitSchema, ReceiveFileInitSchema } from "./schemas.js";
+import { SendInitSchema, ReceiveInitSchema, ReceiveFileInitSchema, ProWaitlistSchema } from "./schemas.js";
 import { MAX_FILE_SIZE_BYTES } from "./limits.js";
 
 const validSendInit = {
@@ -79,5 +79,31 @@ describe("ReceiveFileInitSchema", () => {
 
   it("rejects file size > MAX_FILE_SIZE_BYTES", () => {
     expect(ReceiveFileInitSchema.safeParse({ ...validReceiveFileInit, size_bytes: MAX_FILE_SIZE_BYTES + 1 }).success).toBe(false);
+  });
+});
+
+describe("ProWaitlistSchema", () => {
+  const valid = {
+    email: "ucetni@example.cz",
+    role: "accountant",
+    frequency: "monthly",
+    language: "cs",
+    source: "pro-page",
+    contact_consent: true,
+  };
+
+  it("accepts a consented professional lead", () => {
+    expect(ProWaitlistSchema.safeParse(valid).success).toBe(true);
+    expect(ProWaitlistSchema.safeParse({ ...valid, language: "mk" }).success).toBe(true);
+  });
+
+  it("requires explicit consent", () => {
+    expect(ProWaitlistSchema.safeParse({ ...valid, contact_consent: false }).success).toBe(false);
+    expect(ProWaitlistSchema.safeParse({ ...valid, contact_consent: undefined }).success).toBe(false);
+  });
+
+  it("rejects invalid email and campaign values", () => {
+    expect(ProWaitlistSchema.safeParse({ ...valid, email: "not-email" }).success).toBe(false);
+    expect(ProWaitlistSchema.safeParse({ ...valid, source: "personal-tracker" }).success).toBe(false);
   });
 });

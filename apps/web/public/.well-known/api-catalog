@@ -3,7 +3,7 @@
     {
       "anchor": "https://sealdrop.io/api/",
       "service-doc": [{ "href": "https://sealdrop.io/security" }],
-      "status": [{ "href": "https://sealdrop.io/api/health" }]
+      "status": [{ "href": "https://sealdrop.io/health" }]
     }
   ]
 }

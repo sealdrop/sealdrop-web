@@ -118,12 +118,59 @@ function isOpfsSupported(): boolean {
   );
 }
 
+function isChromiumBrowser(): boolean {
+  return typeof navigator !== "undefined" && navigator.userAgent.includes("Chrome");
+}
+
+/**
+ * Heuristic detection of private/incognito browsing.
+ * Returns true when the browser is likely running in a restricted storage mode
+ * where streaming downloads may not work as expected.
+ */
+export async function detectPrivateBrowsing(): Promise<boolean> {
+  if (typeof window === "undefined" || typeof navigator === "undefined") return false;
+
+  // Chrome/Edge block showSaveFilePicker in incognito — detect by probing
+  if (isChromiumBrowser() && !isStreamingDownloadSupported()) {
+    return true;
+  }
+
+  // Probe OPFS: try writing a tiny file. Some Safari private modes report
+  // support but fail on actual writes.
+  if (isOpfsSupported()) {
+    try {
+      const root = await (navigator.storage as unknown as StorageManagerWithDirectory).getDirectory();
+      const probeName = `.sealdrop-probe-${Date.now()}`;
+      const handle = await root.getFileHandle(probeName, { create: true });
+      const writable = await handle.createWritable();
+      await writable.write(new Uint8Array(1));
+      await writable.close();
+      await root.removeEntry(probeName);
+      return false; // OPFS works fine — not in a restricted mode
+    } catch {
+      return true; // OPFS probed but failed — likely private browsing
+    }
+  }
+
+  return false;
+}
+
 /** Files larger than this trigger a memory-usage warning when no streaming download path is available. */
 export const LARGE_DOWNLOAD_WARNING_BYTES = 2 * 1024 * 1024 * 1024; // 2 GB
 
 /** True if downloading `sizeBytes` on this browser will buffer the whole file in memory. */
 export function needsLargeDownloadWarning(sizeBytes: number): boolean {
   if (sizeBytes <= LARGE_DOWNLOAD_WARNING_BYTES) return false;
+  return !isStreamingDownloadSupported() && !isOpfsSupported() && !isServiceWorkerDownloadSupported();
+}
+
+/**
+ * Returns true when the browser lacks all streaming download paths and will
+ * have to buffer the entire file in memory. This is common in incognito
+ * windows where the File System Access API is blocked and the service worker
+ * controller is not exposed.
+ */
+export function isDownloadMemoryOnly(): boolean {
   return !isStreamingDownloadSupported() && !isOpfsSupported() && !isServiceWorkerDownloadSupported();
 }
 
@@ -219,6 +266,17 @@ async function downloadViaOpfs(
 }
 
 /**
+ * Thrown when the browser cannot stream the download to disk and the file
+ * is too large to safely buffer in memory.
+ */
+export class DownloadTooLargeForMemoryError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "DownloadTooLargeForMemoryError";
+  }
+}
+
+/**
  * Saves a decrypted byte stream to disk without buffering the whole file in
  * memory. Prefers the File System Access API (writes chunks straight to
  * disk), then the origin-private file system (also a direct disk write,
@@ -275,9 +333,13 @@ export async function downloadStream(
     return;
   }
 
+  // All streaming paths exhausted — fall back to in-memory Blob assembly.
   const expectedBytes = maxBytes ?? totalBytes;
   if (expectedBytes !== undefined && expectedBytes > LARGE_DOWNLOAD_WARNING_BYTES) {
-    throw new Error("Large downloads require the File System Access API, the origin-private file system, or an active service worker");
+    throw new DownloadTooLargeForMemoryError(
+      "This browser cannot save a file this large without running out of memory. " +
+      "Try a regular browser window, or use Chrome, Edge, Firefox, or Safari.",
+    );
   }
 
   const chunks: BlobPart[] = [];
